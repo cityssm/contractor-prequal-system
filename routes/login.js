@@ -27,13 +27,14 @@ router.route("/")
     }
 })
     .post((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userName = req.body.userName;
+    const userName = req.body.userName.toLowerCase();
     const passwordPlain = req.body.password;
     try {
         const isAuthenticated = yield authFns.authenticate(userName, passwordPlain);
         if (isAuthenticated) {
             req.session.user = {
-                userName: userName
+                userName: userName,
+                canUpdate: configFns.getProperty("permissions.canUpdate").includes(userName)
             };
             return res.redirect(redirectURL);
         }

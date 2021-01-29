@@ -29,7 +29,7 @@ router.route("/")
   })
   .post(async (req, res) => {
 
-    const userName = req.body.userName;
+    const userName: string = req.body.userName.toLowerCase();
     const passwordPlain = req.body.password;
 
     try {
@@ -39,7 +39,8 @@ router.route("/")
       if (isAuthenticated) {
 
         req.session.user = {
-          userName: userName
+          userName: userName,
+          canUpdate: configFns.getProperty("permissions.canUpdate").includes(userName)
         };
 
         return res.redirect(redirectURL);

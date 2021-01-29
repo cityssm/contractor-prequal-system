@@ -1,3 +1,5 @@
+import * as winston from "winston";
+
 import type * as configTypes from "../types/configTypes";
 import type * as sqlTypes from "mssql";
 import type { ADWebAuthConfig } from "@cityssm/ad-web-auth-connector/types";
@@ -29,6 +31,8 @@ configFallbackValues.set("session.secret", "cityssm/contractor-prequal-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
 configFallbackValues.set("session.doKeepAlive", false);
 
+configFallbackValues.set("permissions.canUpdate", []);
+
 
 export function getProperty(propertyName: "application.httpPort"): number;
 export function getProperty(propertyName: "application.https"): configTypes.Config_HTTPSConfig;
@@ -41,6 +45,8 @@ export function getProperty(propertyName: "session.secret"): string;
 
 export function getProperty(propertyName: "mssqlConfig"): sqlTypes.config;
 export function getProperty(propertyName: "adWebAuthConfig"): ADWebAuthConfig;
+
+export function getProperty(propertyName: "permissions.canUpdate"): string[];
 
 
 export function getProperty(propertyName: string): any {
@@ -64,4 +70,26 @@ export function getProperty(propertyName: string): any {
   }
 
   return currentObj;
+}
+
+
+/*
+ * Logging
+ */
+
+
+export const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.json(),
+  defaultMeta: { service: "user-service" },
+  transports: [
+    new winston.transports.File({ filename: "contractorPrequalSystem-error.log", level: "error" }),
+    new winston.transports.File({ filename: "contractorPrequalSystem-combined.log" })
+  ]
+});
+
+if (process.env.NODE_ENV !== "production") {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple()
+  }));
 }

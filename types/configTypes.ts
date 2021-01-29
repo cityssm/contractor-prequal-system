@@ -20,6 +20,10 @@ export interface Config {
   mssqlConfig: sqlTypes.config;
 
   adWebAuthConfig: ADWebAuthConfig;
+
+  permissions?: {
+    canUpdate: string[];
+  };
 }
 
 export interface Config_HTTPSConfig {

@@ -1,3 +1,4 @@
+import * as winston from "winston";
 import type * as configTypes from "../types/configTypes";
 import type * as sqlTypes from "mssql";
 import type { ADWebAuthConfig } from "@cityssm/ad-web-auth-connector/types";
@@ -10,3 +11,5 @@ export declare function getProperty(propertyName: "session.maxAgeMillis"): numbe
 export declare function getProperty(propertyName: "session.secret"): string;
 export declare function getProperty(propertyName: "mssqlConfig"): sqlTypes.config;
 export declare function getProperty(propertyName: "adWebAuthConfig"): ADWebAuthConfig;
+export declare function getProperty(propertyName: "permissions.canUpdate"): string[];
+export declare const logger: winston.Logger;

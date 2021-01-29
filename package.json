@@ -25,6 +25,7 @@
     "@cityssm/ad-web-auth-connector": "^0.1.0",
     "@cityssm/bulma-webapp-js": "^1.0.0",
     "@cityssm/expressjs-server-js": "^1.0.3",
+    "@cityssm/mssql-multi-pool": "^1.2.0",
     "@fortawesome/fontawesome-free": "^5.15.2",
     "compression": "^1.7.4",
     "connect-sqlite3": "^0.9.11",
@@ -36,7 +37,8 @@
     "express-rate-limit": "^5.2.3",
     "express-session": "^1.17.1",
     "morgan": "^1.10.0",
-    "mssql": "^6.3.1"
+    "mssql": "^6.3.1",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@cityssm/bulma-a11y": "^0.2.1",
