@@ -1,6 +1,6 @@
 import type * as configTypes from "../types/configTypes";
 import type * as sqlTypes from "mssql";
-import type { ADWebAuthConfig } from "@cityssm/ad-web-auth-connector";
+import type { ADWebAuthConfig } from "@cityssm/ad-web-auth-connector/types";
 
 
 /*
@@ -24,8 +24,8 @@ const configFallbackValues = new Map<string, any>();
 
 configFallbackValues.set("application.httpPort", 55556);
 
-configFallbackValues.set("session.cookieName", "mini-shop-admin-user-sid");
-configFallbackValues.set("session.secret", "cityssm/mini-shop-admin");
+configFallbackValues.set("session.cookieName", "contractor-prequal-system-user-sid");
+configFallbackValues.set("session.secret", "cityssm/contractor-prequal-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
 configFallbackValues.set("session.doKeepAlive", false);
 
@@ -64,5 +64,4 @@ export function getProperty(propertyName: string): any {
   }
 
   return currentObj;
-
 }

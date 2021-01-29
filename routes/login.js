@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const express_1 = require("express");
 const authFns = require("../helpers/authFns");
 const configFns = require("../helpers/configFns");
-const redirectURL = "/orders";
+const redirectURL = "/contractors";
 const router = express_1.Router();
 router.route("/")
     .get((req, res) => {
@@ -32,20 +32,10 @@ router.route("/")
     try {
         const isAuthenticated = yield authFns.authenticate(userName, passwordPlain);
         if (isAuthenticated) {
-            const productSKUs = configFns.getProperty("userPermissions")[userName];
-            if (productSKUs) {
-                req.session.user = {
-                    userName,
-                    productSKUs
-                };
-                return res.redirect(redirectURL);
-            }
-            else {
-                return res.render("login", {
-                    userName,
-                    message: "Access Denied"
-                });
-            }
+            req.session.user = {
+                userName: userName
+            };
+            return res.redirect(redirectURL);
         }
         return res.render("login", {
             userName,

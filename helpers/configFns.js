@@ -6,8 +6,8 @@ Object.freeze(config);
 const configOverrides = {};
 const configFallbackValues = new Map();
 configFallbackValues.set("application.httpPort", 55556);
-configFallbackValues.set("session.cookieName", "mini-shop-admin-user-sid");
-configFallbackValues.set("session.secret", "cityssm/mini-shop-admin");
+configFallbackValues.set("session.cookieName", "contractor-prequal-system-user-sid");
+configFallbackValues.set("session.secret", "cityssm/contractor-prequal-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
 configFallbackValues.set("session.doKeepAlive", false);
 function getProperty(propertyName) {

@@ -5,7 +5,7 @@ import * as authFns from "../helpers/authFns";
 import * as configFns from "../helpers/configFns";
 
 
-const redirectURL = "/orders";
+const redirectURL = "/contractors";
 
 
 const router = Router();
@@ -38,24 +38,11 @@ router.route("/")
 
       if (isAuthenticated) {
 
-        const productSKUs = configFns.getProperty("userPermissions")[userName];
+        req.session.user = {
+          userName: userName
+        };
 
-        if (productSKUs) {
-
-          req.session.user = {
-            userName,
-            productSKUs
-          };
-
-          return res.redirect(redirectURL);
-
-        } else {
-
-          return res.render("login", {
-            userName,
-            message: "Access Denied"
-          });
-        }
+        return res.redirect(redirectURL);
       }
 
       return res.render("login", {

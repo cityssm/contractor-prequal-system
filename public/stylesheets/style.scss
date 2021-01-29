@@ -11,14 +11,10 @@ $modal-content-width: 900px;
   max-width: 100%;
 }
 
-.table.is-focused tbody {
-  &:hover tr,
-  &:focus tr {
-    opacity: 0.5;
-  }
-
-  tr:hover,
-  tr:focus {
-    opacity: 1;
-  }
+#is-login-page {
+  min-height: 100vh;
+  background-image: url('../images/login.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
