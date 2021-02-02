@@ -43,3 +43,9 @@ export interface Contractor {
   legal_note?: string;
   legal_isSatisfactory: boolean;
 };
+
+
+export interface TradeCategory {
+  tradeCategoryID: number;
+  tradeCategory: string;
+};

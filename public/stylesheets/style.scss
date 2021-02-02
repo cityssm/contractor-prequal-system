@@ -22,3 +22,19 @@ $modal-content-width: 900px;
 .navbar-burger span {
   height: 2px;
 }
+
+#container--results .panel {
+  background-color: $white;
+
+  .panel-block {
+    transition: opacity 100ms;
+  }
+
+  &:hover .panel-block {
+    opacity: 0.3;
+  }
+
+  .panel-block:hover {
+    opacity: 1;
+  }
+}

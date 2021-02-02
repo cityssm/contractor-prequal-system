@@ -5,9 +5,9 @@ const app = require("../app");
 const http = require("http");
 const https = require("https");
 const fs = require("fs");
-const log = require("fancy-log");
+const child_process_1 = require("child_process");
 const configFns = require("../helpers/configFns");
-function onError(error) {
+const onError = (error) => {
     if (error.syscall !== "listen") {
         throw error;
     }
@@ -21,14 +21,14 @@ function onError(error) {
         default:
             throw error;
     }
-}
-function onListening(server) {
+};
+const onListening = (server) => {
     const addr = server.address();
     const bind = typeof addr === "string"
         ? "pipe " + addr
         : "port " + addr.port.toString();
-    log.info("Listening on " + bind);
-}
+    configFns.logger.info("Listening on " + bind);
+};
 const httpPort = configFns.getProperty("application.httpPort");
 if (httpPort) {
     const httpServer = http.createServer(app);
@@ -37,7 +37,7 @@ if (httpPort) {
     httpServer.on("listening", function () {
         onListening(httpServer);
     });
-    log.info("HTTP listening on " + httpPort.toString());
+    configFns.logger.info("HTTP listening on " + httpPort.toString());
 }
 const httpsConfig = configFns.getProperty("application.https");
 if (httpsConfig) {
@@ -51,5 +51,6 @@ if (httpsConfig) {
     httpsServer.on("listening", function () {
         onListening(httpsServer);
     });
-    log.info("HTTPS listening on " + httpsConfig.port.toString());
+    configFns.logger.info("HTTPS listening on " + httpsConfig.port.toString());
 }
+child_process_1.fork("./tasks/wsibRefreshTask");

@@ -52,6 +52,10 @@ export const getContractors = async (filters: GetContractorFilters): Promise<Con
       sql += " and legal_isSatisfactory = " + (filters.legalIsSatisfactory ? "1" : "0");
     }
 
+    if (filters.hasOwnProperty("tradeCategoryID")) {
+      sql += " and contractorID in (select cp1b_contractorid from cpqs_p1_business where cp1b_typeid = '" + filters.tradeCategoryID.toString() + "')";
+    }
+
     sql += " order by contractor_name, contractorID";
 
     const contractorResult = await pool.request()

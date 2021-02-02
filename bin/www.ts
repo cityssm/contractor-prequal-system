@@ -6,12 +6,12 @@ import * as http from "http";
 import * as https from "https";
 import * as fs from "fs";
 
-import * as log from "fancy-log";
+import { fork } from "child_process";
 
 import * as configFns from "../helpers/configFns";
 
 
-function onError(error: Error) {
+const onError = (error: Error) => {
 
   if (error.syscall !== "listen") {
     throw error;
@@ -32,9 +32,9 @@ function onError(error: Error) {
     default:
       throw error;
   }
-}
+};
 
-function onListening(server: http.Server | https.Server) {
+const onListening = (server: http.Server | https.Server) => {
 
   const addr = server.address();
 
@@ -42,13 +42,14 @@ function onListening(server: http.Server | https.Server) {
     ? "pipe " + addr
     : "port " + addr.port.toString();
 
-  log.info("Listening on " + bind);
+  configFns.logger.info("Listening on " + bind);
+};
 
-}
 
 /**
  * Initialize HTTP
  */
+
 
 const httpPort = configFns.getProperty("application.httpPort");
 
@@ -63,12 +64,14 @@ if (httpPort) {
     onListening(httpServer);
   });
 
-  log.info("HTTP listening on " + httpPort.toString());
+  configFns.logger.info("HTTP listening on " + httpPort.toString());
 }
+
 
 /**
  * Initialize HTTPS
  */
+
 
 const httpsConfig = configFns.getProperty("application.https");
 
@@ -88,6 +91,12 @@ if (httpsConfig) {
     onListening(httpsServer);
   });
 
-  log.info("HTTPS listening on " + httpsConfig.port.toString());
-
+  configFns.logger.info("HTTPS listening on " + httpsConfig.port.toString());
 }
+
+
+/*
+ * Initialize background tasks
+ */
+
+fork("./tasks/wsibRefreshTask");

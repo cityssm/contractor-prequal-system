@@ -10,24 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
-const getContractors_1 = require("../helpers/prequalDB/getContractors");
-;
-const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const formFilters = req.body;
-    const queryFilters = {};
-    if (!req.session.user.canUpdate) {
-        queryFilters.isContractor = true;
-        queryFilters.wsibIsSatisfactory = true;
-        queryFilters.insuranceIsSatisfactory = true;
-        queryFilters.healthSafetyIsSatisfactory = true;
-        queryFilters.legalIsSatisfactory = true;
-    }
-    if (formFilters.tradeCategoryID !== "") {
-        queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
-    }
-    const contractors = yield getContractors_1.getContractors(queryFilters);
-    return res.json({
-        contractors
+const getTradeCategories_1 = require("../helpers/prequalDB/getTradeCategories");
+const handler = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const tradeCategories = yield getTradeCategories_1.getTradeCategories(true);
+    res.render("contractors", {
+        tradeCategories
     });
 });
 exports.handler = handler;

@@ -3,4 +3,5 @@
 *.log
 
 data/config.*
+data/wsibRefreshCache/
 node_modules/

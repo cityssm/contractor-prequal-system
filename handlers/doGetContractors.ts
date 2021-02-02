@@ -4,7 +4,7 @@ import type { RequestHandler } from "express";
 
 
 interface FormFilters {
-
+  tradeCategoryID: string;
 };
 
 
@@ -20,6 +20,10 @@ export const handler: RequestHandler = async (req, res) => {
     queryFilters.insuranceIsSatisfactory = true;
     queryFilters.healthSafetyIsSatisfactory = true;
     queryFilters.legalIsSatisfactory = true;
+  }
+
+  if (formFilters.tradeCategoryID !== "") {
+    queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
   }
 
   const contractors = await getContractors(queryFilters);
