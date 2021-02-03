@@ -8,14 +8,18 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="/stylesheets/style.min.css" />
-  <link rel="stylesheet" href="/lib/fa5/css/all.min.css" />
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#363636">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="<%= urlPrefix %>/stylesheets/style.min.css" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/lib/fa5/css/all.min.css" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="<%= urlPrefix %>/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="<%= urlPrefix %>/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="<%= urlPrefix %>/favicon-16x16.png">
+  <link rel="manifest" href="<%= urlPrefix %>/site.webmanifest">
+  <link rel="mask-icon" href="<%= urlPrefix %>/safari-pinned-tab.svg" color="#363636">
   <meta name="apple-mobile-web-app-title" content="Contractor Prequal">
   <meta name="application-name" content="Contractor Prequal">
   <meta name="msapplication-TileColor" content="#363636">
@@ -31,10 +35,10 @@
         </h1>
         <div class="columns is-vcentered">
           <div class="column is-one-third is-hidden-mobile has-text-centered">
-            <img class="image is-fullwidth" src="/images/logo.svg" alt="" />
+            <img class="image is-fullwidth" src="<%= urlPrefix %>/images/logo.svg" alt="" />
           </div>
           <div class="column">
-            <form method="post" action="/login">
+            <form method="post" action="<%= urlPrefix %>/login">
               <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
               <label class="label" for="login--userName">User Name</label>
               <div class="field has-addons">

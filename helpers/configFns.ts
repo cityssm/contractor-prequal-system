@@ -26,6 +26,11 @@ const configFallbackValues = new Map<string, any>();
 
 configFallbackValues.set("application.httpPort", 55556);
 
+configFallbackValues.set("reverseProxy.disableCompression", false);
+configFallbackValues.set("reverseProxy.disableEtag", false);
+configFallbackValues.set("reverseProxy.blockViaXForwardedFor", false);
+configFallbackValues.set("reverseProxy.urlPrefix", "");
+
 configFallbackValues.set("session.cookieName", "contractor-prequal-system-user-sid");
 configFallbackValues.set("session.secret", "cityssm/contractor-prequal-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
@@ -37,6 +42,11 @@ configFallbackValues.set("permissions.canUpdate", []);
 export function getProperty(propertyName: "application.httpPort"): number;
 export function getProperty(propertyName: "application.https"): configTypes.Config_HTTPSConfig;
 export function getProperty(propertyName: "application.userDomain"): string;
+
+export function getProperty(propertyName: "reverseProxy.disableCompression"): boolean;
+export function getProperty(propertyName: "reverseProxy.disableEtag"): boolean;
+export function getProperty(propertyName: "reverseProxy.blockViaXForwardedFor"): boolean;
+export function getProperty(propertyName: "reverseProxy.urlPrefix"): "";
 
 export function getProperty(propertyName: "session.cookieName"): string;
 export function getProperty(propertyName: "session.doKeepAlive"): boolean;

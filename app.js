@@ -1,6 +1,7 @@
 "use strict";
 const createError = require("http-errors");
 const express = require("express");
+const express_abuse_points_1 = require("@cityssm/express-abuse-points");
 const compression = require("compression");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -15,9 +16,18 @@ const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const routerLogin = require("./routes/login");
 const routerContractors = require("./routes/contractors");
 const app = express();
+if (!configFns.getProperty("reverseProxy.disableEtag")) {
+    app.set("etag", false);
+}
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(compression());
+app.use(express_abuse_points_1.abuseCheck({
+    byXForwardedFor: configFns.getProperty("reverseProxy.blockViaXForwardedFor"),
+    byIP: !configFns.getProperty("reverseProxy.blockViaXForwardedFor")
+}));
+if (!configFns.getProperty("reverseProxy.disableCompression")) {
+    app.use(compression());
+}
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({
@@ -30,9 +40,10 @@ const limiter = rateLimit({
     max: 1000
 });
 app.use(limiter);
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/lib/bulma-webapp-js", express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js", "dist")));
-app.use("/lib/fa5", express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
+const urlPrefix = configFns.getProperty("reverseProxy.urlPrefix");
+app.use(urlPrefix, express.static(path.join(__dirname, "public")));
+app.use(urlPrefix + "/lib/bulma-webapp-js", express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js", "dist")));
+app.use(urlPrefix + "/lib/fa5", express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
 const SQLiteStore = sqlite(session);
 const sessionCookieName = configFns.getProperty("session.cookieName");
 app.use(session({
@@ -60,7 +71,7 @@ const sessionChecker = (req, res, next) => {
     if (req.session.user && req.cookies[sessionCookieName]) {
         return next();
     }
-    return res.redirect("/login");
+    return res.redirect(urlPrefix + "/login");
 };
 app.use(function (req, res, next) {
     res.locals.configFns = configFns;
@@ -68,20 +79,21 @@ app.use(function (req, res, next) {
     res.locals.stringFns = stringFns;
     res.locals.user = req.session.user;
     res.locals.csrfToken = req.csrfToken();
+    res.locals.urlPrefix = configFns.getProperty("reverseProxy.urlPrefix");
     next();
 });
-app.get("/", sessionChecker, (_req, res) => {
-    res.redirect("/contractors");
+app.get(urlPrefix + "/", sessionChecker, (_req, res) => {
+    res.redirect(urlPrefix + "/contractors");
 });
-app.use("/contractors", sessionChecker, routerContractors);
-app.use("/login", routerLogin);
-app.get("/logout", (req, res) => {
+app.use(urlPrefix + "/contractors", sessionChecker, routerContractors);
+app.use(urlPrefix + "/login", routerLogin);
+app.get(urlPrefix + "/logout", (req, res) => {
     if (req.session.user && req.cookies[sessionCookieName]) {
         req.session.destroy(null);
         req.session = null;
         res.clearCookie(sessionCookieName);
     }
-    res.redirect("/login");
+    res.redirect(urlPrefix + "/login");
 });
 app.use(function (_req, _res, next) {
     next(createError(404));

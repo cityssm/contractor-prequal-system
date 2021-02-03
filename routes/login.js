@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const express_1 = require("express");
 const authFns = require("../helpers/authFns");
 const configFns = require("../helpers/configFns");
-const redirectURL = "/contractors";
+const redirectURL = configFns.getProperty("reverseProxy.urlPrefix") + "/contractors";
 const router = express_1.Router();
 router.route("/")
     .get((req, res) => {

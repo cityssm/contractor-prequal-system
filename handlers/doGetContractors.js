@@ -15,7 +15,7 @@ const getContractors_1 = require("../helpers/prequalDB/getContractors");
 const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const formFilters = req.body;
     const queryFilters = {};
-    if (!req.session.user.canUpdate) {
+    if (!req.session.user.canUpdate || formFilters.isHireReady === "1") {
         queryFilters.isContractor = true;
         queryFilters.wsibIsSatisfactory = true;
         queryFilters.insuranceIsSatisfactory = true;

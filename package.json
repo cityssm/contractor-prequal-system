@@ -24,6 +24,7 @@
   "dependencies": {
     "@cityssm/ad-web-auth-connector": "^0.1.0",
     "@cityssm/bulma-webapp-js": "^1.0.0",
+    "@cityssm/express-abuse-points": "^0.3.2",
     "@cityssm/expressjs-server-js": "^1.0.3",
     "@cityssm/mssql-multi-pool": "^1.2.0",
     "@cityssm/wsib-clearance-check": "^0.1.1",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@cityssm/bulma-a11y": "^0.2.1",
+    "@cityssm/simple-fa5-checkbox": "^0.2.1",
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/csurf": "^1.11.0",

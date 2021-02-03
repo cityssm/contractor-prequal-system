@@ -10,6 +10,13 @@ export interface Config {
     userDomain?: string;
   };
 
+  reverseProxy?: {
+    disableCompression: boolean;
+    disableEtag: boolean;
+    blockViaXForwardedFor: boolean;
+    urlPrefix: string;
+  };
+
   session?: {
     cookieName?: string;
     secret?: string;

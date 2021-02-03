@@ -6,6 +6,12 @@ export interface Config {
         https?: Config_HTTPSConfig;
         userDomain?: string;
     };
+    reverseProxy?: {
+        disableCompression: boolean;
+        disableEtag: boolean;
+        blockViaXForwardedFor: boolean;
+        urlPrefix: string;
+    };
     session?: {
         cookieName?: string;
         secret?: string;

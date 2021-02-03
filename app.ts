@@ -1,6 +1,7 @@
 import * as createError from "http-errors";
 import * as express from "express";
 
+import { abuseCheck } from "@cityssm/express-abuse-points";
 import * as compression from "compression";
 import * as path from "path";
 import * as cookieParser from "cookie-parser";
@@ -26,11 +27,22 @@ import * as routerContractors from "./routes/contractors";
 
 const app = express();
 
+if (!configFns.getProperty("reverseProxy.disableEtag")) {
+  app.set("etag", false);
+}
+
 // View engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-app.use(compression());
+app.use(abuseCheck({
+  byXForwardedFor: configFns.getProperty("reverseProxy.blockViaXForwardedFor"),
+  byIP: !configFns.getProperty("reverseProxy.blockViaXForwardedFor")
+}));
+
+if (!configFns.getProperty("reverseProxy.disableCompression")) {
+  app.use(compression());
+}
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -60,12 +72,15 @@ app.use(limiter);
  */
 
 
-app.use(express.static(path.join(__dirname, "public")));
+const urlPrefix = configFns.getProperty("reverseProxy.urlPrefix");
 
-app.use("/lib/bulma-webapp-js",
+
+app.use(urlPrefix, express.static(path.join(__dirname, "public")));
+
+app.use(urlPrefix + "/lib/bulma-webapp-js",
   express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js", "dist")));
 
-app.use("/lib/fa5",
+app.use(urlPrefix + "/lib/fa5",
   express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
 
 
@@ -114,7 +129,7 @@ const sessionChecker = (req: express.Request, res: express.Response, next: expre
     return next();
   }
 
-  return res.redirect("/login");
+  return res.redirect(urlPrefix + "/login");
 };
 
 
@@ -130,19 +145,20 @@ app.use(function(req, res, next) {
   res.locals.stringFns = stringFns;
   res.locals.user = req.session.user;
   res.locals.csrfToken = req.csrfToken();
+  res.locals.urlPrefix = configFns.getProperty("reverseProxy.urlPrefix");
   next();
 });
 
 
-app.get("/", sessionChecker, (_req, res) => {
-  res.redirect("/contractors");
+app.get(urlPrefix + "/", sessionChecker, (_req, res) => {
+  res.redirect(urlPrefix + "/contractors");
 });
 
-app.use("/contractors", sessionChecker, routerContractors);
+app.use(urlPrefix + "/contractors", sessionChecker, routerContractors);
 
-app.use("/login", routerLogin);
+app.use(urlPrefix + "/login", routerLogin);
 
-app.get("/logout", (req, res) => {
+app.get(urlPrefix + "/logout", (req, res) => {
 
   if (req.session.user && req.cookies[sessionCookieName]) {
 
@@ -152,7 +168,7 @@ app.get("/logout", (req, res) => {
 
   }
 
-  res.redirect("/login");
+  res.redirect(urlPrefix + "/login");
 });
 
 

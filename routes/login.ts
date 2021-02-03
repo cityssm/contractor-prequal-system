@@ -5,7 +5,7 @@ import * as authFns from "../helpers/authFns";
 import * as configFns from "../helpers/configFns";
 
 
-const redirectURL = "/contractors";
+const redirectURL = configFns.getProperty("reverseProxy.urlPrefix") + "/contractors";
 
 
 const router = Router();

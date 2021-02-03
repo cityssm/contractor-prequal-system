@@ -5,6 +5,7 @@ import type { RequestHandler } from "express";
 
 interface FormFilters {
   tradeCategoryID: string;
+  isHireReady: null | "1";
 };
 
 
@@ -14,7 +15,7 @@ export const handler: RequestHandler = async (req, res) => {
 
   const queryFilters: GetContractorFilters = {};
 
-  if (!req.session.user.canUpdate) {
+  if (!req.session.user.canUpdate || formFilters.isHireReady === "1") {
     queryFilters.isContractor = true;
     queryFilters.wsibIsSatisfactory = true;
     queryFilters.insuranceIsSatisfactory = true;

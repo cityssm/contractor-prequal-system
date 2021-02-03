@@ -1,0 +1,214 @@
+<div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head is-justify-content-space-between">
+      <h2 class="modal-card-title" id="contractor--contractor_name"></h2>
+      <button class="delete is-close-modal-button" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="columns">
+        <div class="column is-two-thirds">
+          <div class="panel">
+            <div class="panel-block">
+              <span class="panel-icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span>
+              <span id="contractor--location"></span>
+            </div>
+            <div class="panel-block">
+              <span class="panel-icon"><i class="fas fa-user" aria-hidden="true"></i></span>
+              <span id="contractor--phone_name"></span>
+            </div>
+            <div class="panel-block">
+              <span class="panel-icon"><i class="fas fa-phone" aria-hidden="true"></i></span>
+              <span id="contractor--phone_number"></span>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div id="contractor--tradeCategories" style="max-height:200px;overflow:auto;">
+            <div class="has-text-centered"><i class="fas fa-spinner fa-pulse" aria-hidden="true"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column">
+          <form data-action="doUpdateHealthSafety">
+            <div class="columns is-mobile">
+              <div class="column">
+                <h3 class="title is-4">Health & Safety</h3>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-small is-unlock-button is-hidden" type="button">
+                  <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
+                  <span>Unlock</span>
+                </button>
+              </div>
+            </div>
+            <fieldset disabled>
+              <div class="field">
+                <label class="label" for="contractor--healthSafety_status">
+                  Health & Safety Status
+                </label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select id="contractor--healthSafety_status" name="healthSafety_status"></select>
+                  </div>
+                </div>
+              </div>
+              <div class="has-text-right">
+                <button class="button is-primary" type="submit">Save</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="column">
+          <form data-action="doUpdateLegal">
+            <div class="columns is-mobile">
+              <div class="column">
+                <h3 class="title is-4">Legal</h3>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-small is-unlock-button is-hidden" type="button">
+                  <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
+                  <span>Unlock</span>
+                </button>
+              </div>
+            </div>
+            <fieldset disabled>
+              <div class="field">
+                <label class="label" for="contractor--legal_isSatisfactory">
+                  Legal Status
+                </label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select id="contractor--legal_isSatisfactory" name="legal_isSatisfactory"></select>
+                  </div>
+                </div>
+              </div>
+              <div class="has-text-right">
+                <button class="button is-primary" type="submit">Save</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column">
+          <form data-action="doUpdateWSIB">
+            <div class="columns is-mobile">
+              <div class="column">
+                <h3 class="title is-4">WSIB</h3>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-small is-unlock-button is-hidden" type="button">
+                  <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
+                  <span>Unlock</span>
+                </button>
+              </div>
+            </div>
+            <fieldset disabled>
+              <div class="field">
+                <label class="label" for="contractor--wsib_accountNumber">
+                  WSIB Account Number
+                </label>
+                <div class="control">
+                  <input class="input" id="contractor--wsib_accountNumber" name="wsib_accountNumber" type="text" maxlength="12" inputmode="numeric" />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="contractor--wsib_firmNumber">
+                  Firm Number
+                </label>
+                <div class="control">
+                  <input class="input" id="contractor--wsib_firmNumber" name="wsib_firmNumber" type="text" maxlength="10" />
+                </div>
+              </div>
+              <div class="columns">
+                <div class="column">
+                  <div class="field">
+                    <label class="label" for="contractor--wsib_effectiveDate">
+                      Effective Date
+                    </label>
+                    <div class="control">
+                      <input class="input" id="contractor--wsib_effectiveDate" name="wsib_effectiveDate" type="date" />
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="field">
+                    <label class="label" for="contractor--wsib_expiryDate">
+                      Expiry Date
+                    </label>
+                    <div class="control">
+                      <input class="input" id="contractor--wsib_expiryDate" name="wsib_expiryDate" type="date" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="has-text-right">
+                <button class="button is-primary" type="submit">Save</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="column">
+          <form data-action="doUpdateInsurance">
+            <div class="columns is-mobile">
+              <div class="column">
+                <h3 class="title is-4">Liability Insurance</h3>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-small is-unlock-button is-hidden" type="button">
+                  <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
+                  <span>Unlock</span>
+                </button>
+              </div>
+            </div>
+            <fieldset disabled>
+              <div class="field">
+                <label class="label" for="contractor--insurance_company">
+                  Insurance Company
+                </label>
+                <div class="control">
+                  <input class="input" id="contractor--insurance_company" name="insurance_company" type="text" maxlength="200" />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="contractor--insurance_policyNumber">
+                  Policy Number
+                </label>
+                <div class="control">
+                  <input class="input" id="contractor--insurance_policyNumber" name="insurance_policyNumber" type="text" maxlength="30" />
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="contractor--insurance_amount">
+                  Amount
+                </label>
+                <div class="control has-icons-left">
+                  <input class="input" id="contractor--insurance_amount" name="insurance_amount" type="number" min="0" step="99999999999" onwheel="return false" />
+                  <span class="icon is-left">
+                    <i class="fas fa-dollar-sign" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="contractor--insurance_expiryDate">
+                  Expiry Date
+                </label>
+                <div class="control">
+                  <input class="input" id="contractor--insurance_expiryDate" name="insurance_expiryDate" type="date" />
+                </div>
+              </div>
+              <div class="has-text-right">
+                <button class="button is-primary" type="submit">Save</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot is-justify-content-flex-end">
+      <button class="button is-close-modal-button" type="button">Close</button>
+    </footer>
+  </div>
+</div>

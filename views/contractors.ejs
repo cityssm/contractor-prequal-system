@@ -9,14 +9,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="csrf-token" content="<%= csrfToken %>">
-  <link rel="stylesheet" href="/stylesheets/style.min.css" />
-  <link rel="stylesheet" href="/lib/fa5/css/all.min.css" />
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#363636">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="<%= urlPrefix %>/stylesheets/style.min.css" />
+  <link rel="stylesheet" href="<%= urlPrefix %>/lib/fa5/css/all.min.css" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="<%= urlPrefix %>/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="<%= urlPrefix %>/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="<%= urlPrefix %>/favicon-16x16.png">
+  <link rel="manifest" href="<%= urlPrefix %>/site.webmanifest">
+  <link rel="mask-icon" href="<%= urlPrefix %>/safari-pinned-tab.svg" color="#363636">
   <meta name="apple-mobile-web-app-title" content="Contractor Prequal">
   <meta name="application-name" content="Contractor Prequal">
   <meta name="msapplication-TileColor" content="#363636">
@@ -27,7 +32,7 @@
   <nav class="navbar is-dark mb-3">
     <div class="navbar-brand">
       <span class="navbar-item">
-        <img src="/images/logo.svg" alt="" />
+        <img src="<%= urlPrefix %>/images/logo.svg" alt="" />
       </span>
       <span class="navbar-item has-text-weight-bold">
         Contractor Prequal System
@@ -46,7 +51,7 @@
             <span><%= user.userName %></span>
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="/logout">
+            <a class="navbar-item" href="<%= urlPrefix %>/logout">
               <span class="icon mr-1"><i class="fas fa-sign-out-alt" aria-hidden="true"></i></span>
               Log Out
             </a>
@@ -76,6 +81,12 @@
             </div>
           </div>
         </div>
+        <div class="column is-one-third">
+          <p class="facheck facheck-fas-checked has-checked-success">
+            <input id="filter--isHireReady" name="isHireReady" value="1" type="checkbox" checked <%= (user.canUpdate ? "" : "disabled readonly") %> />
+            <label for="filter--isHireReady">Hire Ready Only</label>
+          </p>
+        </div>
       </div>
     </form>
     <div id="container--results">
@@ -89,8 +100,9 @@
   <script>
     window.exports = window.exports || {};
     exports.canUpdate = <%= user.canUpdate %>;
+    exports.urlPrefix = "<%= urlPrefix %>";
   </script>
-  <script src="/lib/bulma-webapp-js/cityssm.min.js"></script>
-  <script src="/javascripts/contractors.min.js"></script>
+  <script src="<%= urlPrefix %>/lib/bulma-webapp-js/cityssm.min.js"></script>
+  <script src="<%= urlPrefix %>/javascripts/contractors.min.js"></script>
 </body>
 </html>
