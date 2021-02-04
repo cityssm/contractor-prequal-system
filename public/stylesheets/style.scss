@@ -8,6 +8,7 @@ $modal-content-width: 900px;
 @import '@cityssm/bulma-a11y/bulma-a11y';
 @import '@cityssm/simple-fa5-checkbox/facheck-bulma';
 
+.modal-content,
 .modal-card {
   max-width: 100%;
 }

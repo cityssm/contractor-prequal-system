@@ -7,17 +7,92 @@ Object.defineProperty(exports, "__esModule", { value: true });
     var filterFormEle = document.getElementById("form--filters");
     var resultsEle = document.getElementById("container--results");
     var contractors = [];
+    var updateOptionsCache = {
+        healthSafetyStatuses: [],
+        insuranceCompanyNames: []
+    };
+    var doRefreshOnClose = false;
+    var submitUpdateForm = function (formEvent) {
+        formEvent.preventDefault();
+        var formEle = formEvent.currentTarget;
+        var updateFormAction = formEle.getAttribute("data-action");
+        cityssm.postJSON(urlPrefix + "/contractors/" + updateFormAction, formEle, function (responseJSON) {
+            if (responseJSON.success) {
+                cityssm.alertModal("Update Saved Successfully", "Close the contractor popup window to refresh your search results.", "OK", "success");
+                doRefreshOnClose = true;
+            }
+            else {
+                cityssm.alertModal("Update Failed", "Please try again.", "OK", "danger");
+            }
+        });
+    };
+    var loadHealthSafetyOptions = function () {
+        var renderFn = function () {
+            var optgroupEle = document.createElement("optgroup");
+            optgroupEle.label = "Options";
+            for (var _i = 0, _a = updateOptionsCache.healthSafetyStatuses; _i < _a.length; _i++) {
+                var status_1 = _a[_i];
+                optgroupEle.insertAdjacentHTML("beforeend", "<option>" + cityssm.escapeHTML(status_1) + "</option>");
+            }
+            document.getElementById("contractor--healthSafety_status").appendChild(optgroupEle);
+        };
+        if (updateOptionsCache.healthSafetyStatuses.length > 0) {
+            renderFn();
+        }
+        else {
+            cityssm.postJSON(urlPrefix + "/contractors/doGetHealthSafetyOptions", {}, function (responseJSON) {
+                updateOptionsCache.healthSafetyStatuses = responseJSON.healthSafetyStatuses;
+                renderFn();
+            });
+        }
+    };
+    var loadLegalOptions = function () {
+        document.getElementById("contractor--legal_isSatisfactory").insertAdjacentHTML("beforeend", "<optgroup label=\"Options\">" +
+            "<option value=\"1\">Approved</option>" +
+            "<option value=\"0\">Declined</option>" +
+            "</optgroup>");
+    };
+    var loadInsuranceOptions = function () {
+        var renderFn = function () {
+            var datalistEle = document.getElementById("contractor--insurance_company-datalist");
+            for (var _i = 0, _a = updateOptionsCache.insuranceCompanyNames; _i < _a.length; _i++) {
+                var companyName = _a[_i];
+                datalistEle.insertAdjacentHTML("beforeend", "<option value=\"" + cityssm.escapeHTML(companyName) + "\"></option>");
+            }
+        };
+        if (updateOptionsCache.insuranceCompanyNames.length > 0) {
+            renderFn();
+        }
+        else {
+            cityssm.postJSON(urlPrefix + "/contractors/doGetInsuranceOptions", {}, function (responseJSON) {
+                updateOptionsCache.insuranceCompanyNames = responseJSON.insuranceCompanyNames;
+                renderFn();
+            });
+        }
+    };
     var unlockUpdateForm = function (clickEvent) {
         var unlockButtonEle = clickEvent.currentTarget;
         var formEle = unlockButtonEle.closest("form");
+        var updateFormAction = formEle.getAttribute("data-action");
+        switch (updateFormAction) {
+            case "doUpdateHealthSafety":
+                loadHealthSafetyOptions();
+                break;
+            case "doUpdateLegal":
+                loadLegalOptions();
+                break;
+            case "doUpdateInsurance":
+                loadInsuranceOptions();
+                break;
+        }
         formEle.getElementsByTagName("fieldset")[0].disabled = false;
+        formEle.addEventListener("submit", submitUpdateForm);
         unlockButtonEle.remove();
     };
     var openContractorModal = function (clickEvent) {
         clickEvent.preventDefault();
         var contractorIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         var contractor = contractors[contractorIndex];
-        var doRefreshOnClose = false;
         var loadTradeCategories = function () {
             cityssm.postJSON(urlPrefix + "/contractors/doGetTradeCategoriesByContractorID", {
                 contractorID: contractor.contractorID
@@ -44,22 +119,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
             });
         };
         cityssm.openHtmlModal("contractor-view", {
-            onshow: function () {
+            onshow: function (modalEle) {
                 document.getElementsByTagName("html")[0].classList.add("is-clipped");
                 loadTradeCategories();
                 document.getElementById("contractor--contractor_name").innerText =
                     contractor.contractor_name;
                 document.getElementById("contractor--location").innerText =
-                    contractor.contractor_city + ", " + contractor.contractor_province;
+                    (contractor.contractor_city ? contractor.contractor_city + ", " : "") +
+                        (contractor.contractor_province || "");
                 document.getElementById("contractor--phone_name").innerText =
                     contractor.phone_name;
                 document.getElementById("contractor--phone_number").innerText =
                     contractor.phone_number;
                 document.getElementById("contractor--healthSafety_status").innerHTML =
-                    "<option>" + cityssm.escapeHTML(contractor.healthSafety_status) + "</option>";
+                    (contractor.healthSafety_status === null || contractor.healthSafety_status === ""
+                        ? "<option value=\"\">(Not Set)</option>"
+                        : "<option>" + cityssm.escapeHTML(contractor.healthSafety_status) + "</option>");
                 var legalOptionHTML = (contractor.legal_isSatisfactory
                     ? "<option value=\"1\">Approved</option>"
-                    : "<option value=\"0\">Denied</option>");
+                    : "<option value=\"0\">Declined</option>");
                 document.getElementById("contractor--legal_isSatisfactory").innerHTML =
                     legalOptionHTML;
                 document.getElementById("contractor--wsib_accountNumber").value =
@@ -78,6 +156,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     document.getElementById("contractor--wsib_expiryDate").value =
                         expiryDateString;
                 }
+                if (contractor.wsib_isIndependent) {
+                    document.getElementById("contractor--wsib_isIndependent").checked = true;
+                }
                 document.getElementById("contractor--insurance_company").value =
                     contractor.insurance_company || "";
                 document.getElementById("contractor--insurance_policyNumber").value =
@@ -89,6 +170,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     var expiryDateString = cityssm.dateToString(expiryDate);
                     document.getElementById("contractor--insurance_expiryDate").value =
                         expiryDateString;
+                }
+                if (canUpdate) {
+                    var contractorIDInputEles = modalEle.getElementsByClassName("contractor--contractorID");
+                    for (var index = 0; index < contractorIDInputEles.length; index += 1) {
+                        contractorIDInputEles[index].value = contractor.contractorID.toString();
+                    }
                 }
             },
             onshown: function (modalEle) {
@@ -103,6 +190,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             onhidden: function () {
                 if (doRefreshOnClose) {
                     getContractors();
+                    doRefreshOnClose = false;
                 }
             },
             onremoved: function () {

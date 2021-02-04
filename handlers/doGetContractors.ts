@@ -5,7 +5,7 @@ import type { RequestHandler } from "express";
 
 interface FormFilters {
   tradeCategoryID: string;
-  isHireReady: null | "1";
+  isHireReady?: "1";
 };
 
 

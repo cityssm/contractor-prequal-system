@@ -32,6 +32,7 @@
       <div class="columns">
         <div class="column">
           <form data-action="doUpdateHealthSafety">
+            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
             <div class="columns is-mobile">
               <div class="column">
                 <h3 class="title is-4">Health & Safety</h3>
@@ -62,6 +63,7 @@
         </div>
         <div class="column">
           <form data-action="doUpdateLegal">
+            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
             <div class="columns is-mobile">
               <div class="column">
                 <h3 class="title is-4">Legal</h3>
@@ -94,6 +96,7 @@
       <div class="columns">
         <div class="column">
           <form data-action="doUpdateWSIB">
+            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
             <div class="columns is-mobile">
               <div class="column">
                 <h3 class="title is-4">WSIB</h3>
@@ -144,6 +147,10 @@
                   </div>
                 </div>
               </div>
+              <p class="facheck facheck-fas-checked has-checked-info">
+                <input id="contractor--wsib_isIndependent" name="wsib_isIndependent" value="1" type="checkbox" />
+                <label for="contractor--wsib_isIndependent">Independent Contractor</label>
+              </p>
               <div class="has-text-right">
                 <button class="button is-primary" type="submit">Save</button>
               </div>
@@ -152,6 +159,7 @@
         </div>
         <div class="column">
           <form data-action="doUpdateInsurance">
+            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
             <div class="columns is-mobile">
               <div class="column">
                 <h3 class="title is-4">Liability Insurance</h3>
@@ -169,7 +177,8 @@
                   Insurance Company
                 </label>
                 <div class="control">
-                  <input class="input" id="contractor--insurance_company" name="insurance_company" type="text" maxlength="200" />
+                  <input class="input" id="contractor--insurance_company" name="insurance_company" type="text" maxlength="200" list="contractor--insurance_company-datalist" />
+                  <datalist id="contractor--insurance_company-datalist"></datalist>
                 </div>
               </div>
               <div class="field">
@@ -185,7 +194,7 @@
                   Amount
                 </label>
                 <div class="control has-icons-left">
-                  <input class="input" id="contractor--insurance_amount" name="insurance_amount" type="number" min="0" step="99999999999" onwheel="return false" />
+                  <input class="input" id="contractor--insurance_amount" name="insurance_amount" type="number" min="0" max="99999999999" step="1" onwheel="return false" />
                   <span class="icon is-left">
                     <i class="fas fa-dollar-sign" aria-hidden="true"></i>
                   </span>

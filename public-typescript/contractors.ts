@@ -18,18 +18,141 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
   let contractors: recordTypes.Contractor[] = [];
 
 
+  const updateOptionsCache = {
+    healthSafetyStatuses: [],
+    insuranceCompanyNames: []
+  };
+
+
   /*
    * Popup Modal
    */
 
 
+  type UpdateFormActions = "doUpdateHealthSafety" | "doUpdateLegal" | "doUpdateWSIB" | "doUpdateInsurance";
+
+
+  let doRefreshOnClose = false;
+
+
+  const submitUpdateForm = (formEvent: Event) => {
+
+    formEvent.preventDefault();
+
+    const formEle = formEvent.currentTarget as HTMLFormElement;
+    const updateFormAction = formEle.getAttribute("data-action") as UpdateFormActions;
+
+    cityssm.postJSON(urlPrefix + "/contractors/" + updateFormAction, formEle,
+      (responseJSON: { success: boolean }) => {
+
+        if (responseJSON.success) {
+          cityssm.alertModal("Update Saved Successfully",
+            "Close the contractor popup window to refresh your search results.",
+            "OK",
+            "success");
+
+          doRefreshOnClose = true;
+
+        } else {
+          cityssm.alertModal("Update Failed",
+            "Please try again.",
+            "OK",
+            "danger");
+        }
+      });
+  };
+
+
+  const loadHealthSafetyOptions = () => {
+
+    const renderFn = () => {
+
+      const optgroupEle = document.createElement("optgroup");
+      optgroupEle.label = "Options";
+
+      for (const status of updateOptionsCache.healthSafetyStatuses) {
+        optgroupEle.insertAdjacentHTML("beforeend",
+          "<option>" + cityssm.escapeHTML(status) + "</option>");
+      }
+
+      document.getElementById("contractor--healthSafety_status").appendChild(optgroupEle);
+    };
+
+    if (updateOptionsCache.healthSafetyStatuses.length > 0) {
+      renderFn();
+
+    } else {
+
+      cityssm.postJSON(urlPrefix + "/contractors/doGetHealthSafetyOptions", {},
+        (responseJSON: { healthSafetyStatuses: string[] }) => {
+
+          updateOptionsCache.healthSafetyStatuses = responseJSON.healthSafetyStatuses;
+          renderFn();
+        });
+    }
+  };
+
+
+  const loadLegalOptions = () => {
+
+    document.getElementById("contractor--legal_isSatisfactory").insertAdjacentHTML("beforeend",
+      "<optgroup label=\"Options\">" +
+      "<option value=\"1\">Approved</option>" +
+      "<option value=\"0\">Declined</option>" +
+      "</optgroup>");
+  };
+
+
+  const loadInsuranceOptions = () => {
+
+    const renderFn = () => {
+
+      const datalistEle = document.getElementById("contractor--insurance_company-datalist");
+
+      for (const companyName of updateOptionsCache.insuranceCompanyNames) {
+        datalistEle.insertAdjacentHTML("beforeend",
+          "<option value=\"" + cityssm.escapeHTML(companyName) + "\"></option>");
+      }
+    };
+
+    if (updateOptionsCache.insuranceCompanyNames.length > 0) {
+      renderFn();
+
+    } else {
+
+      cityssm.postJSON(urlPrefix + "/contractors/doGetInsuranceOptions", {},
+        (responseJSON: { insuranceCompanyNames: string[] }) => {
+
+          updateOptionsCache.insuranceCompanyNames = responseJSON.insuranceCompanyNames;
+          renderFn();
+        });
+    }
+  };
+
+
   const unlockUpdateForm = (clickEvent: MouseEvent) => {
 
     const unlockButtonEle = clickEvent.currentTarget as HTMLButtonElement;
-
     const formEle = unlockButtonEle.closest("form");
+    const updateFormAction = formEle.getAttribute("data-action") as UpdateFormActions;
+
+    switch (updateFormAction) {
+
+      case "doUpdateHealthSafety":
+        loadHealthSafetyOptions();
+        break;
+
+      case "doUpdateLegal":
+        loadLegalOptions();
+        break;
+
+      case "doUpdateInsurance":
+        loadInsuranceOptions();
+        break;
+    }
 
     formEle.getElementsByTagName("fieldset")[0].disabled = false;
+    formEle.addEventListener("submit", submitUpdateForm);
 
     unlockButtonEle.remove();
   };
@@ -41,8 +164,6 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
 
     const contractorIndex: number = parseInt((clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-index"), 10);
     const contractor = contractors[contractorIndex];
-
-    let doRefreshOnClose = false;
 
     const loadTradeCategories = () => {
       cityssm.postJSON(urlPrefix + "/contractors/doGetTradeCategoriesByContractorID", {
@@ -77,7 +198,7 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
     };
 
     cityssm.openHtmlModal("contractor-view", {
-      onshow: () => {
+      onshow: (modalEle) => {
 
         document.getElementsByTagName("html")[0].classList.add("is-clipped");
 
@@ -87,7 +208,8 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
           contractor.contractor_name;
 
         document.getElementById("contractor--location").innerText =
-          contractor.contractor_city + ", " + contractor.contractor_province;
+          (contractor.contractor_city ? contractor.contractor_city + ", " : "") +
+          (contractor.contractor_province || "");
 
         document.getElementById("contractor--phone_name").innerText =
           contractor.phone_name;
@@ -98,13 +220,16 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
         // Health & Safety
 
         (document.getElementById("contractor--healthSafety_status") as HTMLSelectElement).innerHTML =
-          "<option>" + cityssm.escapeHTML(contractor.healthSafety_status) + "</option>";
+          (contractor.healthSafety_status === null || contractor.healthSafety_status === ""
+            ? "<option value=\"\">(Not Set)</option>"
+            : "<option>" + cityssm.escapeHTML(contractor.healthSafety_status) + "</option>"
+          );
 
         // Legal
 
         const legalOptionHTML = (contractor.legal_isSatisfactory
           ? "<option value=\"1\">Approved</option>"
-          : "<option value=\"0\">Denied</option>");
+          : "<option value=\"0\">Declined</option>");
 
         (document.getElementById("contractor--legal_isSatisfactory") as HTMLSelectElement).innerHTML =
           legalOptionHTML;
@@ -135,6 +260,10 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
             expiryDateString;
         }
 
+        if (contractor.wsib_isIndependent) {
+          (document.getElementById("contractor--wsib_isIndependent") as HTMLInputElement).checked = true;
+        }
+
         // Liability Insurance
 
         (document.getElementById("contractor--insurance_company") as HTMLInputElement).value =
@@ -154,6 +283,17 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
           (document.getElementById("contractor--insurance_expiryDate") as HTMLInputElement).value =
             expiryDateString;
         }
+
+        // Contractor IDs
+
+        if (canUpdate) {
+
+          const contractorIDInputEles = modalEle.getElementsByClassName("contractor--contractorID") as HTMLCollectionOf<HTMLInputElement>;
+
+          for (let index = 0; index < contractorIDInputEles.length; index += 1) {
+            contractorIDInputEles[index].value = contractor.contractorID.toString();
+          }
+        }
       },
       onshown: (modalEle) => {
         if (canUpdate) {
@@ -169,6 +309,7 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
       onhidden: () => {
         if (doRefreshOnClose) {
           getContractors();
+          doRefreshOnClose = false;
         }
       },
       onremoved: () => {
