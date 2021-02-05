@@ -27,7 +27,7 @@
     "@cityssm/express-abuse-points": "^0.3.2",
     "@cityssm/expressjs-server-js": "^1.0.3",
     "@cityssm/mssql-multi-pool": "^1.2.0",
-    "@cityssm/wsib-clearance-check": "^0.1.1",
+    "@cityssm/wsib-clearance-check": "^0.1.2",
     "@fortawesome/fontawesome-free": "^5.15.2",
     "compression": "^1.7.4",
     "connect-sqlite3": "^0.9.11",

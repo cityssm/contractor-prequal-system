@@ -92,8 +92,8 @@ export const logger = winston.createLogger({
   level: "info",
   format: winston.format.json(),
   transports: [
-    new winston.transports.File({ filename: "contractorPrequalSystem-error.log", level: "error" }),
-    new winston.transports.File({ filename: "contractorPrequalSystem-combined.log" })
+    new winston.transports.File({ filename: "logs/contractorPrequalSystem-error.log", level: "error" }),
+    new winston.transports.File({ filename: "logs/contractorPrequalSystem-combined.log" })
   ]
 });
 
