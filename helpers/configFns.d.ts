@@ -15,5 +15,6 @@ export declare function getProperty(propertyName: "session.maxAgeMillis"): numbe
 export declare function getProperty(propertyName: "session.secret"): string;
 export declare function getProperty(propertyName: "mssqlConfig"): sqlTypes.config;
 export declare function getProperty(propertyName: "adWebAuthConfig"): ADWebAuthConfig;
+export declare function getProperty(propertyName: "docuShareConfig.rootURL"): string;
 export declare function getProperty(propertyName: "permissions.canUpdate"): string[];
 export declare const logger: winston.Logger;

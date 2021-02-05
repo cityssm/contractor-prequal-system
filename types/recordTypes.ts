@@ -13,7 +13,7 @@ declare module "express-session" {
 
 export interface Contractor {
   contractorID: number;
-  docushareCollectionID?: number;
+  docuShareCollectionID?: number;
   isContractor: boolean;
 
   contractor_name: string;

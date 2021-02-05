@@ -56,6 +56,8 @@ export function getProperty(propertyName: "session.secret"): string;
 export function getProperty(propertyName: "mssqlConfig"): sqlTypes.config;
 export function getProperty(propertyName: "adWebAuthConfig"): ADWebAuthConfig;
 
+export function getProperty(propertyName: "docuShareConfig.rootURL"): string;
+
 export function getProperty(propertyName: "permissions.canUpdate"): string[];
 
 

@@ -23,6 +23,9 @@ export interface Config {
     permissions?: {
         canUpdate: string[];
     };
+    docuShareConfig?: {
+        rootURL: string;
+    };
 }
 export interface Config_HTTPSConfig {
     port: number;

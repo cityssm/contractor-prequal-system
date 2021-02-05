@@ -16,7 +16,7 @@ const configFns = require("../configFns");
 const getContractors = (filters) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const pool = yield sqlPool.connect(configFns.getProperty("mssqlConfig"));
-        let sql = "select contractorID, docushareCollectionID, isContractor," +
+        let sql = "select contractorID, docuShareCollectionID, isContractor," +
             " contractor_name, contractor_city, contractor_province," +
             " phone_name, phone_title, phone_number," +
             " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
