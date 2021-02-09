@@ -35,6 +35,10 @@ export interface Config {
   docuShareConfig?: {
     rootURL: string;
   };
+
+  vendorInformationSystemConfig?: {
+    vendorURL: string;
+  };
 }
 
 export interface Config_HTTPSConfig {

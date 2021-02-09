@@ -4,6 +4,13 @@ import type * as cityssmTypes from "@cityssm/bulma-webapp-js/src/types";
 
 declare const cityssm: cityssmTypes.cityssmGlobal;
 
+declare const exports: {
+  canUpdate: boolean;
+  urlPrefix: string;
+  docuShareRootURL: string;
+  vendorInformationSystemVendorURL: string;
+};
+
 
 (() => {
   const canUpdate: boolean = exports.canUpdate;
@@ -19,6 +26,7 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
 
 
   const updateOptionsCache = {
+    tradeCategories: [],
     healthSafetyStatuses: [],
     insuranceCompanyNames: []
   };
@@ -29,7 +37,34 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
    */
 
 
-  type UpdateFormActions = "doUpdateHealthSafety" | "doUpdateLegal" | "doUpdateWSIB" | "doUpdateInsurance";
+  const buildVendorInformationSystemURL = (contractorID: number) => {
+    return exports.vendorInformationSystemVendorURL + "?vendorID=" + contractorID.toString();
+  };
+
+  const buildDocuShareURL = (docuShareCollectionID: string) => {
+    return exports.docuShareRootURL + "/dsweb/View/Collection-" + docuShareCollectionID;
+  };
+
+
+  const openDocuShareLink = (clickEvent: Event) => {
+    clickEvent.preventDefault();
+
+    const docuShareCollectionID = (document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement).value;
+
+    if (docuShareCollectionID === "") {
+      cityssm.alertModal("DocuShare Collection ID Not Available",
+        "Note that Hire Ready contractors will have their Collection IDs populated automatically.",
+        "OK",
+        "warning");
+    } else {
+      window.open(buildDocuShareURL(docuShareCollectionID));
+    }
+  };
+
+
+  type UpdateFormActions = "doUpdateContractor" |
+    "doUpdateHealthSafety" | "doUpdateLegal" |
+    "doUpdateWSIB" | "doUpdateInsurance";
 
 
   let doRefreshOnClose = false;
@@ -63,6 +98,40 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
   };
 
 
+  const submitAddTradeCategoryForm = (formEvent: Event) => {
+    formEvent.preventDefault();
+  };
+
+
+  const loadTradeCategoryOptions = () => {
+
+    const renderFn = () => {
+
+      const selectEle = document.getElementById("tradeCategories--tradeCategoryID");
+
+      for (const tradeCategory of updateOptionsCache.tradeCategories) {
+
+        selectEle.insertAdjacentHTML("beforeend",
+          "<option value=\"" + tradeCategory.tradeCategoryID + "\">" +
+          tradeCategory.tradeCategory +
+          "</option>");
+      }
+    };
+
+    if (updateOptionsCache.tradeCategories.length > 0) {
+      renderFn();
+
+    } else {
+      cityssm.postJSON(urlPrefix + "/contractors/doGetAllTradeCategories", {},
+        (responseJSON: { tradeCategories: recordTypes.TradeCategory[] }) => {
+
+          updateOptionsCache.tradeCategories = responseJSON.tradeCategories;
+          renderFn();
+        });
+    }
+  };
+
+
   const loadHealthSafetyOptions = () => {
 
     const renderFn = () => {
@@ -82,7 +151,6 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
       renderFn();
 
     } else {
-
       cityssm.postJSON(urlPrefix + "/contractors/doGetHealthSafetyOptions", {},
         (responseJSON: { healthSafetyStatuses: string[] }) => {
 
@@ -136,6 +204,7 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
     const formEle = unlockButtonEle.closest("form");
     const updateFormAction = formEle.getAttribute("data-action") as UpdateFormActions;
 
+    // Load extra data
     switch (updateFormAction) {
 
       case "doUpdateHealthSafety":
@@ -151,10 +220,39 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
         break;
     }
 
-    formEle.getElementsByTagName("fieldset")[0].disabled = false;
     formEle.addEventListener("submit", submitUpdateForm);
+    formEle.getElementsByTagName("fieldset")[0].disabled = false;
 
     unlockButtonEle.remove();
+  };
+
+
+  const unlockContractorUpdateForm = (clickEvent: MouseEvent) => {
+
+    const unlockControlEle = (clickEvent.currentTarget as HTMLElement).closest(".control");
+    const formEle = unlockControlEle.closest("form");
+    const submitControlEle = formEle.getElementsByClassName("is-submit-contractor-control")[0];
+
+    formEle.addEventListener("submit", submitUpdateForm);
+    (document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement).disabled = false;
+    submitControlEle.classList.remove("is-hidden");
+
+    unlockControlEle.remove();
+  };
+
+
+  const unlockTradeCategoriesUpdateForm = (clickEvent: MouseEvent) => {
+
+    const unlockContainerEle = (clickEvent.currentTarget as HTMLElement).closest(".is-unlock-tradecategories-container");
+    const formEle = document.getElementById("form--tradeCategories");
+
+    loadTradeCategoryOptions();
+
+    formEle.addEventListener("submit", submitAddTradeCategoryForm);
+
+    formEle.classList.remove("is-hidden");
+
+    unlockContainerEle.remove();
   };
 
 
@@ -216,6 +314,13 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
 
         document.getElementById("contractor--phone_number").innerText =
           contractor.phone_number;
+
+        if (contractor.docuShareCollectionID) {
+          (document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement).value =
+            contractor.docuShareCollectionID.toString();
+        }
+
+        document.getElementById("contractor--docuShareCollectionID-link").addEventListener("click", openDocuShareLink);
 
         // Health & Safety
 
@@ -296,7 +401,29 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
         }
       },
       onshown: (modalEle) => {
+
         if (canUpdate) {
+
+          // Contractor (DocuShare) form
+
+          const contractorUnlockControlEle = modalEle.getElementsByClassName("is-unlock-contractor-control")[0];
+
+          contractorUnlockControlEle.classList.remove("is-hidden");
+
+          contractorUnlockControlEle.getElementsByTagName("button")[0]
+            .addEventListener("click", unlockContractorUpdateForm);
+
+          // Trade Categories Form
+
+          const tradeCategoriesUnlockContainerEle = modalEle.getElementsByClassName("is-unlock-tradecategories-container")[0];
+
+          tradeCategoriesUnlockContainerEle.classList.remove("is-hidden");
+
+          tradeCategoriesUnlockContainerEle.getElementsByTagName("button")[0]
+            .addEventListener("click", unlockTradeCategoriesUpdateForm);
+
+
+          // Other forms
 
           const unlockButtonEles = modalEle.getElementsByClassName("is-unlock-button");
 
@@ -362,7 +489,17 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
 
   const buildContractorWSIBIconHTML = (contractor: recordTypes.Contractor): string => {
 
-    const html = "<span class=\"icon\">" +
+    let tooltipText = "";
+
+    if (contractor.wsib_isIndependent) {
+      tooltipText = "Independent Contractor";
+    } else if (contractor.wsib_isSatisfactory) {
+      tooltipText = "Expires " + cityssm.dateToString(new Date(contractor.wsib_expiryDate));
+    }
+
+    const html = "<span class=\"icon\"" +
+      (tooltipText === "" ? "" : " data-tooltip=\"" + tooltipText + "\"") +
+      ">" +
       (contractor.wsib_isSatisfactory
         ? "<i class=\"fas fa-2x fa-check-circle has-text-success\" aria-hidden=\"true\"></i>"
         : "<i class=\"fas fa-2x fa-times-circle has-text-danger\" aria-hidden=\"true\"></i>") +
@@ -375,7 +512,18 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
 
   const buildContractorInsuranceIconHTML = (contractor: recordTypes.Contractor): string => {
 
-    const html = "<span class=\"icon\">" +
+    let tooltipText = "";
+
+    if (contractor.insurance_isSatisfactory) {
+      tooltipText = "Expires " + cityssm.dateToString(new Date(contractor.insurance_expiryDate));
+
+    } else if (contractor.insurance_expiryDate) {
+      tooltipText = "Expired " + cityssm.dateToString(new Date(contractor.insurance_expiryDate));
+    }
+
+    const html = "<span class=\"icon\"" +
+      (tooltipText === "" ? "" : " data-tooltip=\"" + tooltipText + "\"") +
+      ">" +
       (contractor.insurance_isSatisfactory
         ? "<i class=\"fas fa-2x fa-check-circle has-text-success\" aria-hidden=\"true\"></i>"
         : "<i class=\"fas fa-2x fa-times-circle has-text-danger\" aria-hidden=\"true\"></i>") +
@@ -395,7 +543,7 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
     columnsEle.className = "columns is-mobile is-multiline";
 
     columnsEle.innerHTML = "<div class=\"column is-full-mobile is-full-tablet is-half-widescreen\">" +
-      "<a class=\"has-text-weight-bold\" data-index=\"" + contractorIndex.toString() + "\" role=\"button\" href=\"#\">" + cityssm.escapeHTML(contractor.contractor_name) + "</a><br />" +
+      "<a class=\"is-size-5 has-text-weight-bold\" data-index=\"" + contractorIndex.toString() + "\" role=\"button\" href=\"#\">" + cityssm.escapeHTML(contractor.contractor_name) + "</a><br />" +
       (isContractorHireReady(contractor)
         ? "<span class=\"icon\"><i class=\"fas fa-phone\" aria-hidden=\"true\"></i></span> <span>" + contractor.phone_number + "</span>"
         : "<span class=\"has-text-weight-semibold has-text-danger\"><span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span> Not Hire Ready</span>") +
@@ -452,7 +600,10 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
           panelEle.appendChild(panelBlockEle);
         });
 
-        resultsEle.innerHTML = "";
+        resultsEle.innerHTML = "<div class=\"mb-5 has-text-centered has-text-weight-bold\">" +
+          "Displaying " + contractors.length.toString() + " contractor" + (contractors.length === 1 ? "" : "s") +
+          "</div>";
+
         resultsEle.appendChild(panelEle);
       });
   };
@@ -467,6 +618,7 @@ declare const cityssm: cityssmTypes.cityssmGlobal;
   getContractors();
 
 
+  document.getElementById("filter--contractorName").addEventListener("change", getContractors);
   document.getElementById("filter--tradeCategoryID").addEventListener("change", getContractors);
 
   const isHireReadyEle = document.getElementById("filter--isHireReady");

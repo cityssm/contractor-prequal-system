@@ -10,27 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
-const getContractors_1 = require("../helpers/prequalDB/getContractors");
-;
+const updateContractor_1 = require("../helpers/prequalDB/updateContractor");
 const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const formFilters = req.body;
-    const queryFilters = {};
-    if (formFilters.contractorName !== "") {
-        queryFilters.contractorName = formFilters.contractorName;
-    }
-    if (!req.session.user.canUpdate || formFilters.isHireReady === "1") {
-        queryFilters.isContractor = true;
-        queryFilters.wsibIsSatisfactory = true;
-        queryFilters.insuranceIsSatisfactory = true;
-        queryFilters.healthSafetyIsSatisfactory = true;
-        queryFilters.legalIsSatisfactory = true;
-    }
-    if (formFilters.tradeCategoryID !== "") {
-        queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
-    }
-    const contractors = yield getContractors_1.getContractors(queryFilters);
+    const updateForm = req.body;
+    const success = yield updateContractor_1.updateContractor(updateForm);
     return res.json({
-        contractors
+        success
     });
 });
 exports.handler = handler;

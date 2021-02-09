@@ -22,9 +22,57 @@
               <span id="contractor--phone_number"></span>
             </div>
           </div>
+          <form data-action="doUpdateContractor">
+            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
+            <label class="label" for="contractor--docuShareCollectionID">DocuShare Collection ID</label>
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <input class="input" id="contractor--docuShareCollectionID" name="docuShareCollectionID" type="text" pattern="^\d+$" inputmode="numeric" maxlength="10" disabled />
+              </div>
+              <div class="control is-hidden is-unlock-contractor-control">
+                <button class="button" type="button">
+                  <i class="fas fa-unlock" aria-hidden="true"></i>
+                  <span class="sr-only">Unlock</span>
+                </button>
+              </div>
+              <div class="control is-hidden is-submit-contractor-control">
+                <button class="button is-primary" type="submit">
+                  Save
+                </button>
+              </div>
+              <div class="control">
+                <a class="button" id="contractor--docuShareCollectionID-link" href="#">
+                  View
+                </a>
+              </div>
+            </div>
+          </form>
         </div>
         <div class="column">
-          <div id="contractor--tradeCategories" style="max-height:200px;overflow:auto;">
+          <div class="has-text-right mb-2 is-hidden is-unlock-tradecategories-container">
+            <button class="button is-small" type="button">
+              <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
+              <span>Unlock</span>
+            </button>
+          </div>
+          <form class="is-hidden mb-2" id="form--tradeCategories">
+            <input class="tradeCategories--contractorID" name="contractorID" type="hidden" value="" />
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <div class="select is-fullwidth">
+                  <select id="tradeCategories--tradeCategoryID" name="tradeCategoryID" required>
+                    <option value="">(Select a Category)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control">
+                <button class="button is-primary" type="submit">
+                  Add
+                </button>
+              </div>
+            </div>
+          </form>
+          <div id="contractor--tradeCategories" style="max-height:243px;overflow:auto;">
             <div class="has-text-centered"><i class="fas fa-spinner fa-pulse" aria-hidden="true"></i></div>
           </div>
         </div>

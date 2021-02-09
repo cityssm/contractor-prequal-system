@@ -1,15 +1,13 @@
 // Dependency imports
-
 $family-sans-serif: 'Barlow', system-ui, sans-serif;
 $body-size: 18px;
-
 $modal-content-width: 900px;
-
 @import '@cityssm/bulma-a11y/bulma-a11y';
 @import '@cityssm/simple-fa5-checkbox/facheck-bulma';
+@import '@creativebulma/bulma-tooltip/src/sass/index';
 
-.modal-content,
-.modal-card {
+.modal-card,
+.modal-content {
   max-width: 100%;
 }
 

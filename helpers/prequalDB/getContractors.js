@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getContractors = void 0;
 const sqlPool = require("@cityssm/mssql-multi-pool");
 const configFns = require("../configFns");
+const sqlFns = require("../sqlFns");
 ;
 const getContractors = (filters) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -42,6 +43,12 @@ const getContractors = (filters) => __awaiter(void 0, void 0, void 0, function* 
         }
         if (filters.hasOwnProperty("tradeCategoryID")) {
             sql += " and contractorID in (select cp1b_contractorid from cpqs_p1_business where cp1b_typeid = '" + filters.tradeCategoryID.toString() + "')";
+        }
+        if (filters.hasOwnProperty("contractorName")) {
+            const whereClausePiece = sqlFns.buildWhereClauseLike(["contractor_name"], filters.contractorName);
+            if (whereClausePiece !== "") {
+                sql += " and " + whereClausePiece;
+            }
         }
         sql += " order by contractor_name, contractorID";
         const contractorResult = yield pool.request()
