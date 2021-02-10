@@ -57,7 +57,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
             cityssm.alertModal("No Trade Category Selected", "Please select a trade category from the list.", "OK", "warning");
             return;
         }
-        else if (usedTradeCategories.has(parseInt(tradeCategoryID))) {
+        else if (usedTradeCategories.has(parseInt(tradeCategoryID, 10))) {
             cityssm.alertModal("Trade Category Already Included", "No need to add it twice.", "OK", "info");
             return;
         }
@@ -65,7 +65,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         cityssm.postJSON(urlPrefix + "/contractors/doAddTradeCategory", formEle, function (responseJSON) {
             if (responseJSON.success) {
                 var contractorID = parseInt(formEle.getElementsByClassName("contractor--contractorID")[0].value, 10);
-                var tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID));
+                var tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID, 10));
                 var tradeCategoryEle = buildContractorTradeCategoryEle(contractorID, tradeCategory);
                 var tradeCategoriesContainerEle = document.getElementById("contractor--tradeCategories");
                 if (!tradeCategoriesContainerEle.classList.contains("panel")) {

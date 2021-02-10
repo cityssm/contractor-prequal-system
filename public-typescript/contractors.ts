@@ -128,7 +128,7 @@ declare const exports: {
 
       return;
 
-    } else if (usedTradeCategories.has(parseInt(tradeCategoryID))) {
+    } else if (usedTradeCategories.has(parseInt(tradeCategoryID, 10))) {
 
       cityssm.alertModal("Trade Category Already Included",
         "No need to add it twice.",
@@ -146,7 +146,7 @@ declare const exports: {
         if (responseJSON.success) {
 
           const contractorID = parseInt((formEle.getElementsByClassName("contractor--contractorID")[0] as HTMLInputElement).value, 10);
-          const tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID));
+          const tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID, 10));
           const tradeCategoryEle = buildContractorTradeCategoryEle(contractorID, tradeCategory);
 
           const tradeCategoriesContainerEle = document.getElementById("contractor--tradeCategories");
