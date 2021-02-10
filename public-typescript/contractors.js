@@ -12,6 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
         healthSafetyStatuses: [],
         insuranceCompanyNames: []
     };
+    var getTradeCategoryFromCache = function (tradeCategoryID) {
+        var tradeCategory = updateOptionsCache.tradeCategories.find(function (potentialTradeCategory) {
+            return (potentialTradeCategory.tradeCategoryID === tradeCategoryID);
+        });
+        return tradeCategory;
+    };
     var buildVendorInformationSystemURL = function (contractorID) {
         return exports.vendorInformationSystemVendorURL + "?vendorID=" + contractorID.toString();
     };
@@ -29,6 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     };
     var doRefreshOnClose = false;
+    var usedTradeCategories;
     var submitUpdateForm = function (formEvent) {
         formEvent.preventDefault();
         var formEle = formEvent.currentTarget;
@@ -45,13 +52,84 @@ Object.defineProperty(exports, "__esModule", { value: true });
     };
     var submitAddTradeCategoryForm = function (formEvent) {
         formEvent.preventDefault();
+        var tradeCategoryID = document.getElementById("tradeCategories--tradeCategoryID").value;
+        if (tradeCategoryID === "") {
+            cityssm.alertModal("No Trade Category Selected", "Please select a trade category from the list.", "OK", "warning");
+            return;
+        }
+        else if (usedTradeCategories.has(parseInt(tradeCategoryID))) {
+            cityssm.alertModal("Trade Category Already Included", "No need to add it twice.", "OK", "info");
+            return;
+        }
+        var formEle = formEvent.currentTarget;
+        cityssm.postJSON(urlPrefix + "/contractors/doAddTradeCategory", formEle, function (responseJSON) {
+            if (responseJSON.success) {
+                var contractorID = parseInt(formEle.getElementsByClassName("contractor--contractorID")[0].value, 10);
+                var tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID));
+                var tradeCategoryEle = buildContractorTradeCategoryEle(contractorID, tradeCategory);
+                var tradeCategoriesContainerEle = document.getElementById("contractor--tradeCategories");
+                if (!tradeCategoriesContainerEle.classList.contains("panel")) {
+                    tradeCategoriesContainerEle.innerHTML = "";
+                    tradeCategoriesContainerEle.classList.add("panel");
+                }
+                tradeCategoriesContainerEle.insertAdjacentElement("afterbegin", tradeCategoryEle);
+                usedTradeCategories.set(tradeCategory.tradeCategoryID, tradeCategory.tradeCategory);
+                doRefreshOnClose = true;
+            }
+            else {
+                cityssm.alertModal("Adding Trade Category Failed", "An error occurred while trying to add the trade category. Is it already included?", "OK", "warning");
+            }
+        });
+    };
+    var removeTradeCategory = function (clickEvent) {
+        var deleteButtonEle = clickEvent.currentTarget;
+        var removeFn = function () {
+            var contractorID = deleteButtonEle.getAttribute("data-contractor-id");
+            var tradeCategoryID = deleteButtonEle.getAttribute("data-trade-category-id");
+            cityssm.postJSON(urlPrefix + "/contractors/doRemoveTradeCategory", {
+                contractorID: contractorID,
+                tradeCategoryID: tradeCategoryID
+            }, function (responseJSON) {
+                if (responseJSON.success) {
+                    deleteButtonEle.closest(".panel-block").remove();
+                    usedTradeCategories.delete(parseInt(tradeCategoryID, 10));
+                    doRefreshOnClose = true;
+                }
+                else {
+                    cityssm.alertModal("Remove Failed", "An error occurred removing this trade category. Please try again.", "OK", "danger");
+                }
+            });
+        };
+        cityssm.confirmModal("Remove Trade Category?", "Are you sure you want to remove the trade category from the contractor?", "Yes, Remove It", "warning", removeFn);
+    };
+    var buildContractorTradeCategoryEle = function (contractorID, tradeCategory) {
+        var tradeCategoryEle = document.createElement("div");
+        tradeCategoryEle.className = "panel-block";
+        tradeCategoryEle.innerHTML = ("<span class=\"panel-icon\">" +
+            "<i class=\"fas fa-book\" aria-hidden=\"true\"></i>" +
+            "</span>") +
+            ("<span class=\"is-flex-grow-1\">" +
+                cityssm.escapeHTML(tradeCategory.tradeCategory) +
+                "</span>");
+        if (canUpdate) {
+            var deleteButtonEle = document.createElement("button");
+            deleteButtonEle.className = "button is-small is-danger is-inverted is-edit-control-flex";
+            deleteButtonEle.type = "button";
+            deleteButtonEle.setAttribute("data-contractor-id", contractorID.toString());
+            deleteButtonEle.setAttribute("data-trade-category-id", tradeCategory.tradeCategoryID.toString());
+            deleteButtonEle.innerHTML = "<i class=\"fas fa-times\" aria-hidden=\"true\"></i>" +
+                "<span class=\"sr-only\">Remove</span>";
+            deleteButtonEle.addEventListener("click", removeTradeCategory);
+            tradeCategoryEle.appendChild(deleteButtonEle);
+        }
+        return tradeCategoryEle;
     };
     var loadTradeCategoryOptions = function () {
         var renderFn = function () {
             var selectEle = document.getElementById("tradeCategories--tradeCategoryID");
             for (var _i = 0, _a = updateOptionsCache.tradeCategories; _i < _a.length; _i++) {
                 var tradeCategory = _a[_i];
-                selectEle.insertAdjacentHTML("beforeend", "<option value=\"" + tradeCategory.tradeCategoryID + "\">" +
+                selectEle.insertAdjacentHTML("beforeend", "<option value=\"" + tradeCategory.tradeCategoryID.toString() + "\">" +
                     tradeCategory.tradeCategory +
                     "</option>");
             }
@@ -141,6 +219,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     var unlockTradeCategoriesUpdateForm = function (clickEvent) {
         var unlockContainerEle = clickEvent.currentTarget.closest(".is-unlock-tradecategories-container");
         var formEle = document.getElementById("form--tradeCategories");
+        document.getElementById("contractor--tradeCategories").classList.add("is-edit-mode");
         loadTradeCategoryOptions();
         formEle.addEventListener("submit", submitAddTradeCategoryForm);
         formEle.classList.remove("is-hidden");
@@ -151,6 +230,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         var contractorIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
         var contractor = contractors[contractorIndex];
         var loadTradeCategories = function () {
+            usedTradeCategories = new Map();
             cityssm.postJSON(urlPrefix + "/contractors/doGetTradeCategoriesByContractorID", {
                 contractorID: contractor.contractorID
             }, function (responseJSON) {
@@ -165,12 +245,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 tradeCategoriesEle.classList.add("panel");
                 for (var _i = 0, _a = responseJSON.tradeCategories; _i < _a.length; _i++) {
                     var tradeCategory = _a[_i];
-                    var tradeCategoryEle = document.createElement("div");
-                    tradeCategoryEle.className = "panel-block";
-                    tradeCategoryEle.innerHTML = "<span class=\"panel-icon\">" +
-                        "<i class=\"fas fa-book\" aria-hidden=\"true\"></i>" +
-                        "</span> " +
-                        cityssm.escapeHTML(tradeCategory.tradeCategory);
+                    usedTradeCategories.set(tradeCategory.tradeCategoryID, tradeCategory.tradeCategory);
+                    var tradeCategoryEle = buildContractorTradeCategoryEle(contractor.contractorID, tradeCategory);
                     tradeCategoriesEle.appendChild(tradeCategoryEle);
                 }
             });

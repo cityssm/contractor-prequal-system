@@ -40,6 +40,7 @@
     "express-session": "^1.17.1",
     "morgan": "^1.10.0",
     "mssql": "^6.3.1",
+    "node-cache": "^5.1.2",
     "node-localstorage": "^2.1.6",
     "set-interval-async": "^1.0.34",
     "winston": "^3.3.3"

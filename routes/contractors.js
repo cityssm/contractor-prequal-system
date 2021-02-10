@@ -11,6 +11,8 @@ const doUpdateHealthSafety_1 = require("../handlers/doUpdateHealthSafety");
 const doUpdateLegal_1 = require("../handlers/doUpdateLegal");
 const doUpdateWSIB_1 = require("../handlers/doUpdateWSIB");
 const doUpdateInsurance_1 = require("../handlers/doUpdateInsurance");
+const doAddTradeCategory_1 = require("../handlers/doAddTradeCategory");
+const doRemoveTradeCategory_1 = require("../handlers/doRemoveTradeCategory");
 const handler_updateOnly = (req, res, next) => {
     if (req.session.user.canUpdate) {
         return next();
@@ -32,4 +34,6 @@ router.post("/doUpdateHealthSafety", handler_updateOnly, doUpdateHealthSafety_1.
 router.post("/doUpdateLegal", handler_updateOnly, doUpdateLegal_1.handler);
 router.post("/doUpdateWSIB", handler_updateOnly, doUpdateWSIB_1.handler);
 router.post("/doUpdateInsurance", handler_updateOnly, doUpdateInsurance_1.handler);
+router.post("/doAddTradeCategory", handler_updateOnly, doAddTradeCategory_1.handler);
+router.post("/doRemoveTradeCategory", handler_updateOnly, doRemoveTradeCategory_1.handler);
 module.exports = router;

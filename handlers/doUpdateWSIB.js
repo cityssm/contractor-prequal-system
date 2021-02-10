@@ -11,9 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
 const updateWSIB_1 = require("../helpers/prequalDB/updateWSIB");
+const resultsCache = require("../helpers/queryResultsCache");
 const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const updateForm = req.body;
     const success = yield updateWSIB_1.updateWSIB(updateForm);
+    if (success) {
+        resultsCache.clearCache();
+    }
     return res.json({
         success
     });

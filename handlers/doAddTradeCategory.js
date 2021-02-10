@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
-const updateHealthSafety_1 = require("../helpers/prequalDB/updateHealthSafety");
+const addTradeCategory_1 = require("../helpers/prequalDB/addTradeCategory");
 const resultsCache = require("../helpers/queryResultsCache");
 const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const updateForm = req.body;
-    const success = yield updateHealthSafety_1.updateHealthSafety(updateForm);
+    const formParams = req.body;
+    const success = yield addTradeCategory_1.addTradeCategory(formParams.contractorID, formParams.tradeCategoryID);
     if (success) {
         resultsCache.clearCache();
     }

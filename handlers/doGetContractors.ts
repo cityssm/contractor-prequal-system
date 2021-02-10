@@ -1,5 +1,7 @@
 import { getContractors, GetContractorFilters } from "../helpers/prequalDB/getContractors";
 
+import * as resultsCache from "../helpers/queryResultsCache";
+
 import type { RequestHandler } from "express";
 
 
@@ -32,7 +34,12 @@ export const handler: RequestHandler = async (req, res) => {
     queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
   }
 
-  const contractors = await getContractors(queryFilters);
+  let contractors = resultsCache.getCachedResult(req.session.user.canUpdate, queryFilters);
+
+  if (!contractors) {
+    contractors = await getContractors(queryFilters);
+    resultsCache.cacheResult(req.session.user.canUpdate, queryFilters, contractors);
+  }
 
   return res.json({
     contractors

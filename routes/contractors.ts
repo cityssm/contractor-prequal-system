@@ -15,6 +15,9 @@ import { handler as handler_doUpdateLegal } from "../handlers/doUpdateLegal";
 import { handler as handler_doUpdateWSIB } from "../handlers/doUpdateWSIB";
 import { handler as handler_doUpdateInsurance } from "../handlers/doUpdateInsurance";
 
+import { handler as handler_doAddTradeCategory } from "../handlers/doAddTradeCategory";
+import { handler as handler_doRemoveTradeCategory } from "../handlers/doRemoveTradeCategory";
+
 
 const handler_updateOnly: RequestHandler = (req, res, next) => {
 
@@ -69,6 +72,10 @@ router.post("/doUpdateWSIB", handler_updateOnly, handler_doUpdateWSIB);
 
 
 router.post("/doUpdateInsurance", handler_updateOnly, handler_doUpdateInsurance);
+
+
+router.post("/doAddTradeCategory", handler_updateOnly, handler_doAddTradeCategory);
+router.post("/doRemoveTradeCategory", handler_updateOnly, handler_doRemoveTradeCategory);
 
 
 export = router;

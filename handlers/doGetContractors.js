@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
 const getContractors_1 = require("../helpers/prequalDB/getContractors");
+const resultsCache = require("../helpers/queryResultsCache");
 ;
 const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const formFilters = req.body;
@@ -28,7 +29,11 @@ const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (formFilters.tradeCategoryID !== "") {
         queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
     }
-    const contractors = yield getContractors_1.getContractors(queryFilters);
+    let contractors = resultsCache.getCachedResult(req.session.user.canUpdate, queryFilters);
+    if (!contractors) {
+        contractors = yield getContractors_1.getContractors(queryFilters);
+        resultsCache.cacheResult(req.session.user.canUpdate, queryFilters, contractors);
+    }
     return res.json({
         contractors
     });

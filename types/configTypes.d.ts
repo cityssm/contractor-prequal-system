@@ -25,6 +25,8 @@ export interface Config {
     };
     docuShareConfig?: {
         rootURL: string;
+        contractorPrequalURL: string;
+        healthSafetyURL: string;
     };
     vendorInformationSystemConfig?: {
         vendorURL: string;

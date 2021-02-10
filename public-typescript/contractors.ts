@@ -25,10 +25,25 @@ declare const exports: {
   let contractors: recordTypes.Contractor[] = [];
 
 
-  const updateOptionsCache = {
+  const updateOptionsCache: {
+    tradeCategories: recordTypes.TradeCategory[];
+    healthSafetyStatuses: string[];
+    insuranceCompanyNames: string[];
+  } = {
     tradeCategories: [],
     healthSafetyStatuses: [],
     insuranceCompanyNames: []
+  };
+
+
+  const getTradeCategoryFromCache = (tradeCategoryID: number) => {
+
+    const tradeCategory = updateOptionsCache.tradeCategories.find((potentialTradeCategory) => {
+
+      return (potentialTradeCategory.tradeCategoryID === tradeCategoryID);
+    });
+
+    return tradeCategory;
   };
 
 
@@ -68,7 +83,7 @@ declare const exports: {
 
 
   let doRefreshOnClose = false;
-
+  let usedTradeCategories: Map<number, string>;
 
   const submitUpdateForm = (formEvent: Event) => {
 
@@ -100,6 +115,133 @@ declare const exports: {
 
   const submitAddTradeCategoryForm = (formEvent: Event) => {
     formEvent.preventDefault();
+
+    const tradeCategoryID =
+      (document.getElementById("tradeCategories--tradeCategoryID") as HTMLSelectElement).value;
+
+    if (tradeCategoryID === "") {
+
+      cityssm.alertModal("No Trade Category Selected",
+        "Please select a trade category from the list.",
+        "OK",
+        "warning");
+
+      return;
+
+    } else if (usedTradeCategories.has(parseInt(tradeCategoryID))) {
+
+      cityssm.alertModal("Trade Category Already Included",
+        "No need to add it twice.",
+        "OK",
+        "info");
+
+      return;
+    }
+
+    const formEle = formEvent.currentTarget as HTMLFormElement;
+
+    cityssm.postJSON(urlPrefix + "/contractors/doAddTradeCategory", formEle,
+      (responseJSON: { success: boolean }) => {
+
+        if (responseJSON.success) {
+
+          const contractorID = parseInt((formEle.getElementsByClassName("contractor--contractorID")[0] as HTMLInputElement).value, 10);
+          const tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID));
+          const tradeCategoryEle = buildContractorTradeCategoryEle(contractorID, tradeCategory);
+
+          const tradeCategoriesContainerEle = document.getElementById("contractor--tradeCategories");
+
+          if (!tradeCategoriesContainerEle.classList.contains("panel")) {
+            tradeCategoriesContainerEle.innerHTML = "";
+            tradeCategoriesContainerEle.classList.add("panel");
+          }
+
+          tradeCategoriesContainerEle.insertAdjacentElement("afterbegin", tradeCategoryEle);
+          usedTradeCategories.set(tradeCategory.tradeCategoryID, tradeCategory.tradeCategory);
+
+          doRefreshOnClose = true;
+
+        } else {
+          cityssm.alertModal("Adding Trade Category Failed",
+            "An error occurred while trying to add the trade category. Is it already included?",
+            "OK",
+            "warning");
+        }
+      });
+  };
+
+
+  const removeTradeCategory = (clickEvent: MouseEvent) => {
+
+    const deleteButtonEle = clickEvent.currentTarget as HTMLButtonElement;
+
+    const removeFn = () => {
+
+      const contractorID = deleteButtonEle.getAttribute("data-contractor-id");
+      const tradeCategoryID = deleteButtonEle.getAttribute("data-trade-category-id");
+
+      cityssm.postJSON(urlPrefix + "/contractors/doRemoveTradeCategory", {
+        contractorID,
+        tradeCategoryID
+      },
+        (responseJSON: { success: boolean }) => {
+
+          if (responseJSON.success) {
+
+            deleteButtonEle.closest(".panel-block").remove();
+
+            usedTradeCategories.delete(parseInt(tradeCategoryID, 10));
+
+            doRefreshOnClose = true;
+
+          } else {
+            cityssm.alertModal("Remove Failed",
+              "An error occurred removing this trade category. Please try again.",
+              "OK",
+              "danger");
+          }
+        });
+    };
+
+    cityssm.confirmModal("Remove Trade Category?",
+      "Are you sure you want to remove the trade category from the contractor?",
+      "Yes, Remove It",
+      "warning",
+      removeFn);
+  };
+
+
+  const buildContractorTradeCategoryEle = (contractorID: number, tradeCategory: recordTypes.TradeCategory) => {
+
+    const tradeCategoryEle = document.createElement("div");
+    tradeCategoryEle.className = "panel-block";
+
+    tradeCategoryEle.innerHTML = ("<span class=\"panel-icon\">" +
+      "<i class=\"fas fa-book\" aria-hidden=\"true\"></i>" +
+      "</span>") +
+      ("<span class=\"is-flex-grow-1\">" +
+        cityssm.escapeHTML(tradeCategory.tradeCategory) +
+        "</span>");
+
+    if (canUpdate) {
+
+      const deleteButtonEle = document.createElement("button");
+
+      deleteButtonEle.className = "button is-small is-danger is-inverted is-edit-control-flex";
+      deleteButtonEle.type = "button";
+
+      deleteButtonEle.setAttribute("data-contractor-id", contractorID.toString());
+      deleteButtonEle.setAttribute("data-trade-category-id", tradeCategory.tradeCategoryID.toString());
+
+      deleteButtonEle.innerHTML = "<i class=\"fas fa-times\" aria-hidden=\"true\"></i>" +
+        "<span class=\"sr-only\">Remove</span>";
+
+      deleteButtonEle.addEventListener("click", removeTradeCategory);
+
+      tradeCategoryEle.appendChild(deleteButtonEle);
+    }
+
+    return tradeCategoryEle;
   };
 
 
@@ -112,7 +254,7 @@ declare const exports: {
       for (const tradeCategory of updateOptionsCache.tradeCategories) {
 
         selectEle.insertAdjacentHTML("beforeend",
-          "<option value=\"" + tradeCategory.tradeCategoryID + "\">" +
+          "<option value=\"" + tradeCategory.tradeCategoryID.toString() + "\">" +
           tradeCategory.tradeCategory +
           "</option>");
       }
@@ -246,6 +388,8 @@ declare const exports: {
     const unlockContainerEle = (clickEvent.currentTarget as HTMLElement).closest(".is-unlock-tradecategories-container");
     const formEle = document.getElementById("form--tradeCategories");
 
+    document.getElementById("contractor--tradeCategories").classList.add("is-edit-mode");
+
     loadTradeCategoryOptions();
 
     formEle.addEventListener("submit", submitAddTradeCategoryForm);
@@ -264,6 +408,9 @@ declare const exports: {
     const contractor = contractors[contractorIndex];
 
     const loadTradeCategories = () => {
+
+      usedTradeCategories = new Map<number, string>();
+
       cityssm.postJSON(urlPrefix + "/contractors/doGetTradeCategoriesByContractorID", {
         contractorID: contractor.contractorID
       }, (responseJSON: { tradeCategories: recordTypes.TradeCategory[] }) => {
@@ -282,14 +429,9 @@ declare const exports: {
 
         for (const tradeCategory of responseJSON.tradeCategories) {
 
-          const tradeCategoryEle = document.createElement("div");
-          tradeCategoryEle.className = "panel-block";
+          usedTradeCategories.set(tradeCategory.tradeCategoryID, tradeCategory.tradeCategory);
 
-          tradeCategoryEle.innerHTML = "<span class=\"panel-icon\">" +
-            "<i class=\"fas fa-book\" aria-hidden=\"true\"></i>" +
-            "</span> " +
-            cityssm.escapeHTML(tradeCategory.tradeCategory);
-
+          const tradeCategoryEle = buildContractorTradeCategoryEle(contractor.contractorID, tradeCategory);
           tradeCategoriesEle.appendChild(tradeCategoryEle);
         }
       });

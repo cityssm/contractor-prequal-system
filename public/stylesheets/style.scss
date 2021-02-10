@@ -6,9 +6,10 @@ $modal-content-width: 900px;
 @import '@cityssm/simple-fa5-checkbox/facheck-bulma';
 @import '@creativebulma/bulma-tooltip/src/sass/index';
 
+.modal,
 .modal-card,
 .modal-content {
-  max-width: 100%;
+  max-width: 100vw;
 }
 
 .modal-card-title {
@@ -59,4 +60,12 @@ $modal-content-width: 900px;
     margin: 0;
     -webkit-appearance: none;
   }
+}
+
+.is-edit-control-flex {
+  display: none;
+}
+
+.is-edit-mode .is-edit-control-flex {
+  display: flex;
 }
