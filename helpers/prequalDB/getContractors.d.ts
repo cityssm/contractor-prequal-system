@@ -8,4 +8,4 @@ export interface GetContractorFilters {
     healthSafetyIsSatisfactory?: boolean;
     legalIsSatisfactory?: boolean;
 }
-export declare const getContractors: (filters: GetContractorFilters) => Promise<Contractor[]>;
+export declare const getContractors: (canUpdate: boolean, filters: GetContractorFilters) => Promise<Contractor[]>;

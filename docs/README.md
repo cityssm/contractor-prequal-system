@@ -6,13 +6,21 @@ _Thank you for taking the time to read the documentation._
 
 Contractors are considered **Hire Ready** when they meet all of the following criteria:
 
-1.  The contractor is **approved by the City's Legal Department**.
+1.  The contractor is a registered vendor with the City's Purchasing Division.
 
-2.  The contractor has satisfied all **health and safety requirements**.
+2.  The contractor is **approved by the City's Legal Department**.
 
-3.  The contractor has an account in **good standing with WSIB**.
+3.  The contractor has satisfied all **health and safety requirements**.
 
-4.  The contractor has **current liability insurance** with a minimum amount of $2,000,000.
+4.  The contractor has an account in **good standing with WSIB**.
+
+5.  The contractor has **current liability insurance** with a minimum amount of $2,000,000.
+
+## Where is _Contactor X_?
+
+Read only users are only able to see contractors that have been approved
+by City departments.  If a contractor is not available, it likely does not have approval
+from one or more City departments.
 
 ## Where Can I Find Out More About the Application Process?
 

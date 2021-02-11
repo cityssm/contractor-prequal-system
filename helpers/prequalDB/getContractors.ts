@@ -17,7 +17,7 @@ export interface GetContractorFilters {
 };
 
 
-export const getContractors = async (filters: GetContractorFilters): Promise<Contractor[]> => {
+export const getContractors = async (canUpdate: boolean, filters: GetContractorFilters): Promise<Contractor[]> => {
 
   try {
     const pool: sqlTypes.ConnectionPool =
@@ -25,7 +25,10 @@ export const getContractors = async (filters: GetContractorFilters): Promise<Con
 
     let sql = "select contractorID, docuShareCollectionID, isContractor," +
       " contractor_name, contractor_city, contractor_province," +
-      " phone_name, phone_title, phone_number," +
+      " phone_name, phone_title," +
+      (canUpdate
+        ? " phone_number,"
+        : " case when healthSafety_isSatisfactory = 1 and legal_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then phone_number else '' end as phone_number,") +
       " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
       " insurance_company, insurance_policyNumber, insurance_amount, insurance_expiryDate, insurance_isSatisfactory," +
       " healthSafety_status, healthSafety_isSatisfactory," +

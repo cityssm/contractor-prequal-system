@@ -19,7 +19,7 @@ const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (formFilters.contractorName !== "") {
         queryFilters.contractorName = formFilters.contractorName;
     }
-    if (!req.session.user.canUpdate || formFilters.isHireReady === "1") {
+    if (formFilters.isHireReady === "1") {
         queryFilters.isContractor = true;
         queryFilters.wsibIsSatisfactory = true;
         queryFilters.insuranceIsSatisfactory = true;
@@ -29,9 +29,13 @@ const handler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (formFilters.tradeCategoryID !== "") {
         queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
     }
+    if (!req.session.user.canUpdate) {
+        queryFilters.healthSafetyIsSatisfactory = true;
+        queryFilters.legalIsSatisfactory = true;
+    }
     let contractors = resultsCache.getCachedResult(req.session.user.canUpdate, queryFilters);
     if (!contractors) {
-        contractors = yield getContractors_1.getContractors(queryFilters);
+        contractors = yield getContractors_1.getContractors(req.session.user.canUpdate, queryFilters);
         resultsCache.cacheResult(req.session.user.canUpdate, queryFilters, contractors);
     }
     return res.json({

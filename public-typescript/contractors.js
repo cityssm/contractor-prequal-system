@@ -257,13 +257,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 loadTradeCategories();
                 document.getElementById("contractor--contractor_name").innerText =
                     contractor.contractor_name;
+                var location = (contractor.contractor_city ? contractor.contractor_city + ", " : "") +
+                    (contractor.contractor_province || "");
                 document.getElementById("contractor--location").innerText =
-                    (contractor.contractor_city ? contractor.contractor_city + ", " : "") +
-                        (contractor.contractor_province || "");
+                    (location === "" ? "(Unavailable)" : location);
                 document.getElementById("contractor--phone_name").innerText =
                     contractor.phone_name;
                 document.getElementById("contractor--phone_number").innerText =
-                    contractor.phone_number;
+                    (contractor.phone_number === ""
+                        ? "(Unavailable)"
+                        : contractor.phone_number);
                 if (contractor.docuShareCollectionID) {
                     document.getElementById("contractor--docuShareCollectionID").value =
                         contractor.docuShareCollectionID.toString();

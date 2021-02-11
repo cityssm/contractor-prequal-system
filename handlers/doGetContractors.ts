@@ -22,7 +22,7 @@ export const handler: RequestHandler = async (req, res) => {
     queryFilters.contractorName = formFilters.contractorName;
   }
 
-  if (!req.session.user.canUpdate || formFilters.isHireReady === "1") {
+  if (formFilters.isHireReady === "1") {
     queryFilters.isContractor = true;
     queryFilters.wsibIsSatisfactory = true;
     queryFilters.insuranceIsSatisfactory = true;
@@ -34,10 +34,16 @@ export const handler: RequestHandler = async (req, res) => {
     queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
   }
 
+  // Read only users can see those that haven't been approved by legal and health and safety
+  if (!req.session.user.canUpdate) {
+    queryFilters.healthSafetyIsSatisfactory = true;
+    queryFilters.legalIsSatisfactory = true;
+  }
+
   let contractors = resultsCache.getCachedResult(req.session.user.canUpdate, queryFilters);
 
   if (!contractors) {
-    contractors = await getContractors(queryFilters);
+    contractors = await getContractors(req.session.user.canUpdate, queryFilters);
     resultsCache.cacheResult(req.session.user.canUpdate, queryFilters, contractors);
   }
 
