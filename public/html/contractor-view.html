@@ -7,46 +7,56 @@
     </header>
     <section class="modal-card-body">
       <div class="columns">
-        <div class="column is-two-thirds">
+        <div class="column is-three-fifths">
           <div class="panel">
             <div class="panel-block">
-              <span class="panel-icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span>
-              <span id="contractor--location"></span>
+              <span class="panel-icon has-tooltip-arrow has-tooltip-right" data-tooltip="Contractor Location">
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+              </span>
+              <span id="contractor--location" aria-label="Contractor Location"></span>
             </div>
             <div class="panel-block">
-              <span class="panel-icon"><i class="fas fa-user" aria-hidden="true"></i></span>
+              <span class="panel-icon has-tooltip-arrow has-tooltip-right" data-tooltip="Contact Name">
+                <i class="fas fa-user" aria-hidden="true"></i>
+              </span>
               <span id="contractor--phone_name"></span>
             </div>
             <div class="panel-block">
-              <span class="panel-icon"><i class="fas fa-phone" aria-hidden="true"></i></span>
+              <span class="panel-icon has-tooltip-arrow has-tooltip-right" data-tooltip="Phone Number">
+                <i class="fas fa-phone" aria-hidden="true"></i>
+              </span>
               <span id="contractor--phone_number"></span>
             </div>
-          </div>
-          <form data-action="doUpdateContractor">
-            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
-            <label class="label" for="contractor--docuShareCollectionID">DocuShare Collection ID</label>
-            <div class="field has-addons">
-              <div class="control is-expanded">
-                <input class="input" id="contractor--docuShareCollectionID" name="docuShareCollectionID" type="text" pattern="^\d+$" inputmode="numeric" maxlength="10" disabled />
-              </div>
-              <div class="control is-hidden is-unlock-contractor-control">
-                <button class="button" type="button">
-                  <i class="fas fa-unlock" aria-hidden="true"></i>
-                  <span class="sr-only">Unlock</span>
-                </button>
-              </div>
-              <div class="control is-hidden is-submit-contractor-control">
-                <button class="button is-primary" type="submit">
-                  Save
-                </button>
-              </div>
-              <div class="control">
-                <a class="button" id="contractor--docuShareCollectionID-link" href="#">
-                  View
-                </a>
+            <div class="panel-block">
+              <span class="panel-icon has-tooltip-arrow has-tooltip-right" data-tooltip="DocuShare Collection">
+                <i class="fas fa-archive" aria-hidden="true"></i>
+              </span>
+              <form class="is-flex-grow-1" data-action="doUpdateContractor">
+                <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    <input class="input" id="contractor--docuShareCollectionID" name="docuShareCollectionID" type="text" pattern="^\d+$" inputmode="numeric" maxlength="10" disabled aria-label="DocuShare Collection ID" />
+                  </div>
+                  <div class="control is-hidden is-unlock-contractor-control">
+                    <button class="button" type="button">
+                      <i class="fas fa-unlock" aria-hidden="true"></i>
+                      <span class="sr-only">Unlock</span>
+                    </button>
+                  </div>
+                  <div class="control is-hidden is-submit-contractor-control">
+                    <button class="button is-primary" type="submit">
+                      Save
+                    </button>
+                  </div>
+                  <div class="control">
+                    <a class="button" id="contractor--docuShareCollectionID-link" href="#">
+                      View
+                    </a>
+                  </div>
+                </form>
               </div>
             </div>
-          </form>
+          </div>
         </div>
         <div class="column">
           <div class="has-text-right mb-2 is-hidden is-unlock-tradecategories-container">
