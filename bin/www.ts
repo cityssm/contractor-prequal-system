@@ -99,4 +99,5 @@ if (httpsConfig) {
  * Initialize background tasks
  */
 
+fork("./tasks/clearRiskInsuranceTask");
 fork("./tasks/wsibRefreshTask");

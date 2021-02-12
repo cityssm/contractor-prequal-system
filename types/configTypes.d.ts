@@ -20,15 +20,25 @@ export interface Config {
     };
     mssqlConfig: sqlTypes.config;
     adWebAuthConfig: ADWebAuthConfig;
-    permissions?: {
+    permissions: {
         canUpdate: string[];
     };
-    docuShareConfig?: {
+    docuShareConfig: {
         rootURL: string;
         contractorPrequalURL: string;
         healthSafetyURL: string;
+        keyForms: Array<{
+            formName: string;
+            formURL: string;
+        }>;
     };
-    vendorInformationSystemConfig?: {
+    clearRiskConfig: {
+        insuranceImport: {
+            folderPath: string;
+            columnNames: Config_ClearRisk_InsuranceImport_ColumnNames;
+        };
+    };
+    vendorInformationSystemConfig: {
         vendorURL: string;
     };
 }
@@ -37,4 +47,11 @@ export interface Config_HTTPSConfig {
     keyPath: string;
     certPath: string;
     passphrase?: string;
+}
+export interface Config_ClearRisk_InsuranceImport_ColumnNames {
+    contractorID: string;
+    expiryDate: string;
+    company?: string;
+    policyNumber?: string;
+    amount?: string;
 }

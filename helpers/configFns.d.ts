@@ -16,5 +16,7 @@ export declare function getProperty(propertyName: "session.secret"): string;
 export declare function getProperty(propertyName: "mssqlConfig"): sqlTypes.config;
 export declare function getProperty(propertyName: "adWebAuthConfig"): ADWebAuthConfig;
 export declare function getProperty(propertyName: "docuShareConfig.rootURL"): string;
+export declare function getProperty(propertyName: "clearRiskConfig.insuranceImport.folderPath"): string;
+export declare function getProperty(propertyName: "clearRiskConfig.insuranceImport.columnNames"): configTypes.Config_ClearRisk_InsuranceImport_ColumnNames;
 export declare function getProperty(propertyName: "permissions.canUpdate"): string[];
 export declare const logger: winston.Logger;

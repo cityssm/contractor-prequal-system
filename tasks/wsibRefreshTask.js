@@ -40,4 +40,4 @@ const doTask = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 doTask();
-fixed_1.setIntervalAsync(doTask, 7200 * 1000);
+fixed_1.setIntervalAsync(doTask, 2 * 60 * 60 * 1000);

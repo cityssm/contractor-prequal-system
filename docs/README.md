@@ -16,6 +16,9 @@ Contractors are considered **Hire Ready** when they meet all of the following cr
 
 5.  The contractor has **current liability insurance** with a minimum amount of $2,000,000.
 
+Contractors may not be hired to perform work for the City
+unless they are considered **Hire Ready**.
+
 ## Where is _Contactor X_?
 
 Read only users are only able to see contractors that have been approved
@@ -27,4 +30,4 @@ from one or more City departments.
 [The City's website](https://saultstemarie.ca/City-Hall/City-Departments/Corporate-Services/Finance/Purchasing/Vendors-List.aspx)
 includes information for the general public
 about how to be included on the Purchasing Division's Vendors List,
-and the process to become a prequalified "hire ready" contractor.
+and the process to become a prequalified **Hire Ready** contractor.

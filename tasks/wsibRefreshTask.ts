@@ -45,4 +45,4 @@ const doTask = async () => {
 doTask();
 
 
-setIntervalAsync(doTask, 7200 * 1000);
+setIntervalAsync(doTask, 2 * 60 * 60 * 1000);

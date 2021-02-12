@@ -45,28 +45,25 @@
     </div>
     <div class="navbar-menu">
       <div class="navbar-end">
-        <a class="navbar-item" href="https://cityssm.github.io/contractor-prequal-system/" target="_blank" rel="nofollow">
-          <span class="icon"><i class="fas fa-question-circle" aria-hidden="true"></i></span>
-          <span>Help</span>
-        </a>
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link">
             <span class="icon"><i class="fas fa-archive" aria-hidden="true"></i></span>
-            <span>DocuShare</span>
+            <span>Forms</span>
           </a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="<%= configFns.getProperty("docuShareConfig.contractorPrequalURL") %>" target="_blank">
+          <div class="navbar-dropdown is-right">
+            <%
+              const keyForms = configFns.getProperty("docuShareConfig.keyForms");
+              for (const keyForm of keyForms) {
+            %>
+            <a class="navbar-item" href="<%= keyForm.formURL %>" target="_blank">
               <span class="icon">
-                <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                <i class="fas fa-file" aria-hidden="true"></i>
               </span>
-              <span>Contractor Collections</span>
+              <span><%= keyForm.formName %></span>
             </a>
-            <a class="navbar-item" href="<%= configFns.getProperty("docuShareConfig.healthSafetyURL") %>" target="_blank">
-              <span class="icon">
-                <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-              </span>
-              <span>Health and Safety Forms</span>
-            </a>
+            <%
+              }
+            %>
           </div>
         </div>
         <div class="navbar-item has-dropdown is-hoverable">
@@ -81,6 +78,10 @@
             </a>
           </div>
         </div>
+        <a class="navbar-item" href="https://cityssm.github.io/contractor-prequal-system/" target="_blank" rel="nofollow">
+          <span class="icon"><i class="fas fa-question-circle" aria-hidden="true"></i></span>
+          <span>Help</span>
+        </a>
       </div>
     </div>
   </nav>

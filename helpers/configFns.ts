@@ -58,6 +58,9 @@ export function getProperty(propertyName: "adWebAuthConfig"): ADWebAuthConfig;
 
 export function getProperty(propertyName: "docuShareConfig.rootURL"): string;
 
+export function getProperty(propertyName: "clearRiskConfig.insuranceImport.folderPath"): string;
+export function getProperty(propertyName: "clearRiskConfig.insuranceImport.columnNames"): configTypes.Config_ClearRisk_InsuranceImport_ColumnNames;
+
 export function getProperty(propertyName: "permissions.canUpdate"): string[];
 
 
