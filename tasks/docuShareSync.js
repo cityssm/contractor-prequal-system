@@ -17,6 +17,7 @@ const queryResultsCache_1 = require("../helpers/queryResultsCache");
 const fixed_1 = require("set-interval-async/fixed");
 const getContractors_1 = require("../helpers/prequalDB/getContractors");
 const updateContractor_1 = require("../helpers/prequalDB/updateContractor");
+const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 ds.setupJava({
     dsapiPath: path.join("..", "..", "..", "java", "dsapi.jar")
 });
@@ -50,7 +51,62 @@ const checkSavedDocuShareCollectionIDs = () => __awaiter(void 0, void 0, void 0,
         }
     }
 });
+const createHireReadyDocuShareCollections = () => __awaiter(void 0, void 0, void 0, function* () {
+    const contractors = yield getContractors_1.getContractors(true, {
+        healthSafetyIsSatisfactory: true,
+        legalIsSatisfactory: true,
+        wsibIsSatisfactory: true,
+        hasDocuShareCollectionID: false
+    });
+    for (const contractor of contractors) {
+        try {
+            const docuShareCollection = yield ds.createCollection(contractorPrequalCollectionHandle, contractor.contractor_name);
+            if (docuShareCollection) {
+                const collectionID = docuShareCollection.handle.split("-")[1];
+                yield updateContractor_1.updateContractor({
+                    contractorID: contractor.contractorID,
+                    docuShareCollectionID: collectionID
+                });
+            }
+        }
+        catch (e) {
+            configFns.logger.error(e);
+        }
+    }
+});
+const purgeDocuShareCollections = (contractors) => __awaiter(void 0, void 0, void 0, function* () {
+    for (const contractor of contractors) {
+        const collectionHandle = docuShareFns.getCollectionHandle(contractor.docuShareCollectionID);
+        const collectionChildren = yield ds.getChildren(collectionHandle);
+        if (collectionChildren && collectionChildren.length === 0) {
+            const success = yield ds.deleteObject(collectionHandle);
+            if (success) {
+                yield updateContractor_1.updateContractor({
+                    contractorID: contractor.contractorID,
+                    docuShareCollectionID: ""
+                });
+            }
+        }
+    }
+});
+const purgeUnsatisfactoryLegalDocuShareCollections = () => __awaiter(void 0, void 0, void 0, function* () {
+    const contractors = yield getContractors_1.getContractors(true, {
+        hasDocuShareCollectionID: true,
+        legalIsSatisfactory: false
+    });
+    yield purgeDocuShareCollections(contractors);
+});
+const purgeUnsatisfactoryHealthSafetyDocuShareCollections = () => __awaiter(void 0, void 0, void 0, function* () {
+    const contractors = yield getContractors_1.getContractors(true, {
+        hasDocuShareCollectionID: true,
+        healthSafetyIsSatisfactory: false
+    });
+    yield purgeDocuShareCollections(contractors);
+});
 const doTask = () => __awaiter(void 0, void 0, void 0, function* () {
+    yield createHireReadyDocuShareCollections();
+    yield purgeUnsatisfactoryLegalDocuShareCollections();
+    yield purgeUnsatisfactoryHealthSafetyDocuShareCollections();
     yield checkSavedDocuShareCollectionIDs();
 });
 doTask();
