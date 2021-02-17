@@ -5,8 +5,8 @@ import type * as sqlTypes from "mssql";
 
 
 export interface ContractorForm {
-  contractorID: string;
-  docuShareCollectionID: string;
+  contractorID: string | number;
+  docuShareCollectionID: string | number;
 }
 
 

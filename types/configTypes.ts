@@ -1,4 +1,5 @@
 import type * as sqlTypes from "mssql";
+import type * as dsTypes from "@cityssm/docushare/types";
 import type { ADWebAuthConfig } from "@cityssm/ad-web-auth-connector/types";
 
 
@@ -34,12 +35,13 @@ export interface Config {
 
   docuShareConfig: {
     rootURL: string;
-    contractorPrequalURL: string;
-    healthSafetyURL: string;
+    contractorPrequalCollectionHandle: string;
     keyForms: Array<{
       formName: string;
       formURL: string;
     }>;
+    server: dsTypes.ServerConfig;
+    session: dsTypes.SessionConfig;
   };
 
   clearRiskConfig: {

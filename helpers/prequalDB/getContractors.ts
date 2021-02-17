@@ -14,6 +14,7 @@ export interface GetContractorFilters {
   insuranceIsSatisfactory?: boolean;
   healthSafetyIsSatisfactory?: boolean;
   legalIsSatisfactory?: boolean;
+  hasDocuShareCollectionID?: boolean;
 };
 
 
@@ -54,6 +55,14 @@ export const getContractors = async (canUpdate: boolean, filters: GetContractorF
 
     if (filters.hasOwnProperty("legalIsSatisfactory")) {
       sql += " and legal_isSatisfactory = " + (filters.legalIsSatisfactory ? "1" : "0");
+    }
+
+    if (filters.hasOwnProperty("hasDocuShareCollectionID")) {
+      if (filters.hasDocuShareCollectionID) {
+        sql += " and docuShareCollectionID is not null";
+      } else {
+        sql += " and docuShareCollectionID is null";
+      }
     }
 
     if (filters.hasOwnProperty("tradeCategoryID")) {

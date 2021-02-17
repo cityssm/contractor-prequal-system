@@ -1,6 +1,7 @@
 import * as winston from "winston";
 
 import type * as configTypes from "../types/configTypes";
+import type * as dsTypes from "@cityssm/docushare/types";
 import type * as sqlTypes from "mssql";
 import type { ADWebAuthConfig } from "@cityssm/ad-web-auth-connector/types";
 
@@ -57,6 +58,9 @@ export function getProperty(propertyName: "mssqlConfig"): sqlTypes.config;
 export function getProperty(propertyName: "adWebAuthConfig"): ADWebAuthConfig;
 
 export function getProperty(propertyName: "docuShareConfig.rootURL"): string;
+export function getProperty(propertyName: "docuShareConfig.contractorPrequalCollectionHandle"): string;
+export function getProperty(propertyName: "docuShareConfig.server"): dsTypes.ServerConfig;
+export function getProperty(propertyName: "docuShareConfig.session"): dsTypes.SessionConfig;
 
 export function getProperty(propertyName: "clearRiskConfig.insuranceImport.folderPath"): string;
 export function getProperty(propertyName: "clearRiskConfig.insuranceImport.columnNames"): configTypes.Config_ClearRisk_InsuranceImport_ColumnNames;

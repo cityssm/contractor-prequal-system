@@ -53,5 +53,6 @@ if (httpsConfig) {
     });
     configFns.logger.info("HTTPS listening on " + httpsConfig.port.toString());
 }
-child_process_1.fork("./tasks/clearRiskInsuranceTask");
-child_process_1.fork("./tasks/wsibRefreshTask");
+child_process_1.fork("./tasks/clearRiskInsuranceImport");
+child_process_1.fork("./tasks/docuShareSync");
+child_process_1.fork("./tasks/wsibRefresh");

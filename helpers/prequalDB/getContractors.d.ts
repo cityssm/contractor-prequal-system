@@ -7,5 +7,6 @@ export interface GetContractorFilters {
     insuranceIsSatisfactory?: boolean;
     healthSafetyIsSatisfactory?: boolean;
     legalIsSatisfactory?: boolean;
+    hasDocuShareCollectionID?: boolean;
 }
 export declare const getContractors: (canUpdate: boolean, filters: GetContractorFilters) => Promise<Contractor[]>;

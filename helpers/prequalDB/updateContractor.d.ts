@@ -1,5 +1,5 @@
 export interface ContractorForm {
-    contractorID: string;
-    docuShareCollectionID: string;
+    contractorID: string | number;
+    docuShareCollectionID: string | number;
 }
 export declare const updateContractor: (updateForm: ContractorForm) => Promise<boolean>;

@@ -44,6 +44,14 @@ const getContractors = (canUpdate, filters) => __awaiter(void 0, void 0, void 0,
         if (filters.hasOwnProperty("legalIsSatisfactory")) {
             sql += " and legal_isSatisfactory = " + (filters.legalIsSatisfactory ? "1" : "0");
         }
+        if (filters.hasOwnProperty("hasDocuShareCollectionID")) {
+            if (filters.hasDocuShareCollectionID) {
+                sql += " and docuShareCollectionID is not null";
+            }
+            else {
+                sql += " and docuShareCollectionID is null";
+            }
+        }
         if (filters.hasOwnProperty("tradeCategoryID")) {
             sql += " and contractorID in (select cp1b_contractorid from cpqs_p1_business where cp1b_typeid = '" + filters.tradeCategoryID.toString() + "')";
         }

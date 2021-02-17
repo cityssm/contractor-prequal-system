@@ -1,8 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDocuShareCollectionURL = void 0;
+exports.getCollectionURL = exports.getCollectionHandle = void 0;
 const configFns = require("./configFns");
-const getDocuShareCollectionURL = (collectionID) => {
-    return configFns.getProperty("docuShareConfig.rootURL") + "/dsweb/View/Collection-" + collectionID.toString();
+const getCollectionHandle = (collectionID) => {
+    return "Collection-" + collectionID.toString();
 };
-exports.getDocuShareCollectionURL = getDocuShareCollectionURL;
+exports.getCollectionHandle = getCollectionHandle;
+const getCollectionURL = (collectionID) => {
+    return configFns.getProperty("docuShareConfig.rootURL") + "/dsweb/View/" +
+        exports.getCollectionHandle(collectionID);
+};
+exports.getCollectionURL = getCollectionURL;

@@ -1,7 +1,12 @@
 import * as configFns from "./configFns";
 
 
-export const getDocuShareCollectionURL = (collectionID: number) => {
+export const getCollectionHandle = (collectionID: number) => {
+  return "Collection-" + collectionID.toString();
+};
 
-  return configFns.getProperty("docuShareConfig.rootURL") + "/dsweb/View/Collection-" + collectionID.toString();
+
+export const getCollectionURL = (collectionID: number) => {
+  return configFns.getProperty("docuShareConfig.rootURL") + "/dsweb/View/" +
+    getCollectionHandle(collectionID);
 };
