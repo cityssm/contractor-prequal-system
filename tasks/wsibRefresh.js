@@ -14,9 +14,32 @@ const updateWSIBExpiryDate_1 = require("../helpers/prequalDB/updateWSIBExpiryDat
 const wsib = require("@cityssm/wsib-clearance-check");
 const configFns = require("../helpers/configFns");
 const fixed_1 = require("set-interval-async/fixed");
-const LocalStorage = require("node-localstorage");
-const accountNumbersToSkip = new LocalStorage.LocalStorage("./data/wsibRefreshCache");
-const doTask = () => __awaiter(void 0, void 0, void 0, function* () {
+const node_localstorage_1 = require("node-localstorage");
+const accountNumbersToSkip = new node_localstorage_1.LocalStorage("./data/wsibRefreshCache");
+const refreshIntervalMillis = 2 * 60 * 60 * 1000;
+const calculateCacheExpiry = () => {
+    return Date.now() +
+        (3 * 86400 * 1000) +
+        (Math.random() * refreshIntervalMillis * 3);
+};
+const purgeExpiredCacheEntries = () => {
+    const rightNowMillis = Date.now();
+    for (let keyIndex = 0; keyIndex < accountNumbersToSkip.length; keyIndex += 1) {
+        const accountNumber = accountNumbersToSkip.key(keyIndex);
+        if (!accountNumber) {
+            break;
+        }
+        const expiryTimeMillisString = accountNumbersToSkip.getItem(accountNumber);
+        if (!expiryTimeMillisString) {
+            accountNumbersToSkip.removeItem(accountNumber);
+        }
+        const expiryTimeMillis = parseInt(expiryTimeMillisString, 10);
+        if (expiryTimeMillis < rightNowMillis) {
+            accountNumbersToSkip.removeItem(accountNumber);
+        }
+    }
+};
+const refreshWSIBDates = () => __awaiter(void 0, void 0, void 0, function* () {
     const wsibAccountNumbers = yield getExpiredWSIBAccountNumbers_1.getExpiredWSIBAccountNumbers(50 + accountNumbersToSkip.length);
     for (const accountNumber of wsibAccountNumbers) {
         if (accountNumbersToSkip.getItem(accountNumber)) {
@@ -30,14 +53,18 @@ const doTask = () => __awaiter(void 0, void 0, void 0, function* () {
             }
             else {
                 configFns.logger.warn(JSON.stringify(certificate));
-                accountNumbersToSkip.setItem(accountNumber, accountNumber);
+                accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry().toString());
             }
         }
         catch (e) {
             configFns.logger.error(e);
-            accountNumbersToSkip.setItem(accountNumber, accountNumber);
+            accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry().toString());
         }
     }
 });
+const doTask = () => __awaiter(void 0, void 0, void 0, function* () {
+    purgeExpiredCacheEntries();
+    yield refreshWSIBDates();
+});
 doTask();
-fixed_1.setIntervalAsync(doTask, 2 * 60 * 60 * 1000);
+fixed_1.setIntervalAsync(doTask, refreshIntervalMillis);

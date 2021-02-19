@@ -24,11 +24,11 @@
   "dependencies": {
     "@cityssm/ad-web-auth-connector": "^0.1.0",
     "@cityssm/bulma-webapp-js": "^1.0.0",
-    "@cityssm/docushare": "^0.0.6",
+    "@cityssm/docushare": "^0.1.0",
     "@cityssm/express-abuse-points": "^0.3.2",
     "@cityssm/expressjs-server-js": "^1.0.3",
     "@cityssm/mssql-multi-pool": "^1.2.0",
-    "@cityssm/wsib-clearance-check": "^0.1.2",
+    "@cityssm/wsib-clearance-check": "^1.1.0",
     "@fortawesome/fontawesome-free": "^5.15.2",
     "chokidar": "^3.5.1",
     "compression": "^1.7.4",

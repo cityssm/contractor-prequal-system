@@ -18,9 +18,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
         return tradeCategory;
     };
-    var buildVendorInformationSystemURL = function (contractorID) {
-        return exports.vendorInformationSystemVendorURL + "?vendorID=" + contractorID.toString();
-    };
     var buildDocuShareURL = function (docuShareCollectionID) {
         return exports.docuShareRootURL + "/dsweb/View/Collection-" + docuShareCollectionID;
     };
@@ -260,13 +257,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 var location = (contractor.contractor_city ? contractor.contractor_city + ", " : "") +
                     (contractor.contractor_province || "");
                 document.getElementById("contractor--location").innerText =
-                    (location === "" ? "(Unavailable)" : location);
+                    (location && location !== "" ? location : "(Unavailable)");
                 document.getElementById("contractor--phone_name").innerText =
-                    contractor.phone_name;
+                    (contractor.phone_name && contractor.phone_name !== ""
+                        ? contractor.phone_name
+                        : "(Unavailable)");
                 document.getElementById("contractor--phone_number").innerText =
-                    (contractor.phone_number === ""
-                        ? "(Unavailable)"
-                        : contractor.phone_number);
+                    (contractor.phone_number && contractor.phone_number !== ""
+                        ? contractor.phone_number
+                        : "(Unavailable)");
                 if (contractor.docuShareCollectionID) {
                     document.getElementById("contractor--docuShareCollectionID").value =
                         contractor.docuShareCollectionID.toString();

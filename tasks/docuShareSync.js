@@ -30,19 +30,21 @@ const checkSavedDocuShareCollectionIDs = () => __awaiter(void 0, void 0, void 0,
     for (const contractor of contractors) {
         const contractorCollectionHandle = docuShareFns.getCollectionHandle(contractor.docuShareCollectionID);
         try {
-            const docuShareCollection = yield ds.findByHandle(contractorCollectionHandle);
-            if (docuShareCollection) {
-                if (contractor.contractor_name !== docuShareCollection.title) {
-                    yield ds.setTitle(contractorCollectionHandle, contractor.contractor_name);
+            const docuShareOutput = yield ds.findByHandle(contractorCollectionHandle);
+            if (docuShareOutput.success) {
+                if (docuShareOutput.dsObjects.length > 0) {
+                    if (contractor.contractor_name !== docuShareOutput.dsObjects[0].title) {
+                        yield ds.setTitle(contractorCollectionHandle, contractor.contractor_name);
+                    }
                 }
-            }
-            else {
-                const success = yield updateContractor_1.updateContractor({
-                    contractorID: contractor.contractorID,
-                    docuShareCollectionID: ""
-                });
-                if (success) {
-                    queryResultsCache_1.clearCache();
+                else {
+                    const success = yield updateContractor_1.updateContractor({
+                        contractorID: contractor.contractorID,
+                        docuShareCollectionID: ""
+                    });
+                    if (success) {
+                        queryResultsCache_1.clearCache();
+                    }
                 }
             }
         }
@@ -60,9 +62,9 @@ const createHireReadyDocuShareCollections = () => __awaiter(void 0, void 0, void
     });
     for (const contractor of contractors) {
         try {
-            const docuShareCollection = yield ds.createCollection(contractorPrequalCollectionHandle, contractor.contractor_name);
-            if (docuShareCollection) {
-                const collectionID = docuShareCollection.handle.split("-")[1];
+            const docuShareOutput = yield ds.createCollection(contractorPrequalCollectionHandle, contractor.contractor_name);
+            if (docuShareOutput.success) {
+                const collectionID = docuShareOutput.dsObjects[0].handle.split("-")[1];
                 yield updateContractor_1.updateContractor({
                     contractorID: contractor.contractorID,
                     docuShareCollectionID: collectionID
@@ -77,8 +79,15 @@ const createHireReadyDocuShareCollections = () => __awaiter(void 0, void 0, void
 const purgeDocuShareCollections = (contractors) => __awaiter(void 0, void 0, void 0, function* () {
     for (const contractor of contractors) {
         const collectionHandle = docuShareFns.getCollectionHandle(contractor.docuShareCollectionID);
-        const collectionChildren = yield ds.getChildren(collectionHandle);
-        if (collectionChildren && collectionChildren.length === 0) {
+        const docuShareOutput = yield ds.findByHandle(collectionHandle);
+        if (!docuShareOutput.success || docuShareOutput.dsObjects.length === 0) {
+            continue;
+        }
+        else if (docuShareOutput.dsObjects[0].modifiedDateMillis + (2 * 86400 * 1000) < Date.now()) {
+            continue;
+        }
+        const docuShareChildrenOutput = yield ds.getChildren(collectionHandle);
+        if (docuShareChildrenOutput.success && docuShareChildrenOutput.dsObjects.length === 0) {
             const success = yield ds.deleteObject(collectionHandle);
             if (success) {
                 yield updateContractor_1.updateContractor({

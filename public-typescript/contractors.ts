@@ -52,9 +52,9 @@ declare const exports: {
    */
 
 
-  const buildVendorInformationSystemURL = (contractorID: number) => {
-    return exports.vendorInformationSystemVendorURL + "?vendorID=" + contractorID.toString();
-  };
+  // const buildVendorInformationSystemURL = (contractorID: number) => {
+  //  return exports.vendorInformationSystemVendorURL + "?vendorID=" + contractorID.toString();
+  // };
 
 
   const buildDocuShareURL = (docuShareCollectionID: string) => {
@@ -452,15 +452,17 @@ declare const exports: {
           (contractor.contractor_province || "");
 
         document.getElementById("contractor--location").innerText =
-          (location === "" ? "(Unavailable)" : location);
+          (location && location !== "" ? location : "(Unavailable)");
 
         document.getElementById("contractor--phone_name").innerText =
-          contractor.phone_name;
+          (contractor.phone_name && contractor.phone_name !== ""
+            ? contractor.phone_name
+            : "(Unavailable)");
 
         document.getElementById("contractor--phone_number").innerText =
-          (contractor.phone_number === ""
-            ? "(Unavailable)"
-            : contractor.phone_number);
+          (contractor.phone_number && contractor.phone_number !== ""
+            ? contractor.phone_number
+            : "(Unavailable)");
 
         if (contractor.docuShareCollectionID) {
           (document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement).value =

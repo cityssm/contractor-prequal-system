@@ -29,9 +29,14 @@ ds.setupServer(configFns.getProperty("docuShareConfig.server"));
 ds.setupSession(configFns.getProperty("docuShareConfig.session"));
 
 /*
- * Task
+ * Tasks
  */
 
+/**
+ * Checks all contractors with docuShareCollectionIDs
+ * - If the Collection exists, make sure the title of the Collection matches the name of the contractor.
+ * - If the Collection does not exist, blank out the docuShareCollectionID.
+ */
 const checkSavedDocuShareCollectionIDs = async () => {
 
   const contractors = await getContractors(true, {
@@ -44,23 +49,26 @@ const checkSavedDocuShareCollectionIDs = async () => {
 
     try {
 
-      const docuShareCollection = await ds.findByHandle(contractorCollectionHandle);
+      const docuShareOutput = await ds.findByHandle(contractorCollectionHandle);
 
-      if (docuShareCollection) {
+      if (docuShareOutput.success) {
 
-        if (contractor.contractor_name !== docuShareCollection.title) {
-          await ds.setTitle(contractorCollectionHandle, contractor.contractor_name);
-        }
+        if (docuShareOutput.dsObjects.length > 0) {
 
-      } else {
+          if (contractor.contractor_name !== docuShareOutput.dsObjects[0].title) {
+            await ds.setTitle(contractorCollectionHandle, contractor.contractor_name);
+          }
 
-        const success = await updateContractor({
-          contractorID: contractor.contractorID,
-          docuShareCollectionID: ""
-        });
+        } else {
 
-        if (success) {
-          clearCache();
+          const success = await updateContractor({
+            contractorID: contractor.contractorID,
+            docuShareCollectionID: ""
+          });
+
+          if (success) {
+            clearCache();
+          }
         }
       }
 
@@ -70,6 +78,9 @@ const checkSavedDocuShareCollectionIDs = async () => {
   }
 };
 
+/**
+ * Ensures that all contractors with valid health and safety, legal, and WSIB have Collections in DocuShare.
+ */
 const createHireReadyDocuShareCollections = async () => {
 
   const contractors = await getContractors(true, {
@@ -83,11 +94,11 @@ const createHireReadyDocuShareCollections = async () => {
 
     try {
 
-      const docuShareCollection = await ds.createCollection(contractorPrequalCollectionHandle, contractor.contractor_name);
+      const docuShareOutput = await ds.createCollection(contractorPrequalCollectionHandle, contractor.contractor_name);
 
-      if (docuShareCollection) {
+      if (docuShareOutput.success) {
 
-        const collectionID = docuShareCollection.handle.split("-")[1];
+        const collectionID = docuShareOutput.dsObjects[0].handle.split("-")[1];
 
         await updateContractor({
           contractorID: contractor.contractorID,
@@ -101,15 +112,28 @@ const createHireReadyDocuShareCollections = async () => {
   }
 };
 
+/**
+ * Purges empty Collections that haven't been modified recently.
+ */
 const purgeDocuShareCollections = async (contractors: recordTypes.Contractor[]) => {
 
   for (const contractor of contractors) {
 
     const collectionHandle = docuShareFns.getCollectionHandle(contractor.docuShareCollectionID);
 
-    const collectionChildren = await ds.getChildren(collectionHandle);
+    const docuShareOutput = await ds.findByHandle(collectionHandle);
 
-    if (collectionChildren && collectionChildren.length === 0) {
+    if (!docuShareOutput.success || docuShareOutput.dsObjects.length === 0) {
+      continue;
+
+    } else if (docuShareOutput.dsObjects[0].modifiedDateMillis + (2 * 86400 * 1000) < Date.now()) {
+      // Don't purge recently modified Collections.
+      continue;
+    }
+
+    const docuShareChildrenOutput = await ds.getChildren(collectionHandle);
+
+    if (docuShareChildrenOutput.success && docuShareChildrenOutput.dsObjects.length === 0) {
 
       const success = await ds.deleteObject(collectionHandle);
 
@@ -123,6 +147,9 @@ const purgeDocuShareCollections = async (contractors: recordTypes.Contractor[]) 
   }
 };
 
+/**
+ * Purges empty Collections with unsatisfactory Legal requirements.
+ */
 const purgeUnsatisfactoryLegalDocuShareCollections = async () => {
 
   const contractors = await getContractors(true, {
@@ -133,6 +160,9 @@ const purgeUnsatisfactoryLegalDocuShareCollections = async () => {
   await purgeDocuShareCollections(contractors);
 };
 
+/**
+ * Purges empty Collections with unsatisfactory Health and Safety requirements.
+ */
 const purgeUnsatisfactoryHealthSafetyDocuShareCollections = async () => {
 
   const contractors = await getContractors(true, {
@@ -143,16 +173,16 @@ const purgeUnsatisfactoryHealthSafetyDocuShareCollections = async () => {
   await purgeDocuShareCollections(contractors);
 };
 
+/*
+ * Schedule
+ */
+
 const doTask = async () => {
   await createHireReadyDocuShareCollections();
   await purgeUnsatisfactoryLegalDocuShareCollections();
   await purgeUnsatisfactoryHealthSafetyDocuShareCollections();
   await checkSavedDocuShareCollectionIDs();
 };
-
-/*
- * Schedule
- */
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 doTask();
