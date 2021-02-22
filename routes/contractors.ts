@@ -10,6 +10,8 @@ import { handler as handler_doGetHealthSafetyOptions } from "../handlers/doGetHe
 import { handler as handler_doGetInsuranceOptions } from "../handlers/doGetInsuranceOptions";
 
 import { handler as handler_doUpdateContractor } from "../handlers/doUpdateContractor";
+import { handler as handler_doCreateDocuShareCollection } from "../handlers/doCreateDocuShareCollection";
+
 import { handler as handler_doUpdateHealthSafety } from "../handlers/doUpdateHealthSafety";
 import { handler as handler_doUpdateLegal } from "../handlers/doUpdateLegal";
 import { handler as handler_doUpdateWSIB } from "../handlers/doUpdateWSIB";
@@ -60,6 +62,7 @@ router.post("/doGetInsuranceOptions", handler_doGetInsuranceOptions);
 
 
 router.post("/doUpdateContractor", handler_updateOnly, handler_doUpdateContractor);
+router.post("/doCreateDocuShareCollection", handler_updateOnly, handler_doCreateDocuShareCollection);
 
 
 router.post("/doUpdateHealthSafety", handler_updateOnly, handler_doUpdateHealthSafety);

@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = require("path");
 const ds = require("@cityssm/docushare");
 const configFns = require("../helpers/configFns");
 const docuShareFns = require("../helpers/docuShareFns");
@@ -20,11 +19,7 @@ const updateContractor_1 = require("../helpers/prequalDB/updateContractor");
 const debug_1 = require("debug");
 const debugDocuShare = debug_1.debug("contractor-prequal-system:docuShareSync");
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
-ds.setupJava({
-    dsapiPath: path.join("..", "..", "..", "java", "dsapi.jar")
-});
-ds.setupServer(configFns.getProperty("docuShareConfig.server"));
-ds.setupSession(configFns.getProperty("docuShareConfig.session"));
+docuShareFns.doSetup();
 const checkSavedDocuShareCollectionIDs = () => __awaiter(void 0, void 0, void 0, function* () {
     const contractors = yield getContractors_1.getContractors(true, {
         hasDocuShareCollectionID: true

@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateWSIB = void 0;
 const sqlPool = require("@cityssm/mssql-multi-pool");
@@ -15,10 +6,10 @@ const configFns = require("../configFns");
 const hasWSIBInsuranceRecord_1 = require("./hasWSIBInsuranceRecord");
 const debug_1 = require("debug");
 const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateWSIB");
-const updateWSIB = (updateForm) => __awaiter(void 0, void 0, void 0, function* () {
+const updateWSIB = async (updateForm) => {
     console.log(updateForm);
     try {
-        const pool = yield sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         const effectiveDateString = updateForm.wsib_effectiveDate !== ""
             ? updateForm.wsib_effectiveDate
             : null;
@@ -29,7 +20,7 @@ const updateWSIB = (updateForm) => __awaiter(void 0, void 0, void 0, function* (
             ? 1
             : 0;
         let sql;
-        const hasRecord = yield hasWSIBInsuranceRecord_1.hasWSIBInsuranceRecord(updateForm.contractorID);
+        const hasRecord = await hasWSIBInsuranceRecord_1.hasWSIBInsuranceRecord(updateForm.contractorID);
         if (hasRecord) {
             sql = "update cpqs_p2" +
                 " set cp2_wsibaccountnumber = @wsib_accountNumber," +
@@ -44,7 +35,7 @@ const updateWSIB = (updateForm) => __awaiter(void 0, void 0, void 0, function* (
                 " (cp2_contractorid, cp2_wsibaccountnumber, cp2_wsibfirmnumber, cp2_wsibdate, cp2_wsibexpirydate, cp2_isindependent, cp2_creationdate)" +
                 " values (@contractorID, @wsib_accountNumber, @wsib_firmNumber, @wsib_effectiveDate, @wsib_expiryDate, @wsib_isIndependent, getdate())";
         }
-        yield pool.request()
+        await pool.request()
             .input("wsib_accountNumber", updateForm.wsib_accountNumber)
             .input("wsib_firmNumber", updateForm.wsib_firmNumber)
             .input("wsib_effectiveDate", effectiveDateString)
@@ -58,5 +49,5 @@ const updateWSIB = (updateForm) => __awaiter(void 0, void 0, void 0, function* (
         debugSQL(e);
     }
     return false;
-});
+};
 exports.updateWSIB = updateWSIB;

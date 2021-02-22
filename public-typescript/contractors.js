@@ -78,6 +78,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
             }
         });
     };
+    var createDocuShareCollection = function (clickEvent) {
+        var createButtonEle = clickEvent.currentTarget;
+        var docuShareCollectionIDEle = document.getElementById("contractor--docuShareCollectionID");
+        var currentDocuShareCollectionID = docuShareCollectionIDEle.value;
+        var closeLoadingModalFn;
+        var doCreate = function () {
+            var contractorID = createButtonEle.getAttribute("data-contractor-id");
+            cityssm.postJSON(urlPrefix + "/contractors/doCreateDocuShareCollection", {
+                contractorID: contractorID
+            }, function (responseJSON) {
+                closeLoadingModalFn();
+                if (responseJSON.success) {
+                    docuShareCollectionIDEle.value = responseJSON.docuShareCollectionID;
+                }
+                else {
+                    cityssm.alertModal("DocuShare Collection Not Created", cityssm.escapeHTML(responseJSON.message), "OK", "danger");
+                }
+            });
+        };
+        var openLoadingAndDoCreate = function () {
+            cityssm.openHtmlModal("contractor-createDSCollection-loading", {
+                onshown: function (_modalEle, closeModalFn) {
+                    closeLoadingModalFn = closeModalFn;
+                    doCreate();
+                }
+            });
+        };
+        if (currentDocuShareCollectionID === "") {
+            cityssm.confirmModal("Create a New Collection in DocuShare", "Are you sure you want to create a new DocuShare Collection for this contractor?", "Yes, Create Collection", "info", openLoadingAndDoCreate);
+        }
+        else {
+            cityssm.confirmModal("Create a New Collection in DocuShare", "<strong>A Collection already exists for this contractor.</strong>" +
+                " Are you sure you want to abandon the existing Collection and create a new DocuShare Collection?", "Yes, Abandon and Create", "danger", openLoadingAndDoCreate);
+        }
+    };
     var removeTradeCategory = function (clickEvent) {
         var deleteButtonEle = clickEvent.currentTarget;
         var removeFn = function () {
@@ -207,10 +242,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
     var unlockContractorUpdateForm = function (clickEvent) {
         var unlockControlEle = clickEvent.currentTarget.closest(".control");
         var formEle = unlockControlEle.closest("form");
-        var submitControlEle = formEle.getElementsByClassName("is-submit-contractor-control")[0];
+        formEle.classList.add("is-edit-mode");
         formEle.addEventListener("submit", submitUpdateForm);
+        var createButtonEle = document.getElementById("contractor--docuShareCollectionID-create");
+        createButtonEle.addEventListener("click", createDocuShareCollection);
+        createButtonEle.setAttribute("data-contractor-id", formEle.getElementsByClassName("contractor--contractorID")[0].value);
         document.getElementById("contractor--docuShareCollectionID").disabled = false;
-        submitControlEle.classList.remove("is-hidden");
         unlockControlEle.remove();
     };
     var unlockTradeCategoriesUpdateForm = function (clickEvent) {

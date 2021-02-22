@@ -1,5 +1,3 @@
-import * as path from "path";
-
 import * as ds from "@cityssm/docushare";
 
 import * as configFns from "../helpers/configFns";
@@ -23,13 +21,7 @@ const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig
  * Setup DocuShare Connection
  */
 
-ds.setupJava({
-  dsapiPath: path.join("..", "..", "..", "java", "dsapi.jar")
-});
-
-ds.setupServer(configFns.getProperty("docuShareConfig.server"));
-
-ds.setupSession(configFns.getProperty("docuShareConfig.session"));
+docuShareFns.doSetup();
 
 /*
  * Tasks

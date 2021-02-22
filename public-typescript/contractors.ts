@@ -172,6 +172,65 @@ declare const exports: {
   };
 
 
+  const createDocuShareCollection = (clickEvent: MouseEvent) => {
+
+    const createButtonEle = clickEvent.currentTarget as HTMLButtonElement;
+
+    const docuShareCollectionIDEle = document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement;
+
+    const currentDocuShareCollectionID = docuShareCollectionIDEle.value;
+
+    let closeLoadingModalFn: () => void;
+
+    const doCreate = () => {
+
+      const contractorID = createButtonEle.getAttribute("data-contractor-id");
+
+      cityssm.postJSON(urlPrefix + "/contractors/doCreateDocuShareCollection", {
+        contractorID
+      },
+        (responseJSON: { success: boolean; message?: string; docuShareCollectionID?: string }) => {
+
+          closeLoadingModalFn();
+
+          if (responseJSON.success) {
+            docuShareCollectionIDEle.value = responseJSON.docuShareCollectionID;
+          } else {
+            cityssm.alertModal("DocuShare Collection Not Created",
+              cityssm.escapeHTML(responseJSON.message),
+              "OK",
+              "danger");
+          }
+        });
+    };
+
+    const openLoadingAndDoCreate = () => {
+
+      cityssm.openHtmlModal("contractor-createDSCollection-loading", {
+        onshown: (_modalEle, closeModalFn) => {
+          closeLoadingModalFn = closeModalFn;
+          doCreate();
+        }
+      });
+    };
+
+    if (currentDocuShareCollectionID === "") {
+      cityssm.confirmModal("Create a New Collection in DocuShare",
+        "Are you sure you want to create a new DocuShare Collection for this contractor?",
+        "Yes, Create Collection",
+        "info",
+        openLoadingAndDoCreate);
+    } else {
+      cityssm.confirmModal("Create a New Collection in DocuShare",
+        "<strong>A Collection already exists for this contractor.</strong>" +
+        " Are you sure you want to abandon the existing Collection and create a new DocuShare Collection?",
+        "Yes, Abandon and Create",
+        "danger",
+        openLoadingAndDoCreate);
+    }
+  };
+
+
   const removeTradeCategory = (clickEvent: MouseEvent) => {
 
     const deleteButtonEle = clickEvent.currentTarget as HTMLButtonElement;
@@ -373,12 +432,18 @@ declare const exports: {
   const unlockContractorUpdateForm = (clickEvent: MouseEvent) => {
 
     const unlockControlEle = (clickEvent.currentTarget as HTMLElement).closest(".control");
+
     const formEle = unlockControlEle.closest("form");
-    const submitControlEle = formEle.getElementsByClassName("is-submit-contractor-control")[0];
+    formEle.classList.add("is-edit-mode");
 
     formEle.addEventListener("submit", submitUpdateForm);
+
+    const createButtonEle = document.getElementById("contractor--docuShareCollectionID-create");
+    createButtonEle.addEventListener("click", createDocuShareCollection);
+    createButtonEle.setAttribute("data-contractor-id",
+      (formEle.getElementsByClassName("contractor--contractorID")[0] as HTMLInputElement).value);
+
     (document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement).disabled = false;
-    submitControlEle.classList.remove("is-hidden");
 
     unlockControlEle.remove();
   };

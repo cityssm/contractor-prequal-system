@@ -7,6 +7,7 @@ const doGetAllTradeCategories_1 = require("../handlers/doGetAllTradeCategories")
 const doGetHealthSafetyOptions_1 = require("../handlers/doGetHealthSafetyOptions");
 const doGetInsuranceOptions_1 = require("../handlers/doGetInsuranceOptions");
 const doUpdateContractor_1 = require("../handlers/doUpdateContractor");
+const doCreateDocuShareCollection_1 = require("../handlers/doCreateDocuShareCollection");
 const doUpdateHealthSafety_1 = require("../handlers/doUpdateHealthSafety");
 const doUpdateLegal_1 = require("../handlers/doUpdateLegal");
 const doUpdateWSIB_1 = require("../handlers/doUpdateWSIB");
@@ -30,6 +31,7 @@ router.post("/doGetAllTradeCategories", doGetAllTradeCategories_1.handler);
 router.post("/doGetHealthSafetyOptions", doGetHealthSafetyOptions_1.handler);
 router.post("/doGetInsuranceOptions", doGetInsuranceOptions_1.handler);
 router.post("/doUpdateContractor", handler_updateOnly, doUpdateContractor_1.handler);
+router.post("/doCreateDocuShareCollection", handler_updateOnly, doCreateDocuShareCollection_1.handler);
 router.post("/doUpdateHealthSafety", handler_updateOnly, doUpdateHealthSafety_1.handler);
 router.post("/doUpdateLegal", handler_updateOnly, doUpdateLegal_1.handler);
 router.post("/doUpdateWSIB", handler_updateOnly, doUpdateWSIB_1.handler);
