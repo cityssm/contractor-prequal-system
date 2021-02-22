@@ -2,6 +2,8 @@
 const express_1 = require("express");
 const authFns = require("../helpers/authFns");
 const configFns = require("../helpers/configFns");
+const debug_1 = require("debug");
+const debugLogin = debug_1.debug("contractor-prequal-system:routes:login");
 const redirectURL = configFns.getProperty("reverseProxy.urlPrefix") + "/contractors";
 const router = express_1.Router();
 router.route("/")
@@ -34,7 +36,8 @@ router.route("/")
             message: "Login Failed"
         });
     }
-    catch (_e) {
+    catch (e) {
+        debugLogin(e);
         return res.render("login", {
             userName,
             message: "Login Failed"

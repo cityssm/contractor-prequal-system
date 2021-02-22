@@ -5,6 +5,10 @@ import * as authFns from "../helpers/authFns";
 import * as configFns from "../helpers/configFns";
 
 
+import { debug } from "debug";
+const debugLogin = debug("contractor-prequal-system:routes:login");
+
+
 const redirectURL = configFns.getProperty("reverseProxy.urlPrefix") + "/contractors";
 
 
@@ -51,8 +55,10 @@ router.route("/")
         message: "Login Failed"
       });
 
-    } catch (_e) {
+    } catch (e) {
 
+      debugLogin(e);
+      
       return res.render("login", {
         userName,
         message: "Login Failed"
