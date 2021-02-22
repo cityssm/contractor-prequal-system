@@ -806,16 +806,34 @@ declare const exports: {
           return;
         }
 
+        let hireReadyCount = 0;
+
         const panelEle = document.createElement("div");
         panelEle.className = "panel";
 
         contractors.forEach((contractor, contractorIndex) => {
           const panelBlockEle = buildContractorResultEle(contractor, contractorIndex);
+
           panelEle.appendChild(panelBlockEle);
+
+          if (isContractorHireReady(contractor)) {
+            hireReadyCount += 1;
+          }
         });
 
+        let hireReadyHTML = "";
+
+        if (hireReadyCount === 0) {
+          hireReadyHTML += "<span class=\"has-text-danger\">No Displayed Contractors are Hire Ready</span>";
+        } else if (hireReadyCount === contractors.length) {
+          hireReadyHTML += "<span class=\"has-text-success\">All Displayed Contractors are Hire Ready</span>";
+        } else {
+          hireReadyHTML += "<span class=\"has-text-success\">" + hireReadyCount.toString() + " out of " + contractors.length.toString() + " Contractors are Hire Ready</span>";
+        }
+
         resultsEle.innerHTML = "<div class=\"mb-5 has-text-centered has-text-weight-bold\">" +
-          "Displaying " + contractors.length.toString() + " contractor" + (contractors.length === 1 ? "" : "s") +
+          "Displaying " + contractors.length.toString() + " contractor" + (contractors.length === 1 ? "" : "s") + "<br />" +
+          hireReadyHTML +
           "</div>";
 
         resultsEle.appendChild(panelEle);
