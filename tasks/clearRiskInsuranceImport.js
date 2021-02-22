@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
@@ -21,12 +12,12 @@ const debug_1 = require("debug");
 const debugClearRisk = debug_1.debug("contractor-prequal-system:clearRiskInsuranceImport");
 const importFolderPath = configFns.getProperty("clearRiskConfig.insuranceImport.folderPath");
 const columnNames = configFns.getProperty("clearRiskConfig.insuranceImport.columnNames");
-const csvResultToInsuranceForm = (csvResult) => __awaiter(void 0, void 0, void 0, function* () {
+const csvResultToInsuranceForm = async (csvResult) => {
     const contractorID = csvResult[columnNames.contractorID];
     if (!contractorID || contractorID === "") {
         return false;
     }
-    const contractor = yield getContractor_1.getContractor(contractorID);
+    const contractor = await getContractor_1.getContractor(contractorID);
     if (!contractor) {
         return false;
     }
@@ -42,15 +33,15 @@ const csvResultToInsuranceForm = (csvResult) => __awaiter(void 0, void 0, void 0
         insurance_expiryDate
     };
     return insuranceForm;
-});
-const processResults = (results) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const processResults = async (results) => {
     for (const csvResult of results.data) {
-        const insuranceForm = yield csvResultToInsuranceForm(csvResult);
+        const insuranceForm = await csvResultToInsuranceForm(csvResult);
         if (insuranceForm) {
-            yield updateInsurance_1.updateInsurance(insuranceForm);
+            await updateInsurance_1.updateInsurance(insuranceForm);
         }
     }
-});
+};
 const validateAndParseFile = (fileName) => {
     const filePath = path.join(importFolderPath, fileName);
     Papa.parse(fs.createReadStream(filePath), {
@@ -64,7 +55,7 @@ const validateAndParseFile = (fileName) => {
         }
     });
 };
-const doTask = () => __awaiter(void 0, void 0, void 0, function* () {
+const doTask = async () => {
     fs.readdir(importFolderPath, (err, files) => {
         if (err) {
             debugClearRisk(err.message);
@@ -72,7 +63,7 @@ const doTask = () => __awaiter(void 0, void 0, void 0, function* () {
         }
         files.forEach(validateAndParseFile);
     });
-});
+};
 doTask();
 const watcher = chokidar.watch(importFolderPath, {
     awaitWriteFinish: true
