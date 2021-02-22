@@ -12,14 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const getExpiredWSIBAccountNumbers_1 = require("../helpers/prequalDB/getExpiredWSIBAccountNumbers");
 const updateWSIBExpiryDate_1 = require("../helpers/prequalDB/updateWSIBExpiryDate");
 const wsib = require("@cityssm/wsib-clearance-check");
-const configFns = require("../helpers/configFns");
 const fixed_1 = require("set-interval-async/fixed");
 const node_localstorage_1 = require("node-localstorage");
+const debug_1 = require("debug");
+const debugWSIB = debug_1.debug("contractor-prequal-system:wsibRefresh");
 const accountNumbersToSkip = new node_localstorage_1.LocalStorage("./data/wsibRefreshCache");
 const refreshIntervalMillis = 2 * 60 * 60 * 1000;
-const calculateCacheExpiry = () => {
+const calculateCacheExpiry = (dayMultiplier) => {
     return Date.now() +
-        (3 * 86400 * 1000) +
+        (dayMultiplier * 86400 * 1000) +
         (Math.random() * refreshIntervalMillis * 3);
 };
 const purgeExpiredCacheEntries = () => {
@@ -48,17 +49,17 @@ const refreshWSIBDates = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const certificate = yield wsib.getClearanceByAccountNumber(accountNumber);
             if (certificate.success) {
-                configFns.logger.debug(certificate);
+                debugWSIB(certificate);
                 yield updateWSIBExpiryDate_1.updateWSIBExpiryDate(accountNumber, certificate.validityPeriodEnd);
             }
             else {
-                configFns.logger.warn(JSON.stringify(certificate));
-                accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry().toString());
+                debugWSIB(JSON.stringify(certificate));
+                accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry(3).toString());
             }
         }
         catch (e) {
-            configFns.logger.error(e);
-            accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry().toString());
+            debugWSIB(e);
+            accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry(1).toString());
         }
     }
 });

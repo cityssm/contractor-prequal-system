@@ -3,6 +3,9 @@ import * as configFns from "../configFns";
 
 import type * as sqlTypes from "mssql";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateContractor");
+
 
 export interface ContractorForm {
   contractorID: string | number;
@@ -26,7 +29,7 @@ export const updateContractor = async (updateForm: ContractorForm): Promise<bool
     return true;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return false;

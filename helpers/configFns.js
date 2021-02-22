@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logger = exports.getProperty = void 0;
-const winston = require("winston");
+exports.getProperty = void 0;
 const config = require("../data/config");
 Object.freeze(config);
 const configOverrides = {};
@@ -31,16 +30,3 @@ function getProperty(propertyName) {
     return currentObj;
 }
 exports.getProperty = getProperty;
-exports.logger = winston.createLogger({
-    level: "info",
-    format: winston.format.json(),
-    transports: [
-        new winston.transports.File({ filename: "logs/contractorPrequalSystem-error.log", level: "error" }),
-        new winston.transports.File({ filename: "logs/contractorPrequalSystem-combined.log" })
-    ]
-});
-if (process.env.NODE_ENV !== "production") {
-    exports.logger.add(new winston.transports.Console({
-        format: winston.format.simple()
-    }));
-}

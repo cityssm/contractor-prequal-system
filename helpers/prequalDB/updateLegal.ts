@@ -4,6 +4,9 @@ import * as configFns from "../configFns";
 import type * as sqlTypes from "mssql";
 import type * as express from "express-session";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateLegal");
+
 
 export interface LegalForm {
   contractorID: string;
@@ -31,7 +34,7 @@ export const updateLegal = async (updateForm: LegalForm, reqSession: express.Ses
     return true;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return false;

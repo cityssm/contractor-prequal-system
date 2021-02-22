@@ -5,6 +5,9 @@ import { hasHealthSafetyRecord } from "./hasHealthSafetyRecord";
 
 import type * as sqlTypes from "mssql";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateHealthSafety");
+
 
 export interface HealthSafetyForm {
   contractorID: string;
@@ -38,7 +41,7 @@ export const updateHealthSafety = async (updateForm: HealthSafetyForm): Promise<
     return true;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return false;

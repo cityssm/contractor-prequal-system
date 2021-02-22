@@ -13,6 +13,8 @@ exports.updateInsurance = void 0;
 const sqlPool = require("@cityssm/mssql-multi-pool");
 const configFns = require("../configFns");
 const hasWSIBInsuranceRecord_1 = require("./hasWSIBInsuranceRecord");
+const debug_1 = require("debug");
+const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateInsurance");
 const updateInsurance = (updateForm) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const pool = yield sqlPool.connect(configFns.getProperty("mssqlConfig"));
@@ -46,7 +48,7 @@ const updateInsurance = (updateForm) => __awaiter(void 0, void 0, void 0, functi
         return true;
     }
     catch (e) {
-        configFns.logger.error(e);
+        debugSQL(e);
     }
     return false;
 });

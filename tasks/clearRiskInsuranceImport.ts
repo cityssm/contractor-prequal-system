@@ -10,6 +10,9 @@ import * as Papa from "papaparse";
 
 import { setIntervalAsync } from "set-interval-async/fixed";
 
+import { debug } from "debug";
+const debugClearRisk = debug("contractor-prequal-system:clearRiskInsuranceImport");
+
 
 const importFolderPath = configFns.getProperty("clearRiskConfig.insuranceImport.folderPath");
 const columnNames = configFns.getProperty("clearRiskConfig.insuranceImport.columnNames");
@@ -73,7 +76,7 @@ const validateAndParseFile = (fileName: string) => {
 
   fs.unlink(filePath, (err) => {
     if (err) {
-      configFns.logger.error("clearRiskInsuranceTask: " + err.message);
+      debugClearRisk(err.message);
     }
   });
 };
@@ -84,7 +87,7 @@ const doTask = async () => {
   fs.readdir(importFolderPath, (err, files) => {
 
     if (err) {
-      configFns.logger.error("clearRiskInsuranceTask: " + err.message);
+      debugClearRisk(err.message);
       return;
     }
 

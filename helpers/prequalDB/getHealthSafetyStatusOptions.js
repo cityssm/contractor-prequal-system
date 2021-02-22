@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getHealthSafetyStatusOptions = void 0;
 const sqlPool = require("@cityssm/mssql-multi-pool");
 const configFns = require("../configFns");
+const debug_1 = require("debug");
+const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:getHealthSafetyStatusOptions");
 const getHealthSafetyStatusOptions = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const pool = yield sqlPool.connect(configFns.getProperty("mssqlConfig"));
@@ -32,7 +34,7 @@ const getHealthSafetyStatusOptions = () => __awaiter(void 0, void 0, void 0, fun
         return statusOptions;
     }
     catch (e) {
-        configFns.logger.error(e);
+        debugSQL(e);
     }
     return [];
 });

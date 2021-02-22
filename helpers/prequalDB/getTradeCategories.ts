@@ -4,6 +4,9 @@ import * as configFns from "../configFns";
 import * as recordTypes from "../../types/recordTypes";
 import type * as sqlTypes from "mssql";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:getTradeCategories");
+
 
 export const getTradeCategories = async (inUse: boolean): Promise<recordTypes.TradeCategory[]> => {
 
@@ -36,7 +39,7 @@ export const getTradeCategories = async (inUse: boolean): Promise<recordTypes.Tr
     return categories;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return [];

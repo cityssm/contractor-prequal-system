@@ -3,6 +3,9 @@ import * as configFns from "../configFns";
 
 import type * as sqlTypes from "mssql";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:getHealthSafetyStatusOptions");
+
 
 interface RawResult {
   cso_status: string;
@@ -38,7 +41,7 @@ export const getHealthSafetyStatusOptions = async (): Promise<string[]> => {
     return statusOptions;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return [];

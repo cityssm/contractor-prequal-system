@@ -3,6 +3,9 @@ import * as configFns from "../configFns";
 
 import type * as sqlTypes from "mssql";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:addTradeCategory");
+
 
 export const addTradeCategory = async (contractorID: number | string, tradeCategoryID: number | string): Promise<boolean> => {
 
@@ -20,7 +23,7 @@ export const addTradeCategory = async (contractorID: number | string, tradeCateg
     return true;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return false;

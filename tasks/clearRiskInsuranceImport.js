@@ -17,6 +17,8 @@ const updateInsurance_1 = require("../helpers/prequalDB/updateInsurance");
 const chokidar = require("chokidar");
 const Papa = require("papaparse");
 const fixed_1 = require("set-interval-async/fixed");
+const debug_1 = require("debug");
+const debugClearRisk = debug_1.debug("contractor-prequal-system:clearRiskInsuranceImport");
 const importFolderPath = configFns.getProperty("clearRiskConfig.insuranceImport.folderPath");
 const columnNames = configFns.getProperty("clearRiskConfig.insuranceImport.columnNames");
 const csvResultToInsuranceForm = (csvResult) => __awaiter(void 0, void 0, void 0, function* () {
@@ -58,14 +60,14 @@ const validateAndParseFile = (fileName) => {
     });
     fs.unlink(filePath, (err) => {
         if (err) {
-            configFns.logger.error("clearRiskInsuranceTask: " + err.message);
+            debugClearRisk(err.message);
         }
     });
 };
 const doTask = () => __awaiter(void 0, void 0, void 0, function* () {
     fs.readdir(importFolderPath, (err, files) => {
         if (err) {
-            configFns.logger.error("clearRiskInsuranceTask: " + err.message);
+            debugClearRisk(err.message);
             return;
         }
         files.forEach(validateAndParseFile);

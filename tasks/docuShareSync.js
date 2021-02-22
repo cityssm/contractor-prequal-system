@@ -17,6 +17,8 @@ const queryResultsCache_1 = require("../helpers/queryResultsCache");
 const fixed_1 = require("set-interval-async/fixed");
 const getContractors_1 = require("../helpers/prequalDB/getContractors");
 const updateContractor_1 = require("../helpers/prequalDB/updateContractor");
+const debug_1 = require("debug");
+const debugDocuShare = debug_1.debug("contractor-prequal-system:docuShareSync");
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 ds.setupJava({
     dsapiPath: path.join("..", "..", "..", "java", "dsapi.jar")
@@ -49,7 +51,7 @@ const checkSavedDocuShareCollectionIDs = () => __awaiter(void 0, void 0, void 0,
             }
         }
         catch (e) {
-            configFns.logger.error(e);
+            debugDocuShare(e);
         }
     }
 });
@@ -72,7 +74,7 @@ const createHireReadyDocuShareCollections = () => __awaiter(void 0, void 0, void
             }
         }
         catch (e) {
-            configFns.logger.error(e);
+            debugDocuShare(e);
         }
     }
 });

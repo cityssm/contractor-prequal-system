@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getContractor = void 0;
 const sqlPool = require("@cityssm/mssql-multi-pool");
 const configFns = require("../configFns");
+const debug_1 = require("debug");
+const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:getContractor");
 const getContractor = (contractorID) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const pool = yield sqlPool.connect(configFns.getProperty("mssqlConfig"));
@@ -20,6 +22,7 @@ const getContractor = (contractorID) => __awaiter(void 0, void 0, void 0, functi
             .query("select contractorID, docuShareCollectionID, isContractor," +
             " contractor_name, contractor_city, contractor_province," +
             " phone_name, phone_title, phone_number," +
+            " websiteURL," +
             " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
             " insurance_company, insurance_policyNumber, insurance_amount, insurance_expiryDate, insurance_isSatisfactory," +
             " healthSafety_status, healthSafety_isSatisfactory," +
@@ -33,7 +36,7 @@ const getContractor = (contractorID) => __awaiter(void 0, void 0, void 0, functi
         return contractor;
     }
     catch (e) {
-        configFns.logger.error(e);
+        debugSQL(e);
     }
     return null;
 });

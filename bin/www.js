@@ -7,16 +7,18 @@ const https = require("https");
 const fs = require("fs");
 const child_process_1 = require("child_process");
 const configFns = require("../helpers/configFns");
+const debug_1 = require("debug");
+const debugWWW = debug_1.debug("contractor-prequal-system:www");
 const onError = (error) => {
     if (error.syscall !== "listen") {
         throw error;
     }
     switch (error.code) {
         case "EACCES":
-            console.error("Requires elevated privileges");
+            debugWWW("Requires elevated privileges");
             process.exit(1);
         case "EADDRINUSE":
-            console.error("Port is already in use.");
+            debugWWW("Port is already in use.");
             process.exit(1);
         default:
             throw error;
@@ -27,7 +29,7 @@ const onListening = (server) => {
     const bind = typeof addr === "string"
         ? "pipe " + addr
         : "port " + addr.port.toString();
-    configFns.logger.info("Listening on " + bind);
+    debugWWW("Listening on " + bind);
 };
 const httpPort = configFns.getProperty("application.httpPort");
 if (httpPort) {
@@ -37,7 +39,7 @@ if (httpPort) {
     httpServer.on("listening", function () {
         onListening(httpServer);
     });
-    configFns.logger.info("HTTP listening on " + httpPort.toString());
+    debugWWW("HTTP listening on " + httpPort.toString());
 }
 const httpsConfig = configFns.getProperty("application.https");
 if (httpsConfig) {
@@ -51,7 +53,7 @@ if (httpsConfig) {
     httpsServer.on("listening", function () {
         onListening(httpsServer);
     });
-    configFns.logger.info("HTTPS listening on " + httpsConfig.port.toString());
+    debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
 child_process_1.fork("./tasks/clearRiskInsuranceImport");
 child_process_1.fork("./tasks/docuShareSync");

@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTradeCategoriesByContractorID = void 0;
 const sqlPool = require("@cityssm/mssql-multi-pool");
 const configFns = require("../configFns");
+const debug_1 = require("debug");
+const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:getTradeCategoriesByContractorID");
 const getTradeCategoriesByContractorID = (contractorID) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const pool = yield sqlPool.connect(configFns.getProperty("mssqlConfig"));
@@ -28,7 +30,7 @@ const getTradeCategoriesByContractorID = (contractorID) => __awaiter(void 0, voi
         return categories;
     }
     catch (e) {
-        configFns.logger.error(e);
+        debugSQL(e);
     }
     return [];
 });

@@ -5,6 +5,9 @@ import { hasWSIBInsuranceRecord } from "./hasWSIBInsuranceRecord";
 
 import type * as sqlTypes from "mssql";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateWSIB");
+
 
 export interface WSIBForm {
   contractorID: string;
@@ -66,7 +69,7 @@ export const updateWSIB = async (updateForm: WSIBForm): Promise<boolean> => {
     return true;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return false;

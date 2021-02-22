@@ -6,7 +6,6 @@ import * as compression from "compression";
 import * as path from "path";
 import * as cookieParser from "cookie-parser";
 import * as csurf from "csurf";
-import * as logger from "morgan";
 import * as rateLimit from "express-rate-limit";
 
 import * as session from "express-session";
@@ -18,6 +17,9 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
 
 import * as routerLogin from "./routes/login";
 import * as routerContractors from "./routes/contractors";
+
+import { debug } from "debug";
+const debugApp = debug("contractor-prequal-system:app");
 
 
 /*
@@ -44,7 +46,11 @@ if (!configFns.getProperty("reverseProxy.disableCompression")) {
   app.use(compression());
 }
 
-app.use(logger("dev"));
+app.use((req, _res, next) => {
+  debugApp(req.method + " " + req.url);
+  next();
+});
+
 app.use(express.json());
 
 app.use(express.urlencoded({

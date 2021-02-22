@@ -6,7 +6,6 @@ const compression = require("compression");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const csurf = require("csurf");
-const logger = require("morgan");
 const rateLimit = require("express-rate-limit");
 const session = require("express-session");
 const sqlite = require("connect-sqlite3");
@@ -15,6 +14,8 @@ const stringFns = require("@cityssm/expressjs-server-js/stringFns");
 const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
 const routerLogin = require("./routes/login");
 const routerContractors = require("./routes/contractors");
+const debug_1 = require("debug");
+const debugApp = debug_1.debug("contractor-prequal-system:app");
 const app = express();
 if (!configFns.getProperty("reverseProxy.disableEtag")) {
     app.set("etag", false);
@@ -28,7 +29,10 @@ app.use(express_abuse_points_1.abuseCheck({
 if (!configFns.getProperty("reverseProxy.disableCompression")) {
     app.use(compression());
 }
-app.use(logger("dev"));
+app.use((req, _res, next) => {
+    debugApp(req.method + " " + req.url);
+    next();
+});
 app.use(express.json());
 app.use(express.urlencoded({
     extended: false

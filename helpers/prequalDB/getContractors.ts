@@ -5,6 +5,9 @@ import * as sqlFns from "../sqlFns";
 import type * as sqlTypes from "mssql";
 import type { Contractor } from "../../types/recordTypes";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:getContractors");
+
 
 export interface GetContractorFilters {
   contractorName?: string;
@@ -30,6 +33,7 @@ export const getContractors = async (canUpdate: boolean, filters: GetContractorF
       (canUpdate
         ? " phone_number,"
         : " case when healthSafety_isSatisfactory = 1 and legal_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then phone_number else '' end as phone_number,") +
+      " websiteURL," +
       " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
       " insurance_company, insurance_policyNumber, insurance_amount, insurance_expiryDate, insurance_isSatisfactory," +
       " healthSafety_status, healthSafety_isSatisfactory," +
@@ -90,7 +94,7 @@ export const getContractors = async (canUpdate: boolean, filters: GetContractorF
     return contractors;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return [];

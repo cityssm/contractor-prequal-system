@@ -1,5 +1,3 @@
-import * as winston from "winston";
-
 import type * as configTypes from "../types/configTypes";
 import type * as dsTypes from "@cityssm/docushare/types";
 import type * as sqlTypes from "mssql";
@@ -89,25 +87,4 @@ export function getProperty(propertyName: string): any {
   }
 
   return currentObj;
-}
-
-
-/*
- * Logging
- */
-
-
-export const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: "logs/contractorPrequalSystem-error.log", level: "error" }),
-    new winston.transports.File({ filename: "logs/contractorPrequalSystem-combined.log" })
-  ]
-});
-
-if (process.env.NODE_ENV !== "production") {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple()
-  }));
 }

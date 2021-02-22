@@ -10,6 +10,9 @@ import { fork } from "child_process";
 
 import * as configFns from "../helpers/configFns";
 
+import { debug } from "debug";
+const debugWWW = debug("contractor-prequal-system:www");
+
 
 const onError = (error: Error) => {
 
@@ -20,12 +23,12 @@ const onError = (error: Error) => {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
-      console.error("Requires elevated privileges");
+      debugWWW("Requires elevated privileges");
       process.exit(1);
     // break;
 
     case "EADDRINUSE":
-      console.error("Port is already in use.");
+      debugWWW("Port is already in use.");
       process.exit(1);
     // break;
 
@@ -42,7 +45,7 @@ const onListening = (server: http.Server | https.Server) => {
     ? "pipe " + addr
     : "port " + addr.port.toString();
 
-  configFns.logger.info("Listening on " + bind);
+  debugWWW("Listening on " + bind);
 };
 
 
@@ -64,7 +67,7 @@ if (httpPort) {
     onListening(httpServer);
   });
 
-  configFns.logger.info("HTTP listening on " + httpPort.toString());
+  debugWWW("HTTP listening on " + httpPort.toString());
 }
 
 
@@ -91,7 +94,7 @@ if (httpsConfig) {
     onListening(httpsServer);
   });
 
-  configFns.logger.info("HTTPS listening on " + httpsConfig.port.toString());
+  debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
 
 

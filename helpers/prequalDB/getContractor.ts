@@ -4,6 +4,9 @@ import * as configFns from "../configFns";
 import type * as sqlTypes from "mssql";
 import type { Contractor } from "../../types/recordTypes";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:getContractor");
+
 
 export const getContractor = async (contractorID: number | string): Promise<Contractor> => {
 
@@ -16,6 +19,7 @@ export const getContractor = async (contractorID: number | string): Promise<Cont
       .query("select contractorID, docuShareCollectionID, isContractor," +
         " contractor_name, contractor_city, contractor_province," +
         " phone_name, phone_title, phone_number," +
+        " websiteURL," +
         " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
         " insurance_company, insurance_policyNumber, insurance_amount, insurance_expiryDate, insurance_isSatisfactory," +
         " healthSafety_status, healthSafety_isSatisfactory," +
@@ -32,7 +36,7 @@ export const getContractor = async (contractorID: number | string): Promise<Cont
     return contractor;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return null;

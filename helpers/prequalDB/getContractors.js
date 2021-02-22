@@ -13,6 +13,8 @@ exports.getContractors = void 0;
 const sqlPool = require("@cityssm/mssql-multi-pool");
 const configFns = require("../configFns");
 const sqlFns = require("../sqlFns");
+const debug_1 = require("debug");
+const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:getContractors");
 ;
 const getContractors = (canUpdate, filters) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -23,6 +25,7 @@ const getContractors = (canUpdate, filters) => __awaiter(void 0, void 0, void 0,
             (canUpdate
                 ? " phone_number,"
                 : " case when healthSafety_isSatisfactory = 1 and legal_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then phone_number else '' end as phone_number,") +
+            " websiteURL," +
             " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
             " insurance_company, insurance_policyNumber, insurance_amount, insurance_expiryDate, insurance_isSatisfactory," +
             " healthSafety_status, healthSafety_isSatisfactory," +
@@ -71,7 +74,7 @@ const getContractors = (canUpdate, filters) => __awaiter(void 0, void 0, void 0,
         return contractors;
     }
     catch (e) {
-        configFns.logger.error(e);
+        debugSQL(e);
     }
     return [];
 });

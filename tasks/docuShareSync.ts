@@ -14,6 +14,9 @@ import { updateContractor } from "../helpers/prequalDB/updateContractor";
 
 import type * as recordTypes from "../types/recordTypes";
 
+import { debug } from "debug";
+const debugDocuShare = debug("contractor-prequal-system:docuShareSync");
+
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 
 /*
@@ -73,7 +76,7 @@ const checkSavedDocuShareCollectionIDs = async () => {
       }
 
     } catch (e) {
-      configFns.logger.error(e);
+      debugDocuShare(e);
     }
   }
 };
@@ -107,7 +110,7 @@ const createHireReadyDocuShareCollections = async () => {
       }
 
     } catch (e) {
-      configFns.logger.error(e);
+      debugDocuShare(e);
     }
   }
 };

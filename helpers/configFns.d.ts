@@ -1,4 +1,3 @@
-import * as winston from "winston";
 import type * as configTypes from "../types/configTypes";
 import type * as dsTypes from "@cityssm/docushare/types";
 import type * as sqlTypes from "mssql";
@@ -23,4 +22,3 @@ export declare function getProperty(propertyName: "docuShareConfig.session"): ds
 export declare function getProperty(propertyName: "clearRiskConfig.insuranceImport.folderPath"): string;
 export declare function getProperty(propertyName: "clearRiskConfig.insuranceImport.columnNames"): configTypes.Config_ClearRisk_InsuranceImport_ColumnNames;
 export declare function getProperty(propertyName: "permissions.canUpdate"): string[];
-export declare const logger: winston.Logger;

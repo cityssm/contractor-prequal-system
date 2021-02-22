@@ -3,6 +3,9 @@ import * as configFns from "../configFns";
 
 import type * as sqlTypes from "mssql";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:getExpiredWSIBAccountNumbers");
+
 
 interface RawResult {
   wsib_accountNumber: string;
@@ -42,7 +45,7 @@ export const getExpiredWSIBAccountNumbers = async (limit: number = 50): Promise<
     return accountNumbers;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return [];

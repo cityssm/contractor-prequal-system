@@ -3,6 +3,9 @@ import * as configFns from "../configFns";
 
 import type * as sqlTypes from "mssql";
 
+import { debug } from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:hasHealthSafetyRecord");
+
 
 export const hasHealthSafetyRecord = async (contractorID: number | string): Promise<boolean> => {
 
@@ -23,7 +26,7 @@ export const hasHealthSafetyRecord = async (contractorID: number | string): Prom
     return true;
 
   } catch (e) {
-    configFns.logger.error(e);
+    debugSQL(e);
   }
 
   return false;

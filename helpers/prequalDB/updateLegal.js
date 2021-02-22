@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateLegal = void 0;
 const sqlPool = require("@cityssm/mssql-multi-pool");
 const configFns = require("../configFns");
+const debug_1 = require("debug");
+const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateLegal");
 const updateLegal = (updateForm, reqSession) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const pool = yield sqlPool.connect(configFns.getProperty("mssqlConfig"));
@@ -28,7 +30,7 @@ const updateLegal = (updateForm, reqSession) => __awaiter(void 0, void 0, void 0
         return true;
     }
     catch (e) {
-        configFns.logger.error(e);
+        debugSQL(e);
     }
     return false;
 });
