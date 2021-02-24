@@ -2,6 +2,8 @@
 
 _Thank you for taking the time to read the documentation._
 
+![Contractor Prequalification System](app.png)
+
 ## What Does "Hire Ready" Mean?
 
 Contractors are considered **Hire Ready** when they meet all of the following criteria:

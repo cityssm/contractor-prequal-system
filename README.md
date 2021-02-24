@@ -4,3 +4,5 @@
 
 A tool to assist City staff with hiring contractors
 that have been prequalified to work for the City.
+
+[More About the City's Contractor Prequalification System](https://saultstemarie.ca/City-Hall/City-Departments/Corporate-Services/Finance/Purchasing/Health-and-Safety.aspx)
