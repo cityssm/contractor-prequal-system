@@ -21,8 +21,6 @@ export interface WSIBForm {
 
 export const updateWSIB = async (updateForm: WSIBForm): Promise<boolean> => {
 
-  console.log(updateForm);
-
   try {
     const pool: sqlTypes.ConnectionPool =
       await sqlPool.connect(configFns.getProperty("mssqlConfig"));

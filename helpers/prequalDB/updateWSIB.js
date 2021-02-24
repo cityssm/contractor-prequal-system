@@ -7,7 +7,6 @@ const hasWSIBInsuranceRecord_1 = require("./hasWSIBInsuranceRecord");
 const debug_1 = require("debug");
 const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateWSIB");
 const updateWSIB = async (updateForm) => {
-    console.log(updateForm);
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         const effectiveDateString = updateForm.wsib_effectiveDate !== ""
