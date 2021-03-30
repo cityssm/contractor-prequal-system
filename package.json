@@ -45,7 +45,7 @@
     "node-cache": "^5.1.2",
     "node-localstorage": "^2.1.6",
     "papaparse": "^5.3.0",
-    "set-interval-async": "^1.0.34"
+    "set-interval-async": "^2.0.0"
   },
   "devDependencies": {
     "@cityssm/bulma-a11y": "^0.2.1",
