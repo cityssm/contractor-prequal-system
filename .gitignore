@@ -3,6 +3,7 @@
 *.log
 dsapi.jar
 
+bin/daemon/*
 data/config.*
 data/wsibRefreshCache/
 node_modules/
