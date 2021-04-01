@@ -120,13 +120,20 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="has-text-right">
-        <span class="facheck facheck-inline facheck-fas-checked has-checked-success">
-          <input id="filter--isHireReady" name="isHireReady" value="1" type="checkbox" checked />
-          <label for="filter--isHireReady">Hire Ready Only</label>
-        </span>
+        <div class="column">
+          <div class="field">
+            <label class="label" for="filter--hireStatus">Hire Status</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="filter--hireStatus" name="hireStatus">
+                  <option value="hireReady">Hire Ready</option>
+                  <option value="cityApproved">City Approved</option>
+                  <option value="">All</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </form>
     <div id="container--results">

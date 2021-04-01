@@ -10,6 +10,7 @@ const updateContractor_1 = require("../helpers/prequalDB/updateContractor");
 const debug_1 = require("debug");
 const debugDocuShare = debug_1.debug("contractor-prequal-system:docuShareSync");
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
+const recentlyModifiedMillis = 5 * 86400 * 1000;
 docuShareFns.doSetup();
 const checkSavedDocuShareCollectionIDs = async () => {
     const contractors = await getContractors_1.getContractors(true, {
@@ -71,7 +72,7 @@ const purgeDocuShareCollections = async (contractors) => {
         if (!docuShareOutput.success || docuShareOutput.dsObjects.length === 0) {
             continue;
         }
-        else if (docuShareOutput.dsObjects[0].modifiedDateMillis + (2 * 86400 * 1000) < Date.now()) {
+        else if (docuShareOutput.dsObjects[0].modifiedDateMillis + recentlyModifiedMillis < Date.now()) {
             continue;
         }
         const docuShareChildrenOutput = await ds.getChildren(collectionHandle);

@@ -17,6 +17,8 @@ const debugDocuShare = debug("contractor-prequal-system:docuShareSync");
 
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 
+const recentlyModifiedMillis = 5 * 86400 * 1000;
+
 /*
  * Setup DocuShare Connection
  */
@@ -121,7 +123,7 @@ const purgeDocuShareCollections = async (contractors: recordTypes.Contractor[]) 
     if (!docuShareOutput.success || docuShareOutput.dsObjects.length === 0) {
       continue;
 
-    } else if (docuShareOutput.dsObjects[0].modifiedDateMillis + (2 * 86400 * 1000) < Date.now()) {
+    } else if (docuShareOutput.dsObjects[0].modifiedDateMillis + recentlyModifiedMillis < Date.now()) {
       // Don't purge recently modified Collections.
       continue;
     }

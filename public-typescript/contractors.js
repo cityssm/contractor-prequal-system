@@ -519,8 +519,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
     getContractors();
     document.getElementById("filter--contractorName").addEventListener("change", getContractors);
     document.getElementById("filter--tradeCategoryID").addEventListener("change", getContractors);
-    var isHireReadyEle = document.getElementById("filter--isHireReady");
-    isHireReadyEle.addEventListener("change", function () {
-        getContractors();
-    });
+    document.getElementById("filter--hireStatus").addEventListener("change", getContractors);
 })();

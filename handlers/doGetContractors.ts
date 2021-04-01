@@ -8,7 +8,7 @@ import type { RequestHandler } from "express";
 interface FormFilters {
   contractorName: string;
   tradeCategoryID: string;
-  isHireReady?: "1";
+  hireStatus: "hireReady" | "cityApproved" | "";
 };
 
 
@@ -22,12 +22,22 @@ export const handler: RequestHandler = async (req, res) => {
     queryFilters.contractorName = formFilters.contractorName;
   }
 
-  if (formFilters.isHireReady === "1") {
-    queryFilters.isContractor = true;
-    queryFilters.wsibIsSatisfactory = true;
-    queryFilters.insuranceIsSatisfactory = true;
-    queryFilters.healthSafetyIsSatisfactory = true;
-    queryFilters.legalIsSatisfactory = true;
+  switch (formFilters.hireStatus) {
+
+    case "hireReady":
+      queryFilters.isContractor = true;
+      queryFilters.wsibIsSatisfactory = true;
+      queryFilters.insuranceIsSatisfactory = true;
+      queryFilters.healthSafetyIsSatisfactory = true;
+      queryFilters.legalIsSatisfactory = true;
+      break;
+
+    case "cityApproved":
+      queryFilters.isContractor = true;
+      queryFilters.healthSafetyIsSatisfactory = true;
+      queryFilters.legalIsSatisfactory = true;
+      break;
+
   }
 
   if (formFilters.tradeCategoryID !== "") {

@@ -852,10 +852,5 @@ declare const exports: {
 
   document.getElementById("filter--contractorName").addEventListener("change", getContractors);
   document.getElementById("filter--tradeCategoryID").addEventListener("change", getContractors);
-
-  const isHireReadyEle = document.getElementById("filter--isHireReady");
-
-  isHireReadyEle.addEventListener("change", () => {
-    getContractors();
-  });
+  document.getElementById("filter--hireStatus").addEventListener("change", getContractors);
 })();
