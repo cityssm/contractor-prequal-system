@@ -23,7 +23,7 @@
   "homepage": "https://github.com/cityssm/contractor-prequal-system#readme",
   "dependencies": {
     "@cityssm/ad-web-auth-connector": "^0.1.0",
-    "@cityssm/bulma-webapp-js": "^1.1.1",
+    "@cityssm/bulma-webapp-js": "^1.1.2",
     "@cityssm/docushare": "^0.1.0",
     "@cityssm/express-abuse-points": "^0.3.3",
     "@cityssm/expressjs-server-js": "^1.0.5",
