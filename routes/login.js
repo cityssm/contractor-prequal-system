@@ -1,11 +1,10 @@
-"use strict";
-const express_1 = require("express");
-const authFns = require("../helpers/authFns");
-const configFns = require("../helpers/configFns");
-const debug_1 = require("debug");
-const debugLogin = debug_1.debug("contractor-prequal-system:routes:login");
+import { Router } from "express";
+import * as authFns from "../helpers/authFns.js";
+import * as configFns from "../helpers/configFns.js";
+import debug from "debug";
+const debugLogin = debug("contractor-prequal-system:routes:login");
 const redirectURL = configFns.getProperty("reverseProxy.urlPrefix") + "/contractors";
-const router = express_1.Router();
+export const router = Router();
 router.route("/")
     .get((req, res) => {
     const sessionCookieName = configFns.getProperty("session.cookieName");
@@ -44,4 +43,4 @@ router.route("/")
         });
     }
 });
-module.exports = router;
+export default router;

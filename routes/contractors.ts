@@ -1,24 +1,24 @@
 import { Router, RequestHandler } from "express";
 
 
-import { handler as handler_contractors } from "../handlers/contractors";
-import { handler as handler_doGetContractors } from "../handlers/doGetContractors";
-import { handler as handler_doGetTradeCategoriesByContractorID } from "../handlers/doGetTradeCategoriesByContractorID";
+import { handler as handler_contractors } from "../handlers/contractors.js";
+import { handler as handler_doGetContractors } from "../handlers/doGetContractors.js";
+import { handler as handler_doGetTradeCategoriesByContractorID } from "../handlers/doGetTradeCategoriesByContractorID.js";
 
-import { handler as handler_doGetAllTradeCategories } from "../handlers/doGetAllTradeCategories";
-import { handler as handler_doGetHealthSafetyOptions } from "../handlers/doGetHealthSafetyOptions";
-import { handler as handler_doGetInsuranceOptions } from "../handlers/doGetInsuranceOptions";
+import { handler as handler_doGetAllTradeCategories } from "../handlers/doGetAllTradeCategories.js";
+import { handler as handler_doGetHealthSafetyOptions } from "../handlers/doGetHealthSafetyOptions.js";
+import { handler as handler_doGetInsuranceOptions } from "../handlers/doGetInsuranceOptions.js";
 
-import { handler as handler_doUpdateContractor } from "../handlers/doUpdateContractor";
-import { handler as handler_doCreateDocuShareCollection } from "../handlers/doCreateDocuShareCollection";
+import { handler as handler_doUpdateContractor } from "../handlers/doUpdateContractor.js";
+import { handler as handler_doCreateDocuShareCollection } from "../handlers/doCreateDocuShareCollection.js";
 
-import { handler as handler_doUpdateHealthSafety } from "../handlers/doUpdateHealthSafety";
-import { handler as handler_doUpdateLegal } from "../handlers/doUpdateLegal";
-import { handler as handler_doUpdateWSIB } from "../handlers/doUpdateWSIB";
-import { handler as handler_doUpdateInsurance } from "../handlers/doUpdateInsurance";
+import { handler as handler_doUpdateHealthSafety } from "../handlers/doUpdateHealthSafety.js";
+import { handler as handler_doUpdateLegal } from "../handlers/doUpdateLegal.js";
+import { handler as handler_doUpdateWSIB } from "../handlers/doUpdateWSIB.js";
+import { handler as handler_doUpdateInsurance } from "../handlers/doUpdateInsurance.js";
 
-import { handler as handler_doAddTradeCategory } from "../handlers/doAddTradeCategory";
-import { handler as handler_doRemoveTradeCategory } from "../handlers/doRemoveTradeCategory";
+import { handler as handler_doAddTradeCategory } from "../handlers/doAddTradeCategory.js";
+import { handler as handler_doRemoveTradeCategory } from "../handlers/doRemoveTradeCategory.js";
 
 
 const handler_updateOnly: RequestHandler = (req, res, next) => {
@@ -35,7 +35,7 @@ const handler_updateOnly: RequestHandler = (req, res, next) => {
 };
 
 
-const router = Router();
+export const router = Router();
 
 
 router.get("/", handler_contractors);
@@ -81,4 +81,4 @@ router.post("/doAddTradeCategory", handler_updateOnly, handler_doAddTradeCategor
 router.post("/doRemoveTradeCategory", handler_updateOnly, handler_doRemoveTradeCategory);
 
 
-export = router;
+export default router;

@@ -1,14 +1,12 @@
 #!/usr/bin/env node
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const app = require("../app");
-const http = require("http");
-const https = require("https");
-const fs = require("fs");
-const child_process_1 = require("child_process");
-const configFns = require("../helpers/configFns");
-const debug_1 = require("debug");
-const debugWWW = debug_1.debug("contractor-prequal-system:www");
+import app from "../app.js";
+import http from "http";
+import https from "https";
+import fs from "fs";
+import { fork } from "child_process";
+import * as configFns from "../helpers/configFns.js";
+import debug from "debug";
+const debugWWW = debug("contractor-prequal-system:www");
 const onError = (error) => {
     if (error.syscall !== "listen") {
         throw error;
@@ -55,6 +53,6 @@ if (httpsConfig) {
     });
     debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
-child_process_1.fork("./tasks/clearRiskInsuranceImport");
-child_process_1.fork("./tasks/docuShareSync");
-child_process_1.fork("./tasks/wsibRefresh");
+fork("./tasks/clearRiskInsuranceImport");
+fork("./tasks/docuShareSync");
+fork("./tasks/wsibRefresh");

@@ -1,6 +1,6 @@
-import { removeTradeCategory } from "../helpers/prequalDB/removeTradeCategory";
+import { removeTradeCategory } from "../helpers/prequalDB/removeTradeCategory.js";
 
-import * as resultsCache from "../helpers/queryResultsCache";
+import * as resultsCache from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 

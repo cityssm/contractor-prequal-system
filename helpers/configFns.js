@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProperty = void 0;
-const config = require("../data/config");
+import { config } from "../data/config.js";
 Object.freeze(config);
 const configOverrides = {};
 const configFallbackValues = new Map();
@@ -15,7 +12,7 @@ configFallbackValues.set("session.secret", "cityssm/contractor-prequal-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
 configFallbackValues.set("session.doKeepAlive", false);
 configFallbackValues.set("permissions.canUpdate", []);
-function getProperty(propertyName) {
+export function getProperty(propertyName) {
     if (configOverrides.hasOwnProperty(propertyName)) {
         return configOverrides[propertyName];
     }
@@ -29,4 +26,3 @@ function getProperty(propertyName) {
     }
     return currentObj;
 }
-exports.getProperty = getProperty;

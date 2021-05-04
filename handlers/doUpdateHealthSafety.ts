@@ -1,6 +1,6 @@
-import { updateHealthSafety, HealthSafetyForm } from "../helpers/prequalDB/updateHealthSafety";
+import { updateHealthSafety, HealthSafetyForm } from "../helpers/prequalDB/updateHealthSafety.js";
 
-import * as resultsCache from "../helpers/queryResultsCache";
+import * as resultsCache from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 

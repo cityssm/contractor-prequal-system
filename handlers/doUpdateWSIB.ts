@@ -1,6 +1,6 @@
-import { updateWSIB, WSIBForm } from "../helpers/prequalDB/updateWSIB";
+import { updateWSIB, WSIBForm } from "../helpers/prequalDB/updateWSIB.js";
 
-import * as resultsCache from "../helpers/queryResultsCache";
+import * as resultsCache from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 

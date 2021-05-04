@@ -14,7 +14,7 @@ export const buildWhereClauseLike = (columnNames: string[], queryString: string)
 
   let whereClause = "";
 
-  const queryStringArray = queryString.split(" ");
+  const queryStringArray = (queryString || "").split(" ");
 
   for (const queryStringPiece of queryStringArray) {
 

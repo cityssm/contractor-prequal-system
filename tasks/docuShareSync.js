@@ -1,19 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const ds = require("@cityssm/docushare");
-const configFns = require("../helpers/configFns");
-const docuShareFns = require("../helpers/docuShareFns");
-const queryResultsCache_1 = require("../helpers/queryResultsCache");
-const fixed_1 = require("set-interval-async/fixed");
-const getContractors_1 = require("../helpers/prequalDB/getContractors");
-const updateContractor_1 = require("../helpers/prequalDB/updateContractor");
-const debug_1 = require("debug");
-const debugDocuShare = debug_1.debug("contractor-prequal-system:docuShareSync");
+import * as ds from "@cityssm/docushare";
+import * as configFns from "../helpers/configFns.js";
+import * as docuShareFns from "../helpers/docuShareFns.js";
+import { clearCache } from "../helpers/queryResultsCache.js";
+import { setIntervalAsync } from "set-interval-async/fixed/index.js";
+import { getContractors } from "../helpers/prequalDB/getContractors.js";
+import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
+import debug from "debug";
+const debugDocuShare = debug("contractor-prequal-system:docuShareSync");
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 const recentlyModifiedMillis = 5 * 86400 * 1000;
 docuShareFns.doSetup();
 const checkSavedDocuShareCollectionIDs = async () => {
-    const contractors = await getContractors_1.getContractors(true, {
+    const contractors = await getContractors(true, {
         hasDocuShareCollectionID: true
     });
     for (const contractor of contractors) {
@@ -27,12 +25,12 @@ const checkSavedDocuShareCollectionIDs = async () => {
                     }
                 }
                 else {
-                    const success = await updateContractor_1.updateContractor({
+                    const success = await updateContractor({
                         contractorID: contractor.contractorID,
                         docuShareCollectionID: ""
                     });
                     if (success) {
-                        queryResultsCache_1.clearCache();
+                        clearCache();
                     }
                 }
             }
@@ -43,7 +41,7 @@ const checkSavedDocuShareCollectionIDs = async () => {
     }
 };
 const createHireReadyDocuShareCollections = async () => {
-    const contractors = await getContractors_1.getContractors(true, {
+    const contractors = await getContractors(true, {
         healthSafetyIsSatisfactory: true,
         legalIsSatisfactory: true,
         wsibIsSatisfactory: true,
@@ -54,7 +52,7 @@ const createHireReadyDocuShareCollections = async () => {
             const docuShareOutput = await ds.createCollection(contractorPrequalCollectionHandle, contractor.contractor_name);
             if (docuShareOutput.success) {
                 const collectionID = docuShareOutput.dsObjects[0].handle.split("-")[1];
-                await updateContractor_1.updateContractor({
+                await updateContractor({
                     contractorID: contractor.contractorID,
                     docuShareCollectionID: collectionID
                 });
@@ -79,7 +77,7 @@ const purgeDocuShareCollections = async (contractors) => {
         if (docuShareChildrenOutput.success && docuShareChildrenOutput.dsObjects.length === 0) {
             const success = await ds.deleteObject(collectionHandle);
             if (success) {
-                await updateContractor_1.updateContractor({
+                await updateContractor({
                     contractorID: contractor.contractorID,
                     docuShareCollectionID: ""
                 });
@@ -88,14 +86,14 @@ const purgeDocuShareCollections = async (contractors) => {
     }
 };
 const purgeUnsatisfactoryLegalDocuShareCollections = async () => {
-    const contractors = await getContractors_1.getContractors(true, {
+    const contractors = await getContractors(true, {
         hasDocuShareCollectionID: true,
         legalIsSatisfactory: false
     });
     await purgeDocuShareCollections(contractors);
 };
 const purgeUnsatisfactoryHealthSafetyDocuShareCollections = async () => {
-    const contractors = await getContractors_1.getContractors(true, {
+    const contractors = await getContractors(true, {
         hasDocuShareCollectionID: true,
         healthSafetyIsSatisfactory: false
     });
@@ -108,4 +106,4 @@ const doTask = async () => {
     await checkSavedDocuShareCollectionIDs();
 };
 doTask();
-fixed_1.setIntervalAsync(doTask, 2 * 60 * 60 * 1000);
+setIntervalAsync(doTask, 2 * 60 * 60 * 1000);

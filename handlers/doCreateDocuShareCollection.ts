@@ -1,12 +1,12 @@
-import { getContractor } from "../helpers/prequalDB/getContractor";
-import { updateContractor } from "../helpers/prequalDB/updateContractor";
+import { getContractor } from "../helpers/prequalDB/getContractor.js";
+import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
 
 import * as ds from "@cityssm/docushare";
 
-import * as configFns from "../helpers/configFns";
-import * as docuShareFns from "../helpers/docuShareFns";
+import * as configFns from "../helpers/configFns.js";
+import * as docuShareFns from "../helpers/docuShareFns.js";
 
-import { clearCache } from "../helpers/queryResultsCache";
+import { clearCache } from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 

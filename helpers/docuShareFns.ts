@@ -2,7 +2,7 @@ import * as path from "path";
 
 import * as ds from "@cityssm/docushare";
 
-import * as configFns from "./configFns";
+import * as configFns from "./configFns.js";
 
 
 export const doSetup = () => {

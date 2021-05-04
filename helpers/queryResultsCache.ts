@@ -1,4 +1,4 @@
-import * as NodeCache from "node-cache";
+import NodeCache from "node-cache";
 
 import type { Contractor } from "../types/recordTypes";
 import type { GetContractorFilters } from "./prequalDB/getContractors";

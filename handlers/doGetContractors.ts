@@ -1,6 +1,6 @@
-import { getContractors, GetContractorFilters } from "../helpers/prequalDB/getContractors";
+import { getContractors, GetContractorFilters } from "../helpers/prequalDB/getContractors.js";
 
-import * as resultsCache from "../helpers/queryResultsCache";
+import * as resultsCache from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 

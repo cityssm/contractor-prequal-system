@@ -1,13 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const getTradeCategoriesByContractorID_1 = require("../helpers/prequalDB/getTradeCategoriesByContractorID");
+import { getTradeCategoriesByContractorID } from "../helpers/prequalDB/getTradeCategoriesByContractorID.js";
 ;
-const handler = async (req, res) => {
+export const handler = async (req, res) => {
     const formFilters = req.body;
-    const tradeCategories = await getTradeCategoriesByContractorID_1.getTradeCategoriesByContractorID(formFilters.contractorID);
+    const tradeCategories = await getTradeCategoriesByContractorID(formFilters.contractorID);
     return res.json({
         tradeCategories
     });
 };
-exports.handler = handler;

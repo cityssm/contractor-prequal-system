@@ -1,33 +1,34 @@
-import * as createError from "http-errors";
-import * as express from "express";
+import createError from "http-errors";
+import express from "express";
 
 import { abuseCheck } from "@cityssm/express-abuse-points";
-import * as compression from "compression";
-import * as path from "path";
-import * as cookieParser from "cookie-parser";
-import * as csurf from "csurf";
-import * as rateLimit from "express-rate-limit";
+import compression from "compression";
+import path from "path";
+import cookieParser from "cookie-parser";
+import csurf from "csurf";
+import rateLimit from "express-rate-limit";
 
-import * as session from "express-session";
-import * as sqlite from "connect-sqlite3";
+import session from "express-session";
+import sqlite from "connect-sqlite3";
 
-import * as configFns from "./helpers/configFns";
-import * as stringFns from "@cityssm/expressjs-server-js/stringFns";
-import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns";
+import * as configFns from "./helpers/configFns.js";
+import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
-import * as routerLogin from "./routes/login";
-import * as routerContractors from "./routes/contractors";
+import routerLogin from "./routes/login.js";
+import routerContractors from "./routes/contractors.js";
 
-import { debug } from "debug";
+import debug from "debug";
 const debugApp = debug("contractor-prequal-system:app");
 
+const __dirname = ".";
 
 /*
  * INITIALIZE APP
  */
 
 
-const app = express();
+export const app = express();
 
 if (!configFns.getProperty("reverseProxy.disableEtag")) {
   app.set("etag", false);
@@ -198,4 +199,4 @@ app.use(function(err: Error, req: express.Request, res: express.Response, _next:
 });
 
 
-export = app;
+export default app;

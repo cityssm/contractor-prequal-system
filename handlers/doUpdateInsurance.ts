@@ -1,6 +1,6 @@
-import { updateInsurance, InsuranceForm } from "../helpers/prequalDB/updateInsurance";
+import { updateInsurance, InsuranceForm } from "../helpers/prequalDB/updateInsurance.js";
 
-import * as resultsCache from "../helpers/queryResultsCache";
+import * as resultsCache from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 

@@ -1,16 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateHealthSafety = void 0;
-const sqlPool = require("@cityssm/mssql-multi-pool");
-const configFns = require("../configFns");
-const hasHealthSafetyRecord_1 = require("./hasHealthSafetyRecord");
-const debug_1 = require("debug");
-const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateHealthSafety");
-const updateHealthSafety = async (updateForm) => {
+import * as sqlPool from "@cityssm/mssql-multi-pool";
+import * as configFns from "../configFns.js";
+import { hasHealthSafetyRecord } from "./hasHealthSafetyRecord.js";
+import debug from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateHealthSafety");
+export const updateHealthSafety = async (updateForm) => {
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         let sql;
-        if (await hasHealthSafetyRecord_1.hasHealthSafetyRecord(updateForm.contractorID)) {
+        if (await hasHealthSafetyRecord(updateForm.contractorID)) {
             sql = "update cpqs_pass" +
                 " set cpass_status = @healthSafety_status" +
                 " where cpass_contractorid = @contractorID";
@@ -31,4 +28,3 @@ const updateHealthSafety = async (updateForm) => {
     }
     return false;
 };
-exports.updateHealthSafety = updateHealthSafety;

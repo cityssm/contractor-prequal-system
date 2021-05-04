@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateInsurance = void 0;
-const sqlPool = require("@cityssm/mssql-multi-pool");
-const configFns = require("../configFns");
-const hasWSIBInsuranceRecord_1 = require("./hasWSIBInsuranceRecord");
-const debug_1 = require("debug");
-const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateInsurance");
-const updateInsurance = async (updateForm) => {
+import * as sqlPool from "@cityssm/mssql-multi-pool";
+import * as configFns from "../configFns.js";
+import { hasWSIBInsuranceRecord } from "./hasWSIBInsuranceRecord.js";
+import debug from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateInsurance");
+export const updateInsurance = async (updateForm) => {
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         const insuranceAmount = updateForm.insurance_amount !== ""
@@ -16,7 +13,7 @@ const updateInsurance = async (updateForm) => {
             ? updateForm.insurance_expiryDate
             : null;
         let sql;
-        if (await hasWSIBInsuranceRecord_1.hasWSIBInsuranceRecord(updateForm.contractorID)) {
+        if (await hasWSIBInsuranceRecord(updateForm.contractorID)) {
             sql = "update cpqs_p2" +
                 " set cp2_insurancecompany = @insurance_company," +
                 " cp2_insurancepolicynumber = @insurance_policyNumber," +
@@ -43,4 +40,3 @@ const updateInsurance = async (updateForm) => {
     }
     return false;
 };
-exports.updateInsurance = updateInsurance;

@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateLegal = void 0;
-const sqlPool = require("@cityssm/mssql-multi-pool");
-const configFns = require("../configFns");
-const debug_1 = require("debug");
-const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateLegal");
-const updateLegal = async (updateForm, reqSession) => {
+import * as sqlPool from "@cityssm/mssql-multi-pool";
+import * as configFns from "../configFns.js";
+import debug from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateLegal");
+export const updateLegal = async (updateForm, reqSession) => {
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         await pool.request()
@@ -25,4 +22,3 @@ const updateLegal = async (updateForm, reqSession) => {
     }
     return false;
 };
-exports.updateLegal = updateLegal;

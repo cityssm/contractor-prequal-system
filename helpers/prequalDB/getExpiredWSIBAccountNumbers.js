@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getExpiredWSIBAccountNumbers = void 0;
-const sqlPool = require("@cityssm/mssql-multi-pool");
-const configFns = require("../configFns");
-const debug_1 = require("debug");
-const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:getExpiredWSIBAccountNumbers");
-const getExpiredWSIBAccountNumbers = async (limit = 50) => {
+import * as sqlPool from "@cityssm/mssql-multi-pool";
+import * as configFns from "../configFns.js";
+import debug from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:getExpiredWSIBAccountNumbers");
+export const getExpiredWSIBAccountNumbers = async (limit = 50) => {
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         const sql = "select top " + limit.toString() + " wsib_accountNumber" +
@@ -33,4 +30,3 @@ const getExpiredWSIBAccountNumbers = async (limit = 50) => {
     }
     return [];
 };
-exports.getExpiredWSIBAccountNumbers = getExpiredWSIBAccountNumbers;

@@ -1,4 +1,4 @@
-import { getTradeCategoriesByContractorID } from "../helpers/prequalDB/getTradeCategoriesByContractorID";
+import { getTradeCategoriesByContractorID } from "../helpers/prequalDB/getTradeCategoriesByContractorID.js";
 
 import type { RequestHandler } from "express";
 

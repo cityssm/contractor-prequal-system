@@ -1,4 +1,4 @@
-import { getDistinctInsuranceCompanyNames } from "../helpers/prequalDB/getDistinctInsuranceCompanyNames";
+import { getDistinctInsuranceCompanyNames } from "../helpers/prequalDB/getDistinctInsuranceCompanyNames.js";
 
 import type { RequestHandler } from "express";
 

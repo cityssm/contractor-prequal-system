@@ -9,7 +9,7 @@ import type { ADWebAuthConfig } from "@cityssm/ad-web-auth-connector/types";
  */
 
 
-import config = require("../data/config");
+import { config } from "../data/config.js";
 
 Object.freeze(config);
 

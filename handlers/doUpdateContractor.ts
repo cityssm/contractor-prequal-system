@@ -1,6 +1,6 @@
-import { updateContractor, ContractorForm } from "../helpers/prequalDB/updateContractor";
+import { updateContractor, ContractorForm } from "../helpers/prequalDB/updateContractor.js";
 
-import * as resultsCache from "../helpers/queryResultsCache";
+import * as resultsCache from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 

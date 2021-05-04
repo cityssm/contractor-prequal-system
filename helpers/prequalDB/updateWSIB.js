@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateWSIB = void 0;
-const sqlPool = require("@cityssm/mssql-multi-pool");
-const configFns = require("../configFns");
-const hasWSIBInsuranceRecord_1 = require("./hasWSIBInsuranceRecord");
-const debug_1 = require("debug");
-const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateWSIB");
-const updateWSIB = async (updateForm) => {
+import * as sqlPool from "@cityssm/mssql-multi-pool";
+import * as configFns from "../configFns.js";
+import { hasWSIBInsuranceRecord } from "./hasWSIBInsuranceRecord.js";
+import debug from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateWSIB");
+export const updateWSIB = async (updateForm) => {
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         const effectiveDateString = updateForm.wsib_effectiveDate !== ""
@@ -19,7 +16,7 @@ const updateWSIB = async (updateForm) => {
             ? 1
             : 0;
         let sql;
-        const hasRecord = await hasWSIBInsuranceRecord_1.hasWSIBInsuranceRecord(updateForm.contractorID);
+        const hasRecord = await hasWSIBInsuranceRecord(updateForm.contractorID);
         if (hasRecord) {
             sql = "update cpqs_p2" +
                 " set cp2_wsibaccountnumber = @wsib_accountNumber," +
@@ -49,4 +46,3 @@ const updateWSIB = async (updateForm) => {
     }
     return false;
 };
-exports.updateWSIB = updateWSIB;

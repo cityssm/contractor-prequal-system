@@ -1,28 +1,28 @@
-"use strict";
-const createError = require("http-errors");
-const express = require("express");
-const express_abuse_points_1 = require("@cityssm/express-abuse-points");
-const compression = require("compression");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const csurf = require("csurf");
-const rateLimit = require("express-rate-limit");
-const session = require("express-session");
-const sqlite = require("connect-sqlite3");
-const configFns = require("./helpers/configFns");
-const stringFns = require("@cityssm/expressjs-server-js/stringFns");
-const dateTimeFns = require("@cityssm/expressjs-server-js/dateTimeFns");
-const routerLogin = require("./routes/login");
-const routerContractors = require("./routes/contractors");
-const debug_1 = require("debug");
-const debugApp = debug_1.debug("contractor-prequal-system:app");
-const app = express();
+import createError from "http-errors";
+import express from "express";
+import { abuseCheck } from "@cityssm/express-abuse-points";
+import compression from "compression";
+import path from "path";
+import cookieParser from "cookie-parser";
+import csurf from "csurf";
+import rateLimit from "express-rate-limit";
+import session from "express-session";
+import sqlite from "connect-sqlite3";
+import * as configFns from "./helpers/configFns.js";
+import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
+import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
+import routerLogin from "./routes/login.js";
+import routerContractors from "./routes/contractors.js";
+import debug from "debug";
+const debugApp = debug("contractor-prequal-system:app");
+const __dirname = ".";
+export const app = express();
 if (!configFns.getProperty("reverseProxy.disableEtag")) {
     app.set("etag", false);
 }
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(express_abuse_points_1.abuseCheck({
+app.use(abuseCheck({
     byXForwardedFor: configFns.getProperty("reverseProxy.blockViaXForwardedFor"),
     byIP: !configFns.getProperty("reverseProxy.blockViaXForwardedFor")
 }));
@@ -108,4 +108,4 @@ app.use(function (err, req, res, _next) {
     res.status(err.status || 500);
     res.render("error");
 });
-module.exports = app;
+export default app;

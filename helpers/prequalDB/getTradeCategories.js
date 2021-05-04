@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTradeCategories = void 0;
-const sqlPool = require("@cityssm/mssql-multi-pool");
-const configFns = require("../configFns");
-const debug_1 = require("debug");
-const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:getTradeCategories");
-const getTradeCategories = async (inUse) => {
+import * as sqlPool from "@cityssm/mssql-multi-pool";
+import * as configFns from "../configFns.js";
+import debug from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:getTradeCategories");
+export const getTradeCategories = async (inUse) => {
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         let sql = "";
@@ -33,4 +30,3 @@ const getTradeCategories = async (inUse) => {
     }
     return [];
 };
-exports.getTradeCategories = getTradeCategories;

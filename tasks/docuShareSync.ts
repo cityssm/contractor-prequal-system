@@ -1,18 +1,18 @@
 import * as ds from "@cityssm/docushare";
 
-import * as configFns from "../helpers/configFns";
-import * as docuShareFns from "../helpers/docuShareFns";
+import * as configFns from "../helpers/configFns.js";
+import * as docuShareFns from "../helpers/docuShareFns.js";
 
-import { clearCache } from "../helpers/queryResultsCache";
+import { clearCache } from "../helpers/queryResultsCache.js";
 
-import { setIntervalAsync } from "set-interval-async/fixed";
+import { setIntervalAsync } from "set-interval-async/fixed/index.js";
 
-import { getContractors } from "../helpers/prequalDB/getContractors";
-import { updateContractor } from "../helpers/prequalDB/updateContractor";
+import { getContractors } from "../helpers/prequalDB/getContractors.js";
+import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
 
 import type * as recordTypes from "../types/recordTypes";
 
-import { debug } from "debug";
+import debug from "debug";
 const debugDocuShare = debug("contractor-prequal-system:docuShareSync");
 
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");

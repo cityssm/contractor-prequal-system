@@ -1,18 +1,18 @@
 import { Router } from "express";
 
-import * as authFns from "../helpers/authFns";
+import * as authFns from "../helpers/authFns.js";
 
-import * as configFns from "../helpers/configFns";
+import * as configFns from "../helpers/configFns.js";
 
 
-import { debug } from "debug";
+import debug from "debug";
 const debugLogin = debug("contractor-prequal-system:routes:login");
 
 
 const redirectURL = configFns.getProperty("reverseProxy.urlPrefix") + "/contractors";
 
 
-const router = Router();
+export const router = Router();
 
 
 router.route("/")
@@ -67,4 +67,4 @@ router.route("/")
   });
 
 
-export = router;
+export default router;

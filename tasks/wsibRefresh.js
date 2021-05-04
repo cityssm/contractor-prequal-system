@@ -1,13 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const getExpiredWSIBAccountNumbers_1 = require("../helpers/prequalDB/getExpiredWSIBAccountNumbers");
-const updateWSIBExpiryDate_1 = require("../helpers/prequalDB/updateWSIBExpiryDate");
-const wsib = require("@cityssm/wsib-clearance-check");
-const fixed_1 = require("set-interval-async/fixed");
-const node_localstorage_1 = require("node-localstorage");
-const debug_1 = require("debug");
-const debugWSIB = debug_1.debug("contractor-prequal-system:wsibRefresh");
-const accountNumbersToSkip = new node_localstorage_1.LocalStorage("./data/wsibRefreshCache");
+import { getExpiredWSIBAccountNumbers } from "../helpers/prequalDB/getExpiredWSIBAccountNumbers.js";
+import { updateWSIBExpiryDate } from "../helpers/prequalDB/updateWSIBExpiryDate.js";
+import * as wsib from "@cityssm/wsib-clearance-check";
+import { setIntervalAsync } from "set-interval-async/fixed/index.js";
+import { LocalStorage } from "node-localstorage";
+import debug from "debug";
+const debugWSIB = debug("contractor-prequal-system:wsibRefresh");
+const accountNumbersToSkip = new LocalStorage("./data/wsibRefreshCache");
 const refreshIntervalMillis = 2 * 60 * 60 * 1000;
 const calculateCacheExpiry = (dayMultiplier) => {
     return Date.now() +
@@ -32,7 +30,7 @@ const purgeExpiredCacheEntries = () => {
     }
 };
 const refreshWSIBDates = async () => {
-    const wsibAccountNumbers = await getExpiredWSIBAccountNumbers_1.getExpiredWSIBAccountNumbers(50 + accountNumbersToSkip.length);
+    const wsibAccountNumbers = await getExpiredWSIBAccountNumbers(50 + accountNumbersToSkip.length);
     for (const accountNumber of wsibAccountNumbers) {
         if (accountNumbersToSkip.getItem(accountNumber)) {
             continue;
@@ -41,7 +39,7 @@ const refreshWSIBDates = async () => {
             const certificate = await wsib.getClearanceByAccountNumber(accountNumber);
             if (certificate.success) {
                 debugWSIB(certificate);
-                await updateWSIBExpiryDate_1.updateWSIBExpiryDate(accountNumber, certificate.validityPeriodEnd);
+                await updateWSIBExpiryDate(accountNumber, certificate.validityPeriodEnd);
             }
             else {
                 debugWSIB(JSON.stringify(certificate));
@@ -59,4 +57,4 @@ const doTask = async () => {
     await refreshWSIBDates();
 };
 doTask();
-fixed_1.setIntervalAsync(doTask, refreshIntervalMillis);
+setIntervalAsync(doTask, refreshIntervalMillis);

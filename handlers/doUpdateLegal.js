@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const updateLegal_1 = require("../helpers/prequalDB/updateLegal");
-const resultsCache = require("../helpers/queryResultsCache");
-const handler = async (req, res) => {
+import { updateLegal } from "../helpers/prequalDB/updateLegal.js";
+import * as resultsCache from "../helpers/queryResultsCache.js";
+export const handler = async (req, res) => {
     const updateForm = req.body;
-    const success = await updateLegal_1.updateLegal(updateForm, req.session);
+    const success = await updateLegal(updateForm, req.session);
     if (success) {
         resultsCache.clearCache();
     }
@@ -13,4 +10,3 @@ const handler = async (req, res) => {
         success
     });
 };
-exports.handler = handler;

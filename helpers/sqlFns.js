@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildWhereClauseLike = void 0;
 const sanitizeWherePiece = (unsanitizedString) => {
     const sanitizedString = unsanitizedString
         .replace(/\[/g, "[[]")
@@ -9,9 +6,9 @@ const sanitizeWherePiece = (unsanitizedString) => {
         .replace(/'/g, "''");
     return sanitizedString;
 };
-const buildWhereClauseLike = (columnNames, queryString) => {
+export const buildWhereClauseLike = (columnNames, queryString) => {
     let whereClause = "";
-    const queryStringArray = queryString.split(" ");
+    const queryStringArray = (queryString || "").split(" ");
     for (const queryStringPiece of queryStringArray) {
         if (queryStringPiece === "") {
             continue;
@@ -28,4 +25,3 @@ const buildWhereClauseLike = (columnNames, queryString) => {
     }
     return whereClause;
 };
-exports.buildWhereClauseLike = buildWhereClauseLike;

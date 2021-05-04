@@ -1,6 +1,6 @@
-import { updateLegal, LegalForm } from "../helpers/prequalDB/updateLegal";
+import { updateLegal, LegalForm } from "../helpers/prequalDB/updateLegal.js";
 
-import * as resultsCache from "../helpers/queryResultsCache";
+import * as resultsCache from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 

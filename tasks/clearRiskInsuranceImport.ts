@@ -1,16 +1,16 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import * as configFns from "../helpers/configFns";
-import { getContractor } from "../helpers/prequalDB/getContractor";
-import { updateInsurance, InsuranceForm } from "../helpers/prequalDB/updateInsurance";
+import * as configFns from "../helpers/configFns.js";
+import { getContractor } from "../helpers/prequalDB/getContractor.js";
+import { updateInsurance, InsuranceForm } from "../helpers/prequalDB/updateInsurance.js";
 
 import * as chokidar from "chokidar";
 import * as Papa from "papaparse";
 
-import { setIntervalAsync } from "set-interval-async/fixed";
+import { setIntervalAsync } from "set-interval-async/fixed/index.js";
 
-import { debug } from "debug";
+import debug from "debug";
 const debugClearRisk = debug("contractor-prequal-system:clearRiskInsuranceImport");
 
 

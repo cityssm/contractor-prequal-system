@@ -1,9 +1,9 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns";
+import * as configFns from "../configFns.js";
 
 import type * as sqlTypes from "mssql";
 
-import { debug } from "debug";
+import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:getHealthSafetyStatusOptions");
 
 

@@ -1,13 +1,13 @@
-import { getExpiredWSIBAccountNumbers } from "../helpers/prequalDB/getExpiredWSIBAccountNumbers";
-import { updateWSIBExpiryDate } from "../helpers/prequalDB/updateWSIBExpiryDate";
+import { getExpiredWSIBAccountNumbers } from "../helpers/prequalDB/getExpiredWSIBAccountNumbers.js";
+import { updateWSIBExpiryDate } from "../helpers/prequalDB/updateWSIBExpiryDate.js";
 
 import * as wsib from "@cityssm/wsib-clearance-check";
 
-import { setIntervalAsync } from "set-interval-async/fixed";
+import { setIntervalAsync } from "set-interval-async/fixed/index.js";
 
 import { LocalStorage } from "node-localstorage";
 
-import { debug } from "debug";
+import debug from "debug";
 const debugWSIB = debug("contractor-prequal-system:wsibRefresh");
 
 

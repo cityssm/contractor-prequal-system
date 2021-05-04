@@ -1,16 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-const getContractor_1 = require("../helpers/prequalDB/getContractor");
-const updateContractor_1 = require("../helpers/prequalDB/updateContractor");
-const ds = require("@cityssm/docushare");
-const configFns = require("../helpers/configFns");
-const docuShareFns = require("../helpers/docuShareFns");
-const queryResultsCache_1 = require("../helpers/queryResultsCache");
+import { getContractor } from "../helpers/prequalDB/getContractor.js";
+import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
+import * as ds from "@cityssm/docushare";
+import * as configFns from "../helpers/configFns.js";
+import * as docuShareFns from "../helpers/docuShareFns.js";
+import { clearCache } from "../helpers/queryResultsCache.js";
 docuShareFns.doSetup();
-const handler = async (req, res) => {
+export const handler = async (req, res) => {
     const formParams = req.body;
-    const contractor = await getContractor_1.getContractor(formParams.contractorID);
+    const contractor = await getContractor(formParams.contractorID);
     if (!contractor) {
         return res.json({
             success: false,
@@ -26,16 +23,15 @@ const handler = async (req, res) => {
         });
     }
     const docuShareCollectionID = docuShareFns.getIDFromHandle(newCollection.dsObjects[0].handle);
-    const success = await updateContractor_1.updateContractor({
+    const success = await updateContractor({
         contractorID: contractor.contractorID,
         docuShareCollectionID
     });
     if (success) {
-        queryResultsCache_1.clearCache();
+        clearCache();
     }
     return res.json({
         success,
         docuShareCollectionID
     });
 };
-exports.handler = handler;

@@ -1,11 +1,11 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns";
-import * as sqlFns from "../sqlFns";
+import * as configFns from "../configFns.js";
+import * as sqlFns from "../sqlFns.js";
 
 import type * as sqlTypes from "mssql";
 import type { Contractor } from "../../types/recordTypes";
 
-import { debug } from "debug";
+import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:getContractors");
 
 

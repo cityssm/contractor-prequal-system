@@ -1,4 +1,4 @@
-import { getTradeCategories } from "../helpers/prequalDB/getTradeCategories";
+import { getTradeCategories } from "../helpers/prequalDB/getTradeCategories.js";
 
 import type { RequestHandler } from "express";
 

@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateWSIBExpiryDate = void 0;
-const sqlPool = require("@cityssm/mssql-multi-pool");
-const configFns = require("../configFns");
-const debug_1 = require("debug");
-const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:updateWSIBExpiryDate");
-const updateWSIBExpiryDate = async (accountNumber, expiryDate) => {
+import * as sqlPool from "@cityssm/mssql-multi-pool";
+import * as configFns from "../configFns.js";
+import debug from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:updateWSIBExpiryDate");
+export const updateWSIBExpiryDate = async (accountNumber, expiryDate) => {
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         await pool.request()
@@ -21,4 +18,3 @@ const updateWSIBExpiryDate = async (accountNumber, expiryDate) => {
     }
     return false;
 };
-exports.updateWSIBExpiryDate = updateWSIBExpiryDate;

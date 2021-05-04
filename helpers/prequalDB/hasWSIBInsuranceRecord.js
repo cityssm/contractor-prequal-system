@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.hasWSIBInsuranceRecord = void 0;
-const sqlPool = require("@cityssm/mssql-multi-pool");
-const configFns = require("../configFns");
-const debug_1 = require("debug");
-const debugSQL = debug_1.debug("contractor-prequal-system:prequalDB:hasWSIBInsuranceRecord");
-const hasWSIBInsuranceRecord = async (contractorID) => {
+import * as sqlPool from "@cityssm/mssql-multi-pool";
+import * as configFns from "../configFns.js";
+import debug from "debug";
+const debugSQL = debug("contractor-prequal-system:prequalDB:hasWSIBInsuranceRecord");
+export const hasWSIBInsuranceRecord = async (contractorID) => {
     try {
         const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
         const result = await pool.request()
@@ -23,4 +20,3 @@ const hasWSIBInsuranceRecord = async (contractorID) => {
     }
     return false;
 };
-exports.hasWSIBInsuranceRecord = hasWSIBInsuranceRecord;

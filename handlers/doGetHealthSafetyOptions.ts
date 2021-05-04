@@ -1,4 +1,4 @@
-import { getHealthSafetyStatusOptions } from "../helpers/prequalDB/getHealthSafetyStatusOptions";
+import { getHealthSafetyStatusOptions } from "../helpers/prequalDB/getHealthSafetyStatusOptions.js";
 
 import type { RequestHandler } from "express";
 
