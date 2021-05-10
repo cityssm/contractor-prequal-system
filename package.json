@@ -31,7 +31,7 @@
     "@cityssm/docushare": "^0.1.0",
     "@cityssm/express-abuse-points": "^0.3.3",
     "@cityssm/expressjs-server-js": "^2.0.0",
-    "@cityssm/mssql-multi-pool": "^1.4.0",
+    "@cityssm/mssql-multi-pool": "^1.4.1",
     "@cityssm/wsib-clearance-check": "^1.1.1",
     "@fortawesome/fontawesome-free": "^5.15.3",
     "chokidar": "^3.5.1",
