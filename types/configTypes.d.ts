@@ -19,6 +19,13 @@ export interface Config {
         maxAgeMillis?: number;
         doKeepAlive?: boolean;
     };
+    twoFactor?: {
+        isEnabledInternally: boolean;
+        isRequiredInternally: boolean;
+        isEnabledExternally: boolean;
+        isRequiredExternally: boolean;
+        mssqlConfig: sqlTypes.config;
+    };
     mssqlConfig: sqlTypes.config;
     adWebAuthConfig: ADWebAuthConfig;
     permissions: {

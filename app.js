@@ -12,6 +12,7 @@ import * as configFns from "./helpers/configFns.js";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import routerLogin from "./routes/login.js";
+import router2fa from "./routes/2fa.js";
 import routerContractors from "./routes/contractors.js";
 import debug from "debug";
 const debugApp = debug("contractor-prequal-system:app");
@@ -77,6 +78,12 @@ const sessionChecker = (req, res, next) => {
     }
     return res.redirect(urlPrefix + "/login");
 };
+const twoFactorChecker = (req, res, next) => {
+    if (req.session.user.passed2FA) {
+        return next();
+    }
+    return res.redirect(urlPrefix + "/2fa");
+};
 app.use(function (req, res, next) {
     res.locals.configFns = configFns;
     res.locals.dateTimeFns = dateTimeFns;
@@ -89,7 +96,8 @@ app.use(function (req, res, next) {
 app.get(urlPrefix + "/", sessionChecker, (_req, res) => {
     res.redirect(urlPrefix + "/contractors");
 });
-app.use(urlPrefix + "/contractors", sessionChecker, routerContractors);
+app.use(urlPrefix + "/contractors", sessionChecker, twoFactorChecker, routerContractors);
+app.use(urlPrefix + "/2fa", sessionChecker, router2fa);
 app.use(urlPrefix + "/login", routerLogin);
 app.get(urlPrefix + "/logout", (req, res) => {
     if (req.session.user && req.cookies[sessionCookieName]) {

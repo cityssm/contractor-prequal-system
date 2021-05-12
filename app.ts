@@ -16,6 +16,7 @@ import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 
 import routerLogin from "./routes/login.js";
+import router2fa from "./routes/2fa.js";
 import routerContractors from "./routes/contractors.js";
 
 import debug from "debug";
@@ -139,6 +140,16 @@ const sessionChecker = (req: express.Request, res: express.Response, next: expre
   return res.redirect(urlPrefix + "/login");
 };
 
+// Redirect 2fa
+const twoFactorChecker = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+
+  if (req.session.user.passed2FA) {
+    return next();
+  }
+
+  return res.redirect(urlPrefix + "/2fa");
+};
+
 
 /*
  * ROUTES
@@ -161,7 +172,9 @@ app.get(urlPrefix + "/", sessionChecker, (_req, res) => {
   res.redirect(urlPrefix + "/contractors");
 });
 
-app.use(urlPrefix + "/contractors", sessionChecker, routerContractors);
+app.use(urlPrefix + "/contractors", sessionChecker, twoFactorChecker, routerContractors);
+
+app.use(urlPrefix + "/2fa", sessionChecker, router2fa);
 
 app.use(urlPrefix + "/login", routerLogin);
 

@@ -11,6 +11,10 @@ configFallbackValues.set("session.cookieName", "contractor-prequal-system-user-s
 configFallbackValues.set("session.secret", "cityssm/contractor-prequal-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
 configFallbackValues.set("session.doKeepAlive", false);
+configFallbackValues.set("twoFactor.isEnabledInternally", false);
+configFallbackValues.set("twoFactor.isRequiredInternally", false);
+configFallbackValues.set("twoFactor.isEnabledExternally", false);
+configFallbackValues.set("twoFactor.isRequiredExternally", false);
 configFallbackValues.set("permissions.canUpdate", []);
 export function getProperty(propertyName) {
     if (configOverrides.hasOwnProperty(propertyName)) {

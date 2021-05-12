@@ -1,6 +1,7 @@
 export interface User {
   userName: string;
   canUpdate: boolean;
+  passed2FA: boolean;
 };
 
 

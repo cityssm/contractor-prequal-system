@@ -35,6 +35,11 @@ configFallbackValues.set("session.secret", "cityssm/contractor-prequal-system");
 configFallbackValues.set("session.maxAgeMillis", 60 * 60 * 1000);
 configFallbackValues.set("session.doKeepAlive", false);
 
+configFallbackValues.set("twoFactor.isEnabledInternally", false);
+configFallbackValues.set("twoFactor.isRequiredInternally", false);
+configFallbackValues.set("twoFactor.isEnabledExternally", false);
+configFallbackValues.set("twoFactor.isRequiredExternally", false);
+
 configFallbackValues.set("permissions.canUpdate", []);
 
 
@@ -51,6 +56,12 @@ export function getProperty(propertyName: "session.cookieName"): string;
 export function getProperty(propertyName: "session.doKeepAlive"): boolean;
 export function getProperty(propertyName: "session.maxAgeMillis"): number;
 export function getProperty(propertyName: "session.secret"): string;
+
+export function getProperty(propertyName: "twoFactor.isEnabledInternally"): boolean;
+export function getProperty(propertyName: "twoFactor.isRequiredInternally"): boolean;
+export function getProperty(propertyName: "twoFactor.isEnabledExternally"): boolean;
+export function getProperty(propertyName: "twoFactor.isRequiredExternally"): boolean;
+export function getProperty(propertyName: "twoFactor.mssqlConfig"): sqlTypes.config;
 
 export function getProperty(propertyName: "mssqlConfig"): sqlTypes.config;
 export function getProperty(propertyName: "adWebAuthConfig"): ADWebAuthConfig;
