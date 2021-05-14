@@ -19,3 +19,6 @@ export const handler: RequestHandler = async (req, res) => {
     success
   });
 };
+
+
+export default handler;

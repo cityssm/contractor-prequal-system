@@ -63,3 +63,6 @@ export const updateInsurance = async (updateForm: InsuranceForm): Promise<boolea
 
   return false;
 };
+
+
+export default updateInsurance;

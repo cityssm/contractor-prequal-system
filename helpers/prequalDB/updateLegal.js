@@ -22,3 +22,4 @@ export const updateLegal = async (updateForm, reqSession) => {
     }
     return false;
 };
+export default updateLegal;

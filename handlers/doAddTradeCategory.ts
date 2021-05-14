@@ -1,4 +1,4 @@
-import { addTradeCategory } from "../helpers/prequalDB/addTradeCategory.js";
+import addTradeCategory from "../helpers/prequalDB/addTradeCategory.js";
 
 import * as resultsCache from "../helpers/queryResultsCache.js";
 
@@ -22,3 +22,6 @@ export const handler: RequestHandler = async (req, res) => {
     success
   });
 };
+
+
+export default handler;

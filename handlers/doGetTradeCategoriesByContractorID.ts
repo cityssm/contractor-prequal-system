@@ -1,4 +1,4 @@
-import { getTradeCategoriesByContractorID } from "../helpers/prequalDB/getTradeCategoriesByContractorID.js";
+import getTradeCategoriesByContractorID from "../helpers/prequalDB/getTradeCategoriesByContractorID.js";
 
 import type { RequestHandler } from "express";
 
@@ -18,3 +18,6 @@ export const handler: RequestHandler = async (req, res) => {
     tradeCategories
   });
 };
+
+
+export default handler;

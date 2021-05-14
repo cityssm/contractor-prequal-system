@@ -46,3 +46,6 @@ export const getDistinctInsuranceCompanyNames = async (): Promise<string[]> => {
 
   return [];
 };
+
+
+export default getDistinctInsuranceCompanyNames;

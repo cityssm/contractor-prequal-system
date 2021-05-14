@@ -46,3 +46,6 @@ export const updateHealthSafety = async (updateForm: HealthSafetyForm): Promise<
 
   return false;
 };
+
+
+export default updateHealthSafety;

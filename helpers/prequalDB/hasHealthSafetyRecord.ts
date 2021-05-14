@@ -31,3 +31,6 @@ export const hasHealthSafetyRecord = async (contractorID: number | string): Prom
 
   return false;
 };
+
+
+export default hasHealthSafetyRecord;

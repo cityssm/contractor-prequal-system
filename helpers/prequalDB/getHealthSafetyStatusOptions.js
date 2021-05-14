@@ -26,3 +26,4 @@ export const getHealthSafetyStatusOptions = async () => {
     }
     return [];
 };
+export default getHealthSafetyStatusOptions;

@@ -6,3 +6,4 @@ export interface InsuranceForm {
     insurance_expiryDate: string;
 }
 export declare const updateInsurance: (updateForm: InsuranceForm) => Promise<boolean>;
+export default updateInsurance;

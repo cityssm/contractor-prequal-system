@@ -18,3 +18,4 @@ export const updateContractor = async (updateForm) => {
     }
     return false;
 };
+export default updateContractor;

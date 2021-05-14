@@ -28,3 +28,4 @@ export const updateHealthSafety = async (updateForm) => {
     }
     return false;
 };
+export default updateHealthSafety;

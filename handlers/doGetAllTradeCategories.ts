@@ -1,4 +1,4 @@
-import { getTradeCategories } from "../helpers/prequalDB/getTradeCategories.js";
+import getTradeCategories from "../helpers/prequalDB/getTradeCategories.js";
 
 import type { RequestHandler } from "express";
 
@@ -11,3 +11,6 @@ export const handler: RequestHandler = async (_req, res) => {
     tradeCategories
   });
 };
+
+
+export default handler;

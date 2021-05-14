@@ -26,3 +26,4 @@ export const getDistinctInsuranceCompanyNames = async () => {
     }
     return [];
 };
+export default getDistinctInsuranceCompanyNames;

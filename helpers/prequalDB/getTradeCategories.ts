@@ -44,3 +44,6 @@ export const getTradeCategories = async (inUse: boolean): Promise<recordTypes.Tr
 
   return [];
 };
+
+
+export default getTradeCategories;

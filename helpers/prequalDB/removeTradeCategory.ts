@@ -28,3 +28,6 @@ export const removeTradeCategory = async (contractorID: number | string, tradeCa
 
   return false;
 };
+
+
+export default removeTradeCategory;

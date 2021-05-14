@@ -28,3 +28,6 @@ export const addTradeCategory = async (contractorID: number | string, tradeCateg
 
   return false;
 };
+
+
+export default addTradeCategory;

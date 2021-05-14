@@ -110,3 +110,6 @@ export const getContractors = async (canUpdate: boolean, filters: GetContractorF
 
   return [];
 };
+
+
+export default getContractors;

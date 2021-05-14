@@ -22,3 +22,4 @@ export const getTradeCategoriesByContractorID = async (contractorID) => {
     }
     return [];
 };
+export default getTradeCategoriesByContractorID;

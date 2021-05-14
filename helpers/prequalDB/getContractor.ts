@@ -41,3 +41,6 @@ export const getContractor = async (contractorID: number | string): Promise<Cont
 
   return null;
 };
+
+
+export default getContractor;

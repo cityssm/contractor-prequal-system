@@ -35,3 +35,6 @@ export const getTradeCategoriesByContractorID = async (contractorID: number | st
 
   return [];
 };
+
+
+export default getTradeCategoriesByContractorID;

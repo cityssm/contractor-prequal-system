@@ -1,4 +1,4 @@
-import { getHealthSafetyStatusOptions } from "../helpers/prequalDB/getHealthSafetyStatusOptions.js";
+import getHealthSafetyStatusOptions from "../helpers/prequalDB/getHealthSafetyStatusOptions.js";
 
 import type { RequestHandler } from "express";
 
@@ -11,3 +11,6 @@ export const handler: RequestHandler = async (_req, res) => {
     healthSafetyStatuses
   });
 };
+
+
+export default handler;

@@ -1,4 +1,4 @@
-import { removeTradeCategory } from "../helpers/prequalDB/removeTradeCategory.js";
+import removeTradeCategory from "../helpers/prequalDB/removeTradeCategory.js";
 import * as resultsCache from "../helpers/queryResultsCache.js";
 export const handler = async (req, res) => {
     const formParams = req.body;
@@ -10,3 +10,4 @@ export const handler = async (req, res) => {
         success
     });
 };
+export default handler;

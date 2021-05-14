@@ -18,3 +18,4 @@ export const removeTradeCategory = async (contractorID, tradeCategoryID) => {
     }
     return false;
 };
+export default removeTradeCategory;

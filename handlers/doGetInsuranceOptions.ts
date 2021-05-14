@@ -1,4 +1,4 @@
-import { getDistinctInsuranceCompanyNames } from "../helpers/prequalDB/getDistinctInsuranceCompanyNames.js";
+import getDistinctInsuranceCompanyNames from "../helpers/prequalDB/getDistinctInsuranceCompanyNames.js";
 
 import type { RequestHandler } from "express";
 
@@ -11,3 +11,6 @@ export const handler: RequestHandler = async (_req, res) => {
     insuranceCompanyNames
   });
 };
+
+
+export default handler;

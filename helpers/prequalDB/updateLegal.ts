@@ -39,3 +39,6 @@ export const updateLegal = async (updateForm: LegalForm, reqSession: express.Ses
 
   return false;
 };
+
+
+export default updateLegal;

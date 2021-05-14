@@ -34,3 +34,6 @@ export const updateContractor = async (updateForm: ContractorForm): Promise<bool
 
   return false;
 };
+
+
+export default updateContractor;

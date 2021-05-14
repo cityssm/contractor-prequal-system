@@ -18,3 +18,4 @@ export const updateWSIBExpiryDate = async (accountNumber, expiryDate) => {
     }
     return false;
 };
+export default updateWSIBExpiryDate;

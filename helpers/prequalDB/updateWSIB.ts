@@ -72,3 +72,6 @@ export const updateWSIB = async (updateForm: WSIBForm): Promise<boolean> => {
 
   return false;
 };
+
+
+export default updateWSIB;

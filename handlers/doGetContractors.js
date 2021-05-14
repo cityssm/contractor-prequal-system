@@ -37,3 +37,4 @@ export const handler = async (req, res) => {
         contractors
     });
 };
+export default handler;

@@ -10,3 +10,4 @@ export interface GetContractorFilters {
     hasDocuShareCollectionID?: boolean;
 }
 export declare const getContractors: (canUpdate: boolean, filters: GetContractorFilters) => Promise<Contractor[]>;
+export default getContractors;

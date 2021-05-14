@@ -31,3 +31,6 @@ export const hasWSIBInsuranceRecord = async (contractorID: number | string): Pro
 
   return false;
 };
+
+
+export default hasWSIBInsuranceRecord;

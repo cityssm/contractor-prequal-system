@@ -7,3 +7,4 @@ export interface WSIBForm {
     wsib_expiryDate: string;
 }
 export declare const updateWSIB: (updateForm: WSIBForm) => Promise<boolean>;
+export default updateWSIB;

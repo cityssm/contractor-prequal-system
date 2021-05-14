@@ -61,3 +61,6 @@ export const handler: RequestHandler = async (req, res) => {
     contractors
   });
 };
+
+
+export default handler;

@@ -1,18 +1,18 @@
 import { Router } from "express";
-import { handler as handler_contractors } from "../handlers/contractors.js";
-import { handler as handler_doGetContractors } from "../handlers/doGetContractors.js";
-import { handler as handler_doGetTradeCategoriesByContractorID } from "../handlers/doGetTradeCategoriesByContractorID.js";
-import { handler as handler_doGetAllTradeCategories } from "../handlers/doGetAllTradeCategories.js";
-import { handler as handler_doGetHealthSafetyOptions } from "../handlers/doGetHealthSafetyOptions.js";
-import { handler as handler_doGetInsuranceOptions } from "../handlers/doGetInsuranceOptions.js";
-import { handler as handler_doUpdateContractor } from "../handlers/doUpdateContractor.js";
-import { handler as handler_doCreateDocuShareCollection } from "../handlers/doCreateDocuShareCollection.js";
-import { handler as handler_doUpdateHealthSafety } from "../handlers/doUpdateHealthSafety.js";
-import { handler as handler_doUpdateLegal } from "../handlers/doUpdateLegal.js";
-import { handler as handler_doUpdateWSIB } from "../handlers/doUpdateWSIB.js";
-import { handler as handler_doUpdateInsurance } from "../handlers/doUpdateInsurance.js";
-import { handler as handler_doAddTradeCategory } from "../handlers/doAddTradeCategory.js";
-import { handler as handler_doRemoveTradeCategory } from "../handlers/doRemoveTradeCategory.js";
+import handler_contractors from "../handlers/contractors.js";
+import handler_doGetContractors from "../handlers/doGetContractors.js";
+import handler_doGetTradeCategoriesByContractorID from "../handlers/doGetTradeCategoriesByContractorID.js";
+import handler_doGetAllTradeCategories from "../handlers/doGetAllTradeCategories.js";
+import handler_doGetHealthSafetyOptions from "../handlers/doGetHealthSafetyOptions.js";
+import handler_doGetInsuranceOptions from "../handlers/doGetInsuranceOptions.js";
+import handler_doUpdateContractor from "../handlers/doUpdateContractor.js";
+import handler_doCreateDocuShareCollection from "../handlers/doCreateDocuShareCollection.js";
+import handler_doUpdateHealthSafety from "../handlers/doUpdateHealthSafety.js";
+import handler_doUpdateLegal from "../handlers/doUpdateLegal.js";
+import handler_doUpdateWSIB from "../handlers/doUpdateWSIB.js";
+import handler_doUpdateInsurance from "../handlers/doUpdateInsurance.js";
+import handler_doAddTradeCategory from "../handlers/doAddTradeCategory.js";
+import handler_doRemoveTradeCategory from "../handlers/doRemoveTradeCategory.js";
 const handler_updateOnly = (req, res, next) => {
     if (req.session.user.canUpdate) {
         return next();

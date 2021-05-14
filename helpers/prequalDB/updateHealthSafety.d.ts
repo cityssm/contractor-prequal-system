@@ -3,3 +3,4 @@ export interface HealthSafetyForm {
     healthSafety_status: string;
 }
 export declare const updateHealthSafety: (updateForm: HealthSafetyForm) => Promise<boolean>;
+export default updateHealthSafety;

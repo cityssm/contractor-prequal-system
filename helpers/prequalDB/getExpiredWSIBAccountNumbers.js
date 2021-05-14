@@ -30,3 +30,4 @@ export const getExpiredWSIBAccountNumbers = async (limit = 50) => {
     }
     return [];
 };
+export default getExpiredWSIBAccountNumbers;

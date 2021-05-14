@@ -28,3 +28,4 @@ export const getContractor = async (contractorID) => {
     }
     return null;
 };
+export default getContractor;

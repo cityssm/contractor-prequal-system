@@ -46,3 +46,4 @@ export const updateWSIB = async (updateForm) => {
     }
     return false;
 };
+export default updateWSIB;

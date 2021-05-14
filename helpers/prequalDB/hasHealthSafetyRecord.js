@@ -20,3 +20,4 @@ export const hasHealthSafetyRecord = async (contractorID) => {
     }
     return false;
 };
+export default hasHealthSafetyRecord;

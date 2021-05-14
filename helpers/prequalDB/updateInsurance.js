@@ -40,3 +40,4 @@ export const updateInsurance = async (updateForm) => {
     }
     return false;
 };
+export default updateInsurance;

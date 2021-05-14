@@ -1,5 +1,5 @@
-import { getContractor } from "../helpers/prequalDB/getContractor.js";
-import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
+import getContractor from "../helpers/prequalDB/getContractor.js";
+import updateContractor from "../helpers/prequalDB/updateContractor.js";
 
 import * as ds from "@cityssm/docushare";
 
@@ -56,3 +56,6 @@ export const handler: RequestHandler = async (req, res) => {
     docuShareCollectionID
   });
 };
+
+
+export default handler;

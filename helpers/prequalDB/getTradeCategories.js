@@ -30,3 +30,4 @@ export const getTradeCategories = async (inUse) => {
     }
     return [];
 };
+export default getTradeCategories;

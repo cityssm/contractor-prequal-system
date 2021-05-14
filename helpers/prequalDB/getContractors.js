@@ -73,3 +73,4 @@ export const getContractors = async (canUpdate, filters) => {
     }
     return [];
 };
+export default getContractors;

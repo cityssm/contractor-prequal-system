@@ -1,4 +1,4 @@
-import { getTradeCategoriesByContractorID } from "../helpers/prequalDB/getTradeCategoriesByContractorID.js";
+import getTradeCategoriesByContractorID from "../helpers/prequalDB/getTradeCategoriesByContractorID.js";
 ;
 export const handler = async (req, res) => {
     const formFilters = req.body;
@@ -7,3 +7,4 @@ export const handler = async (req, res) => {
         tradeCategories
     });
 };
+export default handler;

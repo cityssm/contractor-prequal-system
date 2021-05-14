@@ -50,3 +50,6 @@ export const getExpiredWSIBAccountNumbers = async (limit: number = 50): Promise<
 
   return [];
 };
+
+
+export default getExpiredWSIBAccountNumbers;
