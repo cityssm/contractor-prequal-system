@@ -1,27 +1,29 @@
-(() => {
-    const canUpdate = exports.canUpdate;
-    const urlPrefix = exports.urlPrefix;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+(function () {
+    var canUpdate = exports.canUpdate;
+    var urlPrefix = exports.urlPrefix;
     cityssm.htmlModalFolder = urlPrefix + "/html/";
-    const filterFormEle = document.getElementById("form--filters");
-    const resultsEle = document.getElementById("container--results");
-    let contractors = [];
-    const updateOptionsCache = {
+    var filterFormEle = document.getElementById("form--filters");
+    var resultsEle = document.getElementById("container--results");
+    var contractors = [];
+    var updateOptionsCache = {
         tradeCategories: [],
         healthSafetyStatuses: [],
         insuranceCompanyNames: []
     };
-    const getTradeCategoryFromCache = (tradeCategoryID) => {
-        const tradeCategory = updateOptionsCache.tradeCategories.find((potentialTradeCategory) => {
+    var getTradeCategoryFromCache = function (tradeCategoryID) {
+        var tradeCategory = updateOptionsCache.tradeCategories.find(function (potentialTradeCategory) {
             return (potentialTradeCategory.tradeCategoryID === tradeCategoryID);
         });
         return tradeCategory;
     };
-    const buildDocuShareURL = (docuShareCollectionID) => {
+    var buildDocuShareURL = function (docuShareCollectionID) {
         return exports.docuShareRootURL + "/dsweb/View/Collection-" + docuShareCollectionID;
     };
-    const openDocuShareLink = (clickEvent) => {
+    var openDocuShareLink = function (clickEvent) {
         clickEvent.preventDefault();
-        const docuShareCollectionID = document.getElementById("contractor--docuShareCollectionID").value;
+        var docuShareCollectionID = document.getElementById("contractor--docuShareCollectionID").value;
         if (docuShareCollectionID === "") {
             cityssm.alertModal("DocuShare Collection ID Not Available", "Note that Hire Ready contractors will have their Collection IDs populated automatically.", "OK", "warning");
         }
@@ -29,13 +31,13 @@
             window.open(buildDocuShareURL(docuShareCollectionID));
         }
     };
-    let doRefreshOnClose = false;
-    let usedTradeCategories;
-    const submitUpdateForm = (formEvent) => {
+    var doRefreshOnClose = false;
+    var usedTradeCategories;
+    var submitUpdateForm = function (formEvent) {
         formEvent.preventDefault();
-        const formEle = formEvent.currentTarget;
-        const updateFormAction = formEle.getAttribute("data-action");
-        cityssm.postJSON(urlPrefix + "/contractors/" + updateFormAction, formEle, (responseJSON) => {
+        var formEle = formEvent.currentTarget;
+        var updateFormAction = formEle.getAttribute("data-action");
+        cityssm.postJSON(urlPrefix + "/contractors/" + updateFormAction, formEle, function (responseJSON) {
             if (responseJSON.success) {
                 cityssm.alertModal("Update Saved Successfully", "Close the contractor popup window to refresh your search results.", "OK", "success");
                 doRefreshOnClose = true;
@@ -45,9 +47,9 @@
             }
         });
     };
-    const submitAddTradeCategoryForm = (formEvent) => {
+    var submitAddTradeCategoryForm = function (formEvent) {
         formEvent.preventDefault();
-        const tradeCategoryID = document.getElementById("tradeCategories--tradeCategoryID").value;
+        var tradeCategoryID = document.getElementById("tradeCategories--tradeCategoryID").value;
         if (tradeCategoryID === "") {
             cityssm.alertModal("No Trade Category Selected", "Please select a trade category from the list.", "OK", "warning");
             return;
@@ -56,13 +58,13 @@
             cityssm.alertModal("Trade Category Already Included", "No need to add it twice.", "OK", "info");
             return;
         }
-        const formEle = formEvent.currentTarget;
-        cityssm.postJSON(urlPrefix + "/contractors/doAddTradeCategory", formEle, (responseJSON) => {
+        var formEle = formEvent.currentTarget;
+        cityssm.postJSON(urlPrefix + "/contractors/doAddTradeCategory", formEle, function (responseJSON) {
             if (responseJSON.success) {
-                const contractorID = parseInt(formEle.getElementsByClassName("contractor--contractorID")[0].value, 10);
-                const tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID, 10));
-                const tradeCategoryEle = buildContractorTradeCategoryEle(contractorID, tradeCategory);
-                const tradeCategoriesContainerEle = document.getElementById("contractor--tradeCategories");
+                var contractorID = parseInt(formEle.getElementsByClassName("contractor--contractorID")[0].value, 10);
+                var tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID, 10));
+                var tradeCategoryEle = buildContractorTradeCategoryEle(contractorID, tradeCategory);
+                var tradeCategoriesContainerEle = document.getElementById("contractor--tradeCategories");
                 if (!tradeCategoriesContainerEle.classList.contains("panel")) {
                     tradeCategoriesContainerEle.innerHTML = "";
                     tradeCategoriesContainerEle.classList.add("panel");
@@ -76,16 +78,16 @@
             }
         });
     };
-    const createDocuShareCollection = (clickEvent) => {
-        const createButtonEle = clickEvent.currentTarget;
-        const docuShareCollectionIDEle = document.getElementById("contractor--docuShareCollectionID");
-        const currentDocuShareCollectionID = docuShareCollectionIDEle.value;
-        let closeLoadingModalFn;
-        const doCreate = () => {
-            const contractorID = createButtonEle.getAttribute("data-contractor-id");
+    var createDocuShareCollection = function (clickEvent) {
+        var createButtonEle = clickEvent.currentTarget;
+        var docuShareCollectionIDEle = document.getElementById("contractor--docuShareCollectionID");
+        var currentDocuShareCollectionID = docuShareCollectionIDEle.value;
+        var closeLoadingModalFn;
+        var doCreate = function () {
+            var contractorID = createButtonEle.getAttribute("data-contractor-id");
             cityssm.postJSON(urlPrefix + "/contractors/doCreateDocuShareCollection", {
-                contractorID
-            }, (responseJSON) => {
+                contractorID: contractorID
+            }, function (responseJSON) {
                 closeLoadingModalFn();
                 if (responseJSON.success) {
                     docuShareCollectionIDEle.value = responseJSON.docuShareCollectionID;
@@ -95,9 +97,9 @@
                 }
             });
         };
-        const openLoadingAndDoCreate = () => {
+        var openLoadingAndDoCreate = function () {
             cityssm.openHtmlModal("contractor-createDSCollection-loading", {
-                onshown: (_modalEle, closeModalFn) => {
+                onshown: function (_modalEle, closeModalFn) {
                     closeLoadingModalFn = closeModalFn;
                     doCreate();
                 }
@@ -111,15 +113,15 @@
                 " Are you sure you want to abandon the existing Collection and create a new DocuShare Collection?", "Yes, Abandon and Create", "danger", openLoadingAndDoCreate);
         }
     };
-    const removeTradeCategory = (clickEvent) => {
-        const deleteButtonEle = clickEvent.currentTarget;
-        const removeFn = () => {
-            const contractorID = deleteButtonEle.getAttribute("data-contractor-id");
-            const tradeCategoryID = deleteButtonEle.getAttribute("data-trade-category-id");
+    var removeTradeCategory = function (clickEvent) {
+        var deleteButtonEle = clickEvent.currentTarget;
+        var removeFn = function () {
+            var contractorID = deleteButtonEle.getAttribute("data-contractor-id");
+            var tradeCategoryID = deleteButtonEle.getAttribute("data-trade-category-id");
             cityssm.postJSON(urlPrefix + "/contractors/doRemoveTradeCategory", {
-                contractorID,
-                tradeCategoryID
-            }, (responseJSON) => {
+                contractorID: contractorID,
+                tradeCategoryID: tradeCategoryID
+            }, function (responseJSON) {
                 if (responseJSON.success) {
                     deleteButtonEle.closest(".panel-block").remove();
                     usedTradeCategories.delete(parseInt(tradeCategoryID, 10));
@@ -132,8 +134,8 @@
         };
         cityssm.confirmModal("Remove Trade Category?", "Are you sure you want to remove the trade category from the contractor?", "Yes, Remove It", "warning", removeFn);
     };
-    const buildContractorTradeCategoryEle = (contractorID, tradeCategory) => {
-        const tradeCategoryEle = document.createElement("div");
+    var buildContractorTradeCategoryEle = function (contractorID, tradeCategory) {
+        var tradeCategoryEle = document.createElement("div");
         tradeCategoryEle.className = "panel-block";
         tradeCategoryEle.innerHTML = ("<span class=\"panel-icon\">" +
             "<i class=\"fas fa-book\" aria-hidden=\"true\"></i>" +
@@ -142,7 +144,7 @@
                 cityssm.escapeHTML(tradeCategory.tradeCategory) +
                 "</span>");
         if (canUpdate) {
-            const deleteButtonEle = document.createElement("button");
+            var deleteButtonEle = document.createElement("button");
             deleteButtonEle.className = "button is-small is-danger is-inverted is-edit-control-flex";
             deleteButtonEle.type = "button";
             deleteButtonEle.setAttribute("data-contractor-id", contractorID.toString());
@@ -154,10 +156,11 @@
         }
         return tradeCategoryEle;
     };
-    const loadTradeCategoryOptions = () => {
-        const renderFn = () => {
-            const selectEle = document.getElementById("tradeCategories--tradeCategoryID");
-            for (const tradeCategory of updateOptionsCache.tradeCategories) {
+    var loadTradeCategoryOptions = function () {
+        var renderFn = function () {
+            var selectEle = document.getElementById("tradeCategories--tradeCategoryID");
+            for (var _i = 0, _a = updateOptionsCache.tradeCategories; _i < _a.length; _i++) {
+                var tradeCategory = _a[_i];
                 selectEle.insertAdjacentHTML("beforeend", "<option value=\"" + tradeCategory.tradeCategoryID.toString() + "\">" +
                     tradeCategory.tradeCategory +
                     "</option>");
@@ -167,18 +170,19 @@
             renderFn();
         }
         else {
-            cityssm.postJSON(urlPrefix + "/contractors/doGetAllTradeCategories", {}, (responseJSON) => {
+            cityssm.postJSON(urlPrefix + "/contractors/doGetAllTradeCategories", {}, function (responseJSON) {
                 updateOptionsCache.tradeCategories = responseJSON.tradeCategories;
                 renderFn();
             });
         }
     };
-    const loadHealthSafetyOptions = () => {
-        const renderFn = () => {
-            const optgroupEle = document.createElement("optgroup");
+    var loadHealthSafetyOptions = function () {
+        var renderFn = function () {
+            var optgroupEle = document.createElement("optgroup");
             optgroupEle.label = "Options";
-            for (const status of updateOptionsCache.healthSafetyStatuses) {
-                optgroupEle.insertAdjacentHTML("beforeend", "<option>" + cityssm.escapeHTML(status) + "</option>");
+            for (var _i = 0, _a = updateOptionsCache.healthSafetyStatuses; _i < _a.length; _i++) {
+                var status_1 = _a[_i];
+                optgroupEle.insertAdjacentHTML("beforeend", "<option>" + cityssm.escapeHTML(status_1) + "</option>");
             }
             document.getElementById("contractor--healthSafety_status").appendChild(optgroupEle);
         };
@@ -186,22 +190,23 @@
             renderFn();
         }
         else {
-            cityssm.postJSON(urlPrefix + "/contractors/doGetHealthSafetyOptions", {}, (responseJSON) => {
+            cityssm.postJSON(urlPrefix + "/contractors/doGetHealthSafetyOptions", {}, function (responseJSON) {
                 updateOptionsCache.healthSafetyStatuses = responseJSON.healthSafetyStatuses;
                 renderFn();
             });
         }
     };
-    const loadLegalOptions = () => {
+    var loadLegalOptions = function () {
         document.getElementById("contractor--legal_isSatisfactory").insertAdjacentHTML("beforeend", "<optgroup label=\"Options\">" +
             "<option value=\"1\">Approved</option>" +
             "<option value=\"0\">Declined</option>" +
             "</optgroup>");
     };
-    const loadInsuranceOptions = () => {
-        const renderFn = () => {
-            const datalistEle = document.getElementById("contractor--insurance_company-datalist");
-            for (const companyName of updateOptionsCache.insuranceCompanyNames) {
+    var loadInsuranceOptions = function () {
+        var renderFn = function () {
+            var datalistEle = document.getElementById("contractor--insurance_company-datalist");
+            for (var _i = 0, _a = updateOptionsCache.insuranceCompanyNames; _i < _a.length; _i++) {
+                var companyName = _a[_i];
                 datalistEle.insertAdjacentHTML("beforeend", "<option value=\"" + cityssm.escapeHTML(companyName) + "\"></option>");
             }
         };
@@ -209,16 +214,16 @@
             renderFn();
         }
         else {
-            cityssm.postJSON(urlPrefix + "/contractors/doGetInsuranceOptions", {}, (responseJSON) => {
+            cityssm.postJSON(urlPrefix + "/contractors/doGetInsuranceOptions", {}, function (responseJSON) {
                 updateOptionsCache.insuranceCompanyNames = responseJSON.insuranceCompanyNames;
                 renderFn();
             });
         }
     };
-    const unlockUpdateForm = (clickEvent) => {
-        const unlockButtonEle = clickEvent.currentTarget;
-        const formEle = unlockButtonEle.closest("form");
-        const updateFormAction = formEle.getAttribute("data-action");
+    var unlockUpdateForm = function (clickEvent) {
+        var unlockButtonEle = clickEvent.currentTarget;
+        var formEle = unlockButtonEle.closest("form");
+        var updateFormAction = formEle.getAttribute("data-action");
         switch (updateFormAction) {
             case "doUpdateHealthSafety":
                 loadHealthSafetyOptions();
@@ -234,36 +239,36 @@
         formEle.getElementsByTagName("fieldset")[0].disabled = false;
         unlockButtonEle.remove();
     };
-    const unlockContractorUpdateForm = (clickEvent) => {
-        const unlockControlEle = clickEvent.currentTarget.closest(".control");
-        const formEle = unlockControlEle.closest("form");
+    var unlockContractorUpdateForm = function (clickEvent) {
+        var unlockControlEle = clickEvent.currentTarget.closest(".control");
+        var formEle = unlockControlEle.closest("form");
         formEle.classList.add("is-edit-mode");
         formEle.addEventListener("submit", submitUpdateForm);
-        const createButtonEle = document.getElementById("contractor--docuShareCollectionID-create");
+        var createButtonEle = document.getElementById("contractor--docuShareCollectionID-create");
         createButtonEle.addEventListener("click", createDocuShareCollection);
         createButtonEle.setAttribute("data-contractor-id", formEle.getElementsByClassName("contractor--contractorID")[0].value);
         document.getElementById("contractor--docuShareCollectionID").disabled = false;
         unlockControlEle.remove();
     };
-    const unlockTradeCategoriesUpdateForm = (clickEvent) => {
-        const unlockContainerEle = clickEvent.currentTarget.closest(".is-unlock-tradecategories-container");
-        const formEle = document.getElementById("form--tradeCategories");
+    var unlockTradeCategoriesUpdateForm = function (clickEvent) {
+        var unlockContainerEle = clickEvent.currentTarget.closest(".is-unlock-tradecategories-container");
+        var formEle = document.getElementById("form--tradeCategories");
         document.getElementById("contractor--tradeCategories").classList.add("is-edit-mode");
         loadTradeCategoryOptions();
         formEle.addEventListener("submit", submitAddTradeCategoryForm);
         formEle.classList.remove("is-hidden");
         unlockContainerEle.remove();
     };
-    const openContractorModal = (clickEvent) => {
+    var openContractorModal = function (clickEvent) {
         clickEvent.preventDefault();
-        const contractorIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
-        const contractor = contractors[contractorIndex];
-        const loadTradeCategories = () => {
+        var contractorIndex = parseInt(clickEvent.currentTarget.getAttribute("data-index"), 10);
+        var contractor = contractors[contractorIndex];
+        var loadTradeCategories = function () {
             usedTradeCategories = new Map();
             cityssm.postJSON(urlPrefix + "/contractors/doGetTradeCategoriesByContractorID", {
                 contractorID: contractor.contractorID
-            }, (responseJSON) => {
-                const tradeCategoriesEle = document.getElementById("contractor--tradeCategories");
+            }, function (responseJSON) {
+                var tradeCategoriesEle = document.getElementById("contractor--tradeCategories");
                 if (responseJSON.tradeCategories.length === 0) {
                     tradeCategoriesEle.innerHTML = "<div class=\"message is-warning\">" +
                         "<div class=\"message-body\">There are no trade categories assigned to this contractor.</div>" +
@@ -272,20 +277,21 @@
                 }
                 tradeCategoriesEle.innerHTML = "";
                 tradeCategoriesEle.classList.add("panel");
-                for (const tradeCategory of responseJSON.tradeCategories) {
+                for (var _i = 0, _a = responseJSON.tradeCategories; _i < _a.length; _i++) {
+                    var tradeCategory = _a[_i];
                     usedTradeCategories.set(tradeCategory.tradeCategoryID, tradeCategory.tradeCategory);
-                    const tradeCategoryEle = buildContractorTradeCategoryEle(contractor.contractorID, tradeCategory);
+                    var tradeCategoryEle = buildContractorTradeCategoryEle(contractor.contractorID, tradeCategory);
                     tradeCategoriesEle.appendChild(tradeCategoryEle);
                 }
             });
         };
         cityssm.openHtmlModal("contractor-view", {
-            onshow: (modalEle) => {
+            onshow: function (modalEle) {
                 document.getElementsByTagName("html")[0].classList.add("is-clipped");
                 loadTradeCategories();
                 document.getElementById("contractor--contractor_name").innerText =
                     contractor.contractor_name;
-                const location = (contractor.contractor_city ? contractor.contractor_city + ", " : "") +
+                var location = (contractor.contractor_city ? contractor.contractor_city + ", " : "") +
                     (contractor.contractor_province || "");
                 document.getElementById("contractor--location").innerText =
                     (location && location !== "" ? location : "(Unavailable)");
@@ -306,7 +312,7 @@
                     (contractor.healthSafety_status === null || contractor.healthSafety_status === ""
                         ? "<option value=\"\">(Not Set)</option>"
                         : "<option>" + cityssm.escapeHTML(contractor.healthSafety_status) + "</option>");
-                const legalOptionHTML = (contractor.legal_isSatisfactory
+                var legalOptionHTML = (contractor.legal_isSatisfactory
                     ? "<option value=\"1\">Approved</option>"
                     : "<option value=\"0\">Declined</option>");
                 document.getElementById("contractor--legal_isSatisfactory").innerHTML =
@@ -316,14 +322,14 @@
                 document.getElementById("contractor--wsib_firmNumber").value =
                     contractor.wsib_firmNumber;
                 if (contractor.wsib_effectiveDate) {
-                    const effectiveDate = new Date(contractor.wsib_effectiveDate);
-                    const effectiveDateString = cityssm.dateToString(effectiveDate);
+                    var effectiveDate = new Date(contractor.wsib_effectiveDate);
+                    var effectiveDateString = cityssm.dateToString(effectiveDate);
                     document.getElementById("contractor--wsib_effectiveDate").value =
                         effectiveDateString;
                 }
                 if (contractor.wsib_expiryDate) {
-                    const expiryDate = new Date(contractor.wsib_expiryDate);
-                    const expiryDateString = cityssm.dateToString(expiryDate);
+                    var expiryDate = new Date(contractor.wsib_expiryDate);
+                    var expiryDateString = cityssm.dateToString(expiryDate);
                     document.getElementById("contractor--wsib_expiryDate").value =
                         expiryDateString;
                 }
@@ -337,55 +343,55 @@
                 document.getElementById("contractor--insurance_amount").value =
                     contractor.insurance_amount.toString();
                 if (contractor.insurance_expiryDate) {
-                    const expiryDate = new Date(contractor.insurance_expiryDate);
-                    const expiryDateString = cityssm.dateToString(expiryDate);
+                    var expiryDate = new Date(contractor.insurance_expiryDate);
+                    var expiryDateString = cityssm.dateToString(expiryDate);
                     document.getElementById("contractor--insurance_expiryDate").value =
                         expiryDateString;
                 }
                 if (canUpdate) {
-                    const contractorIDInputEles = modalEle.getElementsByClassName("contractor--contractorID");
-                    for (let index = 0; index < contractorIDInputEles.length; index += 1) {
+                    var contractorIDInputEles = modalEle.getElementsByClassName("contractor--contractorID");
+                    for (var index = 0; index < contractorIDInputEles.length; index += 1) {
                         contractorIDInputEles[index].value = contractor.contractorID.toString();
                     }
                 }
             },
-            onshown: (modalEle) => {
+            onshown: function (modalEle) {
                 if (canUpdate) {
-                    const contractorUnlockControlEle = modalEle.getElementsByClassName("is-unlock-contractor-control")[0];
+                    var contractorUnlockControlEle = modalEle.getElementsByClassName("is-unlock-contractor-control")[0];
                     contractorUnlockControlEle.classList.remove("is-hidden");
                     contractorUnlockControlEle.getElementsByTagName("button")[0]
                         .addEventListener("click", unlockContractorUpdateForm);
-                    const tradeCategoriesUnlockContainerEle = modalEle.getElementsByClassName("is-unlock-tradecategories-container")[0];
+                    var tradeCategoriesUnlockContainerEle = modalEle.getElementsByClassName("is-unlock-tradecategories-container")[0];
                     tradeCategoriesUnlockContainerEle.classList.remove("is-hidden");
                     tradeCategoriesUnlockContainerEle.getElementsByTagName("button")[0]
                         .addEventListener("click", unlockTradeCategoriesUpdateForm);
-                    const unlockButtonEles = modalEle.getElementsByClassName("is-unlock-button");
-                    for (let index = 0; index < unlockButtonEles.length; index += 1) {
+                    var unlockButtonEles = modalEle.getElementsByClassName("is-unlock-button");
+                    for (var index = 0; index < unlockButtonEles.length; index += 1) {
                         unlockButtonEles[index].classList.remove("is-hidden");
                         unlockButtonEles[index].addEventListener("click", unlockUpdateForm);
                     }
                 }
             },
-            onhidden: () => {
+            onhidden: function () {
                 if (doRefreshOnClose) {
                     getContractors();
                     doRefreshOnClose = false;
                 }
             },
-            onremoved: () => {
+            onremoved: function () {
                 document.getElementsByTagName("html")[0].classList.remove("is-clipped");
             }
         });
     };
-    const isContractorHireReady = (contractor) => {
+    var isContractorHireReady = function (contractor) {
         return contractor.isContractor &&
             contractor.healthSafety_isSatisfactory &&
             contractor.legal_isSatisfactory &&
             contractor.wsib_isSatisfactory &&
             contractor.insurance_isSatisfactory;
     };
-    const buildContractorHealthSafetyIconHTML = (contractor) => {
-        const html = "<span class=\"icon\">" +
+    var buildContractorHealthSafetyIconHTML = function (contractor) {
+        var html = "<span class=\"icon\">" +
             (contractor.healthSafety_isSatisfactory
                 ? "<i class=\"fas fa-2x fa-check-circle has-text-success\" aria-hidden=\"true\"></i>"
                 : "<i class=\"fas fa-2x fa-times-circle has-text-danger\" aria-hidden=\"true\"></i>") +
@@ -393,8 +399,8 @@
             "<span class=\"is-size-7 has-text-weight-semibold\">Health & Safety</span>";
         return html;
     };
-    const buildContractorLegalIconHTML = (contractor) => {
-        const html = "<span class=\"icon\">" +
+    var buildContractorLegalIconHTML = function (contractor) {
+        var html = "<span class=\"icon\">" +
             (contractor.legal_isSatisfactory
                 ? "<i class=\"fas fa-2x fa-check-circle has-text-success\" aria-hidden=\"true\"></i>"
                 : "<i class=\"fas fa-2x fa-times-circle has-text-danger\" aria-hidden=\"true\"></i>") +
@@ -402,15 +408,15 @@
             "<span class=\"is-size-7 has-text-weight-semibold\">Legal</span>";
         return html;
     };
-    const buildContractorWSIBIconHTML = (contractor) => {
-        let tooltipText = "";
+    var buildContractorWSIBIconHTML = function (contractor) {
+        var tooltipText = "";
         if (contractor.wsib_isIndependent) {
             tooltipText = "Independent Contractor";
         }
         else if (contractor.wsib_isSatisfactory) {
             tooltipText = "Expires " + cityssm.dateToString(new Date(contractor.wsib_expiryDate));
         }
-        const html = "<span class=\"icon\"" +
+        var html = "<span class=\"icon\"" +
             (tooltipText === "" ? "" : " data-tooltip=\"" + tooltipText + "\"") +
             ">" +
             (contractor.wsib_isSatisfactory
@@ -420,15 +426,15 @@
             "<span class=\"is-size-7 has-text-weight-semibold\">WSIB</span>";
         return html;
     };
-    const buildContractorInsuranceIconHTML = (contractor) => {
-        let tooltipText = "";
+    var buildContractorInsuranceIconHTML = function (contractor) {
+        var tooltipText = "";
         if (contractor.insurance_isSatisfactory) {
             tooltipText = "Expires " + cityssm.dateToString(new Date(contractor.insurance_expiryDate));
         }
         else if (contractor.insurance_expiryDate) {
             tooltipText = "Expired " + cityssm.dateToString(new Date(contractor.insurance_expiryDate));
         }
-        const html = "<span class=\"icon\"" +
+        var html = "<span class=\"icon\"" +
             (tooltipText === "" ? "" : " data-tooltip=\"" + tooltipText + "\"") +
             ">" +
             (contractor.insurance_isSatisfactory
@@ -438,10 +444,10 @@
             "<span class=\"is-size-7 has-text-weight-semibold\">Insurance</span>";
         return html;
     };
-    const buildContractorResultEle = (contractor, contractorIndex) => {
-        const panelBlockEle = document.createElement("div");
+    var buildContractorResultEle = function (contractor, contractorIndex) {
+        var panelBlockEle = document.createElement("div");
         panelBlockEle.className = "panel-block is-block";
-        const columnsEle = document.createElement("div");
+        var columnsEle = document.createElement("div");
         columnsEle.className = "columns is-mobile is-multiline";
         columnsEle.innerHTML = "<div class=\"column is-full-mobile is-full-tablet is-half-widescreen\">" +
             "<a class=\"is-size-5 has-text-weight-bold\" data-index=\"" + contractorIndex.toString() + "\" role=\"button\" href=\"#\">" + cityssm.escapeHTML(contractor.contractor_name) + "</a><br />" +
@@ -465,14 +471,14 @@
         panelBlockEle.appendChild(columnsEle);
         return panelBlockEle;
     };
-    const getContractors = () => {
+    var getContractors = function () {
         contractors = [];
         cityssm.clearElement(resultsEle);
         resultsEle.innerHTML = "<div class=\"has-text-centered p-4\">" +
             "<span class=\"icon\"><i class=\"fas fa-4x fa-spinner fa-pulse\" aria-hidden=\"true\"></i>" +
             "</span>" +
             "</div>";
-        cityssm.postJSON(urlPrefix + "/contractors/doGetContractors", filterFormEle, (responseJSON) => {
+        cityssm.postJSON(urlPrefix + "/contractors/doGetContractors", filterFormEle, function (responseJSON) {
             contractors = responseJSON.contractors;
             if (contractors.length === 0) {
                 resultsEle.innerHTML = "<div class=\"message is-info\">" +
@@ -480,17 +486,17 @@
                     "</div>";
                 return;
             }
-            let hireReadyCount = 0;
-            const panelEle = document.createElement("div");
+            var hireReadyCount = 0;
+            var panelEle = document.createElement("div");
             panelEle.className = "panel";
-            contractors.forEach((contractor, contractorIndex) => {
-                const panelBlockEle = buildContractorResultEle(contractor, contractorIndex);
+            contractors.forEach(function (contractor, contractorIndex) {
+                var panelBlockEle = buildContractorResultEle(contractor, contractorIndex);
                 panelEle.appendChild(panelBlockEle);
                 if (isContractorHireReady(contractor)) {
                     hireReadyCount += 1;
                 }
             });
-            let hireReadyHTML = "";
+            var hireReadyHTML = "";
             if (hireReadyCount === 0) {
                 hireReadyHTML += "<span class=\"has-text-danger\">No Displayed Contractors are Hire Ready</span>";
             }
@@ -507,7 +513,7 @@
             resultsEle.appendChild(panelEle);
         });
     };
-    filterFormEle.addEventListener("submit", (formEvent) => {
+    filterFormEle.addEventListener("submit", function (formEvent) {
         formEvent.preventDefault();
     });
     getContractors();
@@ -515,4 +521,3 @@
     document.getElementById("filter--tradeCategoryID").addEventListener("change", getContractors);
     document.getElementById("filter--hireStatus").addEventListener("change", getContractors);
 })();
-export {};
