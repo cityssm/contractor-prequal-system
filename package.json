@@ -46,7 +46,7 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
     "express-session": "^1.17.1",
-    "mssql": "^7.0.0",
+    "mssql": "^7.1.0",
     "node-cache": "^5.1.2",
     "node-localstorage": "^2.1.6",
     "otplib": "^12.0.1",
