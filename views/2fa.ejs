@@ -5,25 +5,7 @@
   <title>
     Two-Factor Authentication: Contractor Prequalification System
   </title>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="<%= urlPrefix %>/stylesheets/style.min.css" />
-  <link rel="stylesheet" href="<%= urlPrefix %>/lib/fa5/css/all.min.css" />
-
-  <link rel="apple-touch-icon" sizes="180x180" href="<%= urlPrefix %>/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="<%= urlPrefix %>/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="<%= urlPrefix %>/favicon-16x16.png">
-  <link rel="manifest" href="<%= urlPrefix %>/site.webmanifest">
-  <link rel="mask-icon" href="<%= urlPrefix %>/safari-pinned-tab.svg" color="#363636">
-  <meta name="apple-mobile-web-app-title" content="Contractor Prequal">
-  <meta name="application-name" content="Contractor Prequal">
-  <meta name="msapplication-TileColor" content="#363636">
-  <meta name="theme-color" content="#ffffff">
+  <%- include('_headTags'); -%>
 </head>
 
 <body>
@@ -34,6 +16,12 @@
           Contractor Prequal System<br />
           <small>Two-Factor Authentication</small>
         </h1>
+
+        <div class="message is-warning">
+          <p class="message-body">
+            This login is protected by two-factor authentication (2FA).
+          </p>
+        </div>
 
         <form method="post" action="<%= urlPrefix %>/2fa">
           <input name="_csrf" type="hidden" value="<%= csrfToken %>" />
@@ -66,17 +54,15 @@
                 </span>
                 <span>Validate Token</span>
               </button>
-              <a class="button is-danger ml-2" href="<%= urlPrefix %>/logout">
-                <span class="icon">
-                  <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-                </span>
-                <span>Cancel and Log Out</span>
-              </a>
             </div>
           </div>
         </form>
 
         <div class="has-text-right">
+          <a class="is-size-7 has-text-danger" href="<%= urlPrefix %>/logout">
+            <span>Cancel and Log Out</span>
+          </a>
+          -
           <a class="is-size-7" href="https://cityssm.github.io/contractor-prequal-system/" target="_blank">Help</a>
         </div>
       </div>
