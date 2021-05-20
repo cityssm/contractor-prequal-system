@@ -45,7 +45,7 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
-    "express-session": "^1.17.1",
+    "express-session": "^1.17.2",
     "mssql": "^7.1.0",
     "node-cache": "^5.1.2",
     "node-localstorage": "^2.1.6",
