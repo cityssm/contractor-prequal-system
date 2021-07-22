@@ -31,9 +31,7 @@ router.route("/")
             let passed2FA = true;
             if (configFns.getProperty("twoFactor.isEnabledInternally") || configFns.getProperty("twoFactor.isEnabledExternally")) {
                 const ipAddress = requestIP.getClientIp(req);
-                console.log(ipAddress);
                 const isPrivateIP = isPrivate(ipAddress);
-                console.log(isPrivateIP);
                 if (configFns.getProperty("twoFactor.isRequiredInternally") && isPrivateIP) {
                     passed2FA = false;
                 }

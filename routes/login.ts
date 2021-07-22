@@ -52,11 +52,7 @@ router.route("/")
 
           const ipAddress = requestIP.getClientIp(req);
 
-          console.log(ipAddress);
-
           const isPrivateIP = isPrivate(ipAddress);
-
-          console.log(isPrivateIP);
 
           if (configFns.getProperty("twoFactor.isRequiredInternally") && isPrivateIP) {
 
