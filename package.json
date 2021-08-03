@@ -75,7 +75,7 @@
     "@types/request-ip": "^0.0.37",
     "@types/set-interval-async": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "@typescript-eslint/parser": "^4.28.4",
+    "@typescript-eslint/parser": "^4.29.0",
     "bulma": "^0.9.3",
     "eslint": "^7.31.0",
     "eslint-plugin-import": "^2.23.4",
