@@ -34,7 +34,7 @@
     "@cityssm/is-private-network-address": "^0.2.1",
     "@cityssm/mssql-multi-pool": "^2.0.0",
     "@cityssm/wsib-clearance-check": "^2.0.0",
-    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "chokidar": "^3.5.2",
     "compression": "^1.7.4",
     "connect-sqlite3": "^0.9.11",
