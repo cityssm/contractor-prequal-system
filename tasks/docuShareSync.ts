@@ -17,7 +17,8 @@ const debugDocuShare = debug("contractor-prequal-system:docuShareSync");
 
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 
-const recentlyModifiedMillis = 5 * 86400 * 1000;
+const recentlyModifiedYears = 1;
+const recentlyModifiedMillis = recentlyModifiedYears * 365 * 86400 * 1000;
 
 /*
  * Setup DocuShare Connection
@@ -76,14 +77,13 @@ const checkSavedDocuShareCollectionIDs = async () => {
 };
 
 /**
- * Ensures that all contractors with valid health and safety, legal, and WSIB have Collections in DocuShare.
+ * Ensures that all contractors have Collections in DocuShare.
  */
-const createHireReadyDocuShareCollections = async () => {
+const createDocuShareCollections = async () => {
 
   const contractors = await getContractors(true, {
-    healthSafetyIsSatisfactory: true,
-    legalIsSatisfactory: true,
-    wsibIsSatisfactory: true,
+    isContractor: true,
+    updateYears: recentlyModifiedYears,
     hasDocuShareCollectionID: false
   });
 
@@ -110,7 +110,7 @@ const createHireReadyDocuShareCollections = async () => {
 };
 
 /**
- * Purges empty Collections that haven't been modified recently.
+ * Purges empty Collections that are empty and haven't been modified recently.
  */
 const purgeDocuShareCollections = async (contractors: recordTypes.Contractor[]) => {
 
@@ -123,10 +123,13 @@ const purgeDocuShareCollections = async (contractors: recordTypes.Contractor[]) 
     if (!docuShareOutput.success || docuShareOutput.dsObjects.length === 0) {
       continue;
 
-    } else if (docuShareOutput.dsObjects[0].modifiedDateMillis + recentlyModifiedMillis < Date.now()) {
+    } else if (docuShareOutput.dsObjects[0].modifiedDateMillis + recentlyModifiedMillis > Date.now()) {
       // Don't purge recently modified Collections.
       continue;
     }
+
+    debugDocuShare("about to purge");
+    debugDocuShare(docuShareOutput);
 
     const docuShareChildrenOutput = await ds.getChildren(collectionHandle);
 
@@ -174,14 +177,48 @@ const purgeUnsatisfactoryHealthSafetyDocuShareCollections = async () => {
  * Schedule
  */
 
+let taskIsRunning = false;
+let taskIsQueued = false;
+
 const doTask = async () => {
-  await createHireReadyDocuShareCollections();
+
+  taskIsQueued = false;
+  taskIsRunning = true;
+
+  debugDocuShare("Task starting.");
+  await createDocuShareCollections();
   await purgeUnsatisfactoryLegalDocuShareCollections();
   await purgeUnsatisfactoryHealthSafetyDocuShareCollections();
   await checkSavedDocuShareCollectionIDs();
+  debugDocuShare("Task finished.");
+  taskIsRunning = false;
+
+  if (taskIsQueued) {
+    taskIsQueued = false;
+    await doTask();
+  }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-doTask();
+const queueTask = () => {
 
-setIntervalAsync(doTask, 2 * 60 * 60 * 1000);
+  if (taskIsRunning) {
+    taskIsQueued = true;
+  } else {
+    doTask();
+  }
+};
+
+queueTask();
+
+setIntervalAsync(async () => {
+  queueTask();
+}, 2 * 60 * 60 * 1000);
+
+/*
+ * Listener
+ */
+
+process.on("message", () => {
+  debugDocuShare("Task queued.");
+  queueTask();
+});

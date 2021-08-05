@@ -9,6 +9,9 @@ const buildWhereClause = (filters) => {
     if (filters.hasOwnProperty("isContractor")) {
         whereClause += " and isContractor = " + (filters.isContractor ? "1" : "0");
     }
+    if (filters.hasOwnProperty("updateYears")) {
+        whereClause += " and datediff(year, updateTime, getDate()) <= " + filters.updateYears.toString();
+    }
     if (filters.hasOwnProperty("wsibIsSatisfactory")) {
         whereClause += " and wsib_isSatisfactory = " + (filters.wsibIsSatisfactory ? "1" : "0");
     }

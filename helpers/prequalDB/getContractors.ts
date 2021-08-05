@@ -18,6 +18,7 @@ export interface GetContractorFilters {
   healthSafetyIsSatisfactory?: boolean;
   legalIsSatisfactory?: boolean;
   hasDocuShareCollectionID?: boolean;
+  updateYears?: number;
 };
 
 
@@ -27,6 +28,10 @@ const buildWhereClause = (filters: GetContractorFilters) => {
 
   if (filters.hasOwnProperty("isContractor")) {
     whereClause += " and isContractor = " + (filters.isContractor ? "1" : "0");
+  }
+
+  if (filters.hasOwnProperty("updateYears")) {
+    whereClause  += " and datediff(year, updateTime, getDate()) <= " + filters.updateYears.toString();
   }
 
   if (filters.hasOwnProperty("wsibIsSatisfactory")) {

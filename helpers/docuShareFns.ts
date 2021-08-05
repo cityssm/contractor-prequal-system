@@ -8,7 +8,12 @@ import * as configFns from "./configFns.js";
 export const doSetup = () => {
 
   ds.setupJava({
-    dsapiPath: path.join("..", "..", "..", "java", "dsapi.jar")
+    dsapiPath: [
+      path.join("java", "dsapi.jar"),
+      path.join("..", "java", "dsapi.jar"),
+      path.join("..", "..", "java", "dsapi.jar"),
+      path.join("..", "..", "..", "java", "dsapi.jar")
+    ]
   });
 
   ds.setupServer(configFns.getProperty("docuShareConfig.server"));

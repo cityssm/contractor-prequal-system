@@ -14,6 +14,7 @@ import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import routerLogin from "./routes/login.js";
 import router2fa from "./routes/2fa.js";
 import routerContractors from "./routes/contractors.js";
+import { fork } from "child_process";
 import debug from "debug";
 const debugApp = debug("contractor-prequal-system:app");
 const __dirname = ".";
@@ -106,6 +107,22 @@ app.get(urlPrefix + "/logout", (req, res) => {
         res.clearCookie(sessionCookieName);
     }
     res.redirect(urlPrefix + "/login");
+});
+const childProcesses = {
+    clearRisk: fork("./tasks/clearRiskInsuranceImport"),
+    docuShare: fork("./tasks/docuShareSync"),
+    wsib: fork("./tasks/wsibRefresh")
+};
+childProcesses.docuShare.on("message", (message) => {
+    debugApp(message);
+});
+app.get(urlPrefix + "/tasks/:taskName", (request, response) => {
+    const taskName = request.params.taskName;
+    if (childProcesses[taskName]) {
+        childProcesses[taskName].send("ping");
+        return response.json(true);
+    }
+    return response.json(false);
 });
 app.use(function (_req, _res, next) {
     next(createError(404));

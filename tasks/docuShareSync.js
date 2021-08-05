@@ -8,7 +8,8 @@ import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
 import debug from "debug";
 const debugDocuShare = debug("contractor-prequal-system:docuShareSync");
 const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
-const recentlyModifiedMillis = 5 * 86400 * 1000;
+const recentlyModifiedYears = 1;
+const recentlyModifiedMillis = recentlyModifiedYears * 365 * 86400 * 1000;
 docuShareFns.doSetup();
 const checkSavedDocuShareCollectionIDs = async () => {
     const contractors = await getContractors(true, {
@@ -40,11 +41,10 @@ const checkSavedDocuShareCollectionIDs = async () => {
         }
     }
 };
-const createHireReadyDocuShareCollections = async () => {
+const createDocuShareCollections = async () => {
     const contractors = await getContractors(true, {
-        healthSafetyIsSatisfactory: true,
-        legalIsSatisfactory: true,
-        wsibIsSatisfactory: true,
+        isContractor: true,
+        updateYears: recentlyModifiedYears,
         hasDocuShareCollectionID: false
     });
     for (const contractor of contractors) {
@@ -70,9 +70,11 @@ const purgeDocuShareCollections = async (contractors) => {
         if (!docuShareOutput.success || docuShareOutput.dsObjects.length === 0) {
             continue;
         }
-        else if (docuShareOutput.dsObjects[0].modifiedDateMillis + recentlyModifiedMillis < Date.now()) {
+        else if (docuShareOutput.dsObjects[0].modifiedDateMillis + recentlyModifiedMillis > Date.now()) {
             continue;
         }
+        debugDocuShare("about to purge");
+        debugDocuShare(docuShareOutput);
         const docuShareChildrenOutput = await ds.getChildren(collectionHandle);
         if (docuShareChildrenOutput.success && docuShareChildrenOutput.dsObjects.length === 0) {
             const success = await ds.deleteObject(collectionHandle);
@@ -99,11 +101,36 @@ const purgeUnsatisfactoryHealthSafetyDocuShareCollections = async () => {
     });
     await purgeDocuShareCollections(contractors);
 };
+let taskIsRunning = false;
+let taskIsQueued = false;
 const doTask = async () => {
-    await createHireReadyDocuShareCollections();
+    taskIsQueued = false;
+    taskIsRunning = true;
+    debugDocuShare("Task starting.");
+    await createDocuShareCollections();
     await purgeUnsatisfactoryLegalDocuShareCollections();
     await purgeUnsatisfactoryHealthSafetyDocuShareCollections();
     await checkSavedDocuShareCollectionIDs();
+    debugDocuShare("Task finished.");
+    taskIsRunning = false;
+    if (taskIsQueued) {
+        taskIsQueued = false;
+        await doTask();
+    }
 };
-doTask();
-setIntervalAsync(doTask, 2 * 60 * 60 * 1000);
+const queueTask = () => {
+    if (taskIsRunning) {
+        taskIsQueued = true;
+    }
+    else {
+        doTask();
+    }
+};
+queueTask();
+setIntervalAsync(async () => {
+    queueTask();
+}, 2 * 60 * 60 * 1000);
+process.on("message", () => {
+    debugDocuShare("Task queued.");
+    queueTask();
+});

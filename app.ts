@@ -19,10 +19,13 @@ import routerLogin from "./routes/login.js";
 import router2fa from "./routes/2fa.js";
 import routerContractors from "./routes/contractors.js";
 
+import { fork } from "child_process";
+
 import debug from "debug";
 const debugApp = debug("contractor-prequal-system:app");
 
 const __dirname = ".";
+
 
 /*
  * INITIALIZE APP
@@ -191,6 +194,31 @@ app.get(urlPrefix + "/logout", (req, res) => {
   res.redirect(urlPrefix + "/login");
 });
 
+/*
+ * Initialize background tasks
+ */
+
+const childProcesses = {
+  clearRisk: fork("./tasks/clearRiskInsuranceImport"),
+  docuShare: fork("./tasks/docuShareSync"),
+  wsib: fork("./tasks/wsibRefresh")
+};
+
+childProcesses.docuShare.on("message", (message) => {
+  debugApp(message);
+});
+
+app.get(urlPrefix + "/tasks/:taskName", (request, response) => {
+  const taskName = request.params.taskName;
+
+  if (childProcesses[taskName]) {
+    childProcesses[taskName].send("ping");
+    return response.json(true);
+  }
+
+  return response.json(false);
+});
+
 
 // Catch 404 and forward to error handler
 app.use(function(_req, _res, next) {
@@ -208,7 +236,6 @@ app.use(function(err: Error, req: express.Request, res: express.Response, _next:
   // Render the error page
   res.status(err.status || 500);
   res.render("error");
-
 });
 
 

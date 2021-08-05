@@ -3,7 +3,6 @@ import app from "../app.js";
 import http from "http";
 import https from "https";
 import fs from "fs";
-import { fork } from "child_process";
 import * as configFns from "../helpers/configFns.js";
 import debug from "debug";
 const debugWWW = debug("contractor-prequal-system:www");
@@ -53,6 +52,3 @@ if (httpsConfig) {
     });
     debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
-fork("./tasks/clearRiskInsuranceImport");
-fork("./tasks/docuShareSync");
-fork("./tasks/wsibRefresh");
