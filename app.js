@@ -102,10 +102,9 @@ app.use(urlPrefix + "/2fa", sessionChecker, router2fa);
 app.use(urlPrefix + "/login", routerLogin);
 app.get(urlPrefix + "/logout", (request, response) => {
     if (request.session.user && request.cookies[sessionCookieName]) {
-        request.session.destroy(() => {
-            request.session = undefined;
-            response.clearCookie(sessionCookieName);
-        });
+        request.session.destroy(null);
+        request.session = undefined;
+        response.clearCookie(sessionCookieName);
     }
     response.redirect(urlPrefix + "/login");
 });

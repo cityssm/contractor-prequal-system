@@ -185,11 +185,10 @@ app.get(urlPrefix + "/logout", (request, response) => {
 
   if (request.session.user && request.cookies[sessionCookieName]) {
 
-    request.session.destroy(() => {
-      request.session = undefined;
-      response.clearCookie(sessionCookieName);
-    });
-
+    // eslint-disable-next-line unicorn/no-null
+    request.session.destroy(null);
+    request.session = undefined;
+    response.clearCookie(sessionCookieName);
   }
 
   response.redirect(urlPrefix + "/login");
