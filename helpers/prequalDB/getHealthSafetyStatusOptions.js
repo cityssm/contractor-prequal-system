@@ -1,10 +1,10 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:getHealthSafetyStatusOptions");
 export const getHealthSafetyStatusOptions = async () => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         const sql = "select cso_status" +
             " from cpqs_statusoptions" +
             " where cso_isactive = 1" +
@@ -21,8 +21,8 @@ export const getHealthSafetyStatusOptions = async () => {
         }
         return statusOptions;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
     return [];
 };

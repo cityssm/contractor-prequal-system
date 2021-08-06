@@ -1,10 +1,10 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:addTradeCategory");
 export const addTradeCategory = async (contractorID, tradeCategoryID) => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         await pool.request()
             .input("contractorID", contractorID)
             .input("tradeCategoryID", tradeCategoryID)
@@ -13,8 +13,8 @@ export const addTradeCategory = async (contractorID, tradeCategoryID) => {
             " values (@contractorID, @tradeCategoryID, getdate())");
         return true;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
     return false;
 };

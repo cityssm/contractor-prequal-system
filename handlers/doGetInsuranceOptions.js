@@ -1,7 +1,7 @@
-import getDistinctInsuranceCompanyNames from "../helpers/prequalDB/getDistinctInsuranceCompanyNames.js";
-export const handler = async (_req, res) => {
+import { getDistinctInsuranceCompanyNames } from "../helpers/prequalDB/getDistinctInsuranceCompanyNames.js";
+export const handler = async (_request, response) => {
     const insuranceCompanyNames = await getDistinctInsuranceCompanyNames();
-    return res.json({
+    return response.json({
         insuranceCompanyNames
     });
 };

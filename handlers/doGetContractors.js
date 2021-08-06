@@ -1,8 +1,7 @@
 import { getContractors } from "../helpers/prequalDB/getContractors.js";
 import * as resultsCache from "../helpers/queryResultsCache.js";
-;
-export const handler = async (req, res) => {
-    const formFilters = req.body;
+export const handler = async (request, response) => {
+    const formFilters = request.body;
     const queryFilters = {};
     if (formFilters.contractorName !== "") {
         queryFilters.contractorName = formFilters.contractorName;
@@ -22,18 +21,18 @@ export const handler = async (req, res) => {
             break;
     }
     if (formFilters.tradeCategoryID !== "") {
-        queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
+        queryFilters.tradeCategoryID = Number.parseInt(formFilters.tradeCategoryID, 10);
     }
-    if (!req.session.user.canUpdate) {
+    if (!request.session.user.canUpdate) {
         queryFilters.healthSafetyIsSatisfactory = true;
         queryFilters.legalIsSatisfactory = true;
     }
-    let contractors = resultsCache.getCachedResult(req.session.user.canUpdate, queryFilters);
+    let contractors = resultsCache.getCachedResult(request.session.user.canUpdate, queryFilters);
     if (!contractors) {
-        contractors = await getContractors(req.session.user.canUpdate, queryFilters);
-        resultsCache.cacheResult(req.session.user.canUpdate, queryFilters, contractors);
+        contractors = await getContractors(request.session.user.canUpdate, queryFilters);
+        resultsCache.cacheResult(request.session.user.canUpdate, queryFilters, contractors);
     }
-    return res.json({
+    return response.json({
         contractors
     });
 };

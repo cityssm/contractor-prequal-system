@@ -1,10 +1,10 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:twoFactorBD:has2FA");
 export const has2FA = async (userName) => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("twoFactor.mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("twoFactor.mssqlConfig"));
         const userResult = await pool.request()
             .input("userName", userName)
             .query("select enforce2FA from TwoFactor" +
@@ -14,8 +14,8 @@ export const has2FA = async (userName) => {
         }
         return userResult.recordset[0].enforce2FA;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
     return false;
 };

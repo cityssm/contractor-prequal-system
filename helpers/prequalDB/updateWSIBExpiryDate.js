@@ -1,10 +1,10 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:updateWSIBExpiryDate");
 export const updateWSIBExpiryDate = async (accountNumber, expiryDate) => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         await pool.request()
             .input("wsibExpiryDate", expiryDate)
             .input("wsibAccountNumber", accountNumber)
@@ -13,8 +13,8 @@ export const updateWSIBExpiryDate = async (accountNumber, expiryDate) => {
             " where cp2_wsibaccountnumber = @wsibAccountNumber");
         return true;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
     return false;
 };

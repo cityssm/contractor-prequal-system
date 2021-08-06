@@ -32,7 +32,7 @@
           </a>
           <div class="navbar-dropdown is-right">
             <%
-              const keyForms = configFns.getProperty("docuShareConfig.keyForms");
+              const keyForms = configFunctions.getProperty("docuShareConfig.keyForms");
               for (const keyForm of keyForms) {
             %>
             <a class="navbar-item" href="<%= keyForm.formURL %>" target="_blank">
@@ -129,8 +129,8 @@
     window.exports.__esModule = window.exports.__esModule || false;
     exports.canUpdate = <%= user.canUpdate %>;
     exports.urlPrefix = "<%= urlPrefix %>";
-    exports.docuShareRootURL = "<%= configFns.getProperty("docuShareConfig.rootURL") %>";
-    exports.vendorInformationSystemVendorURL = "<%= configFns.getProperty("vendorInformationSystemConfig.vendorURL") %>";
+    exports.docuShareRootURL = "<%= configFunctions.getProperty("docuShareConfig.rootURL") %>";
+    exports.vendorInformationSystemVendorURL = "<%= configFunctions.getProperty("vendorInformationSystemConfig.vendorURL") %>";
   </script>
   <script src="<%= urlPrefix %>/lib/bulma-webapp-js/cityssm.min.js"></script>
   <script src="<%= urlPrefix %>/javascripts/contractors.min.js"></script>

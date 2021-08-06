@@ -1,34 +1,34 @@
 import { Router } from "express";
-import getSecretKey from "../helpers/twoFactorDB/getSecretKey.js";
+import { getSecretKey } from "../helpers/twoFactorDB/getSecretKey.js";
 import { authenticator } from "otplib";
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/configFunctions.js";
 import debug from "debug";
 const debugLogin = debug("contractor-prequal-system:routes:login");
-const redirectURL = configFns.getProperty("reverseProxy.urlPrefix") + "/contractors";
+const redirectURL = configFunctions.getProperty("reverseProxy.urlPrefix") + "/contractors";
 export const router = Router();
 authenticator.options = {
     window: [2, 2]
 };
 router.route("/")
-    .get((req, res) => {
-    const sessionCookieName = configFns.getProperty("session.cookieName");
-    if (req.session.user && req.cookies[sessionCookieName] && req.session.user.passed2FA) {
-        res.redirect(redirectURL);
+    .get((request, response) => {
+    const sessionCookieName = configFunctions.getProperty("session.cookieName");
+    if (request.session.user && request.cookies[sessionCookieName] && request.session.user.passed2FA) {
+        response.redirect(redirectURL);
     }
     else {
-        res.render("2fa", {
+        response.render("2fa", {
             userName: "",
             message: ""
         });
     }
 })
-    .post(async (req, res) => {
-    const userName = req.body.userName.toLowerCase();
-    const token = req.body.token;
+    .post(async (request, response) => {
+    const userName = request.body.userName.toLowerCase();
+    const token = request.body.token;
     try {
         const secret = await getSecretKey(userName);
         if (!secret || secret === "") {
-            return res.render("2fa", {
+            return response.render("2fa", {
                 userName,
                 message: "Setting up two-factor authentication may be incomplete.  Please contact IT for assistance"
             });
@@ -38,17 +38,17 @@ router.route("/")
             secret
         });
         if (passed2FA) {
-            req.session.user.passed2FA = true;
-            return res.redirect(redirectURL);
+            request.session.user.passed2FA = true;
+            return response.redirect(redirectURL);
         }
-        return res.render("2fa", {
+        return response.render("2fa", {
             userName,
             message: "Token not valid."
         });
     }
-    catch (e) {
-        debugLogin(e);
-        return res.render("2fa", {
+    catch (error) {
+        debugLogin(error);
+        return response.render("2fa", {
             userName,
             message: "Unknown Error"
         });

@@ -17,16 +17,16 @@ configFallbackValues.set("twoFactor.isEnabledExternally", false);
 configFallbackValues.set("twoFactor.isRequiredExternally", false);
 configFallbackValues.set("permissions.canUpdate", []);
 export function getProperty(propertyName) {
-    if (configOverrides.hasOwnProperty(propertyName)) {
+    if (Object.prototype.hasOwnProperty.call(configOverrides, propertyName)) {
         return configOverrides[propertyName];
     }
     const propertyNameSplit = propertyName.split(".");
-    let currentObj = config;
-    for (let index = 0; index < propertyNameSplit.length; index += 1) {
-        currentObj = currentObj[propertyNameSplit[index]];
-        if (!currentObj) {
+    let currentObject = config;
+    for (const element of propertyNameSplit) {
+        currentObject = currentObject[element];
+        if (!currentObject) {
             return configFallbackValues.get(propertyName);
         }
     }
-    return currentObj;
+    return currentObject;
 }

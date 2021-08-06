@@ -1,10 +1,10 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:getDistinctInsuranceCompanyNames");
 export const getDistinctInsuranceCompanyNames = async () => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         const sql = "select distinct insurance_company" +
             " from Prequal.Contractor_SearchResults" +
             " where insurance_company is not null" +
@@ -21,8 +21,8 @@ export const getDistinctInsuranceCompanyNames = async () => {
         }
         return companyOptions;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
     return [];
 };

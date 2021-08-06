@@ -1,22 +1,22 @@
 import * as ds from "@cityssm/docushare";
-import * as configFns from "../helpers/configFns.js";
-import * as docuShareFns from "../helpers/docuShareFns.js";
+import * as configFunctions from "../helpers/configFunctions.js";
+import * as docuShareFunctions from "../helpers/docuShareFunctions.js";
 import { clearCache } from "../helpers/queryResultsCache.js";
 import { setIntervalAsync } from "set-interval-async/fixed/index.js";
 import { getContractors } from "../helpers/prequalDB/getContractors.js";
 import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
 import debug from "debug";
 const debugDocuShare = debug("contractor-prequal-system:docuShareSync");
-const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
+const contractorPrequalCollectionHandle = configFunctions.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 const recentlyModifiedYears = 1;
 const recentlyModifiedMillis = recentlyModifiedYears * 365 * 86400 * 1000;
-docuShareFns.doSetup();
+docuShareFunctions.doSetup();
 const checkSavedDocuShareCollectionIDs = async () => {
     const contractors = await getContractors(true, {
         hasDocuShareCollectionID: true
     });
     for (const contractor of contractors) {
-        const contractorCollectionHandle = docuShareFns.getCollectionHandle(contractor.docuShareCollectionID);
+        const contractorCollectionHandle = docuShareFunctions.getCollectionHandle(contractor.docuShareCollectionID);
         try {
             const docuShareOutput = await ds.findByHandle(contractorCollectionHandle);
             if (docuShareOutput.success) {
@@ -36,8 +36,8 @@ const checkSavedDocuShareCollectionIDs = async () => {
                 }
             }
         }
-        catch (e) {
-            debugDocuShare(e);
+        catch (error) {
+            debugDocuShare(error);
         }
     }
 };
@@ -58,14 +58,14 @@ const createDocuShareCollections = async () => {
                 });
             }
         }
-        catch (e) {
-            debugDocuShare(e);
+        catch (error) {
+            debugDocuShare(error);
         }
     }
 };
 const purgeDocuShareCollections = async (contractors) => {
     for (const contractor of contractors) {
-        const collectionHandle = docuShareFns.getCollectionHandle(contractor.docuShareCollectionID);
+        const collectionHandle = docuShareFunctions.getCollectionHandle(contractor.docuShareCollectionID);
         const docuShareOutput = await ds.findByHandle(collectionHandle);
         if (!docuShareOutput.success || docuShareOutput.dsObjects.length === 0) {
             continue;

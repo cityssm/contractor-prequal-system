@@ -1,7 +1,7 @@
 import * as fs from "fs";
-import * as path from "path";
+import path from "path";
 
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/configFunctions.js";
 import { getContractor } from "../helpers/prequalDB/getContractor.js";
 import { updateInsurance, InsuranceForm } from "../helpers/prequalDB/updateInsurance.js";
 
@@ -14,11 +14,11 @@ import debug from "debug";
 const debugClearRisk = debug("contractor-prequal-system:clearRiskInsuranceImport");
 
 
-const importFolderPath = configFns.getProperty("clearRiskConfig.insuranceImport.folderPath");
-const columnNames = configFns.getProperty("clearRiskConfig.insuranceImport.columnNames");
+const importFolderPath = configFunctions.getProperty("clearRiskConfig.insuranceImport.folderPath");
+const columnNames = configFunctions.getProperty("clearRiskConfig.insuranceImport.columnNames");
 
 
-const csvResultToInsuranceForm = async (csvResult: {}): Promise<InsuranceForm | false> => {
+const csvResultToInsuranceForm = async (csvResult: { [columnName: string]: string }): Promise<InsuranceForm | false> => {
 
   const contractorID = csvResult[columnNames.contractorID];
 
@@ -51,7 +51,7 @@ const csvResultToInsuranceForm = async (csvResult: {}): Promise<InsuranceForm | 
 };
 
 
-const processResults = async (results: Papa.ParseResult<Array<{}>>) => {
+const processResults = async (results: Papa.ParseResult<{ [columnName: string]: string }>) => {
 
   for (const csvResult of results.data) {
 
@@ -74,9 +74,9 @@ const validateAndParseFile = (fileName: string) => {
     complete: processResults
   });
 
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      debugClearRisk(err.message);
+  fs.unlink(filePath, (error) => {
+    if (error) {
+      debugClearRisk(error.message);
     }
   });
 };
@@ -84,10 +84,10 @@ const validateAndParseFile = (fileName: string) => {
 
 const doTask = async () => {
 
-  fs.readdir(importFolderPath, (err, files) => {
+  fs.readdir(importFolderPath, (error, files) => {
 
-    if (err) {
-      debugClearRisk(err.message);
+    if (error) {
+      debugClearRisk(error.message);
       return;
     }
 

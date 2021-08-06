@@ -1,46 +1,46 @@
-import getContractor from "../helpers/prequalDB/getContractor.js";
-import updateContractor from "../helpers/prequalDB/updateContractor.js";
+import { getContractor } from "../helpers/prequalDB/getContractor.js";
+import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
 
 import * as ds from "@cityssm/docushare";
 
-import * as configFns from "../helpers/configFns.js";
-import * as docuShareFns from "../helpers/docuShareFns.js";
+import * as configFunctions from "../helpers/configFunctions.js";
+import * as docuShareFunctions from "../helpers/docuShareFunctions.js";
 
 import { clearCache } from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 
 
-docuShareFns.doSetup();
+docuShareFunctions.doSetup();
 
 
-export const handler: RequestHandler = async (req, res) => {
+export const handler: RequestHandler = async (request, response) => {
 
-  const formParams: {
+  const formParameters: {
     contractorID: string;
-  } = req.body;
+  } = request.body;
 
-  const contractor = await getContractor(formParams.contractorID);
+  const contractor = await getContractor(formParameters.contractorID);
 
   if (!contractor) {
-    return res.json({
+    return response.json({
       success: false,
       message: "Contractor record not found."
     });
   }
 
-  const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
+  const contractorPrequalCollectionHandle = configFunctions.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 
   const newCollection = await ds.createCollection(contractorPrequalCollectionHandle, contractor.contractor_name);
 
   if (!newCollection || !newCollection.success) {
-    return res.json({
+    return response.json({
       success: false,
       message: "An error occurred communicating with DocuShare.  Please try again."
     });
   }
 
-  const docuShareCollectionID = docuShareFns.getIDFromHandle(newCollection.dsObjects[0].handle);
+  const docuShareCollectionID = docuShareFunctions.getIDFromHandle(newCollection.dsObjects[0].handle);
 
   const success = await updateContractor({
     contractorID: contractor.contractorID,
@@ -51,7 +51,7 @@ export const handler: RequestHandler = async (req, res) => {
     clearCache();
   }
 
-  return res.json({
+  return response.json({
     success,
     docuShareCollectionID
   });

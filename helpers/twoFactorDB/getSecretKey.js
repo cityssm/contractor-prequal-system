@@ -1,23 +1,23 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:twoFactorDB:getSecretKey");
 export const getSecretKey = async (userName) => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("twoFactor.mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("twoFactor.mssqlConfig"));
         const userResult = await pool.request()
             .input("userName", userName)
             .query("select secretKey from TwoFactor" +
             " where enforce2FA = 1" +
             " and userName = @userName");
         if (!userResult.recordset || userResult.recordset.length === 0) {
-            return null;
+            return undefined;
         }
         return userResult.recordset[0].secretKey;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
-    return null;
+    return undefined;
 };
 export default getSecretKey;

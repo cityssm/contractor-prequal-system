@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import * as path from "path";
-import * as configFns from "../helpers/configFns.js";
+import path from "path";
+import * as configFunctions from "../helpers/configFunctions.js";
 import { getContractor } from "../helpers/prequalDB/getContractor.js";
 import { updateInsurance } from "../helpers/prequalDB/updateInsurance.js";
 import * as chokidar from "chokidar";
@@ -8,8 +8,8 @@ import * as Papa from "papaparse";
 import { setIntervalAsync } from "set-interval-async/fixed/index.js";
 import debug from "debug";
 const debugClearRisk = debug("contractor-prequal-system:clearRiskInsuranceImport");
-const importFolderPath = configFns.getProperty("clearRiskConfig.insuranceImport.folderPath");
-const columnNames = configFns.getProperty("clearRiskConfig.insuranceImport.columnNames");
+const importFolderPath = configFunctions.getProperty("clearRiskConfig.insuranceImport.folderPath");
+const columnNames = configFunctions.getProperty("clearRiskConfig.insuranceImport.columnNames");
 const csvResultToInsuranceForm = async (csvResult) => {
     const contractorID = csvResult[columnNames.contractorID];
     if (!contractorID || contractorID === "") {
@@ -47,16 +47,16 @@ const validateAndParseFile = (fileName) => {
         skipEmptyLines: "greedy",
         complete: processResults
     });
-    fs.unlink(filePath, (err) => {
-        if (err) {
-            debugClearRisk(err.message);
+    fs.unlink(filePath, (error) => {
+        if (error) {
+            debugClearRisk(error.message);
         }
     });
 };
 const doTask = async () => {
-    fs.readdir(importFolderPath, (err, files) => {
-        if (err) {
-            debugClearRisk(err.message);
+    fs.readdir(importFolderPath, (error, files) => {
+        if (error) {
+            debugClearRisk(error.message);
             return;
         }
         files.forEach(validateAndParseFile);

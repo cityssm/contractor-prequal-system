@@ -77,4 +77,4 @@ export interface Config_ClearRisk_InsuranceImport_ColumnNames {
   company?: string;
   policyNumber?: string;
   amount?: string;
-};
+}

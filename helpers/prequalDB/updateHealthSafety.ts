@@ -1,5 +1,5 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 
 import { hasHealthSafetyRecord } from "./hasHealthSafetyRecord.js";
 
@@ -19,19 +19,15 @@ export const updateHealthSafety = async (updateForm: HealthSafetyForm): Promise<
 
   try {
     const pool: sqlTypes.ConnectionPool =
-      await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+      await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
 
-    let sql: string;
-
-    if (await hasHealthSafetyRecord(updateForm.contractorID)) {
-      sql = "update cpqs_pass" +
-        " set cpass_status = @healthSafety_status" +
-        " where cpass_contractorid = @contractorID";
-    } else {
-      sql = "insert into cpqs_pass" +
-        " (cpass_contractorid, cpass_status)" +
-        " values (@contractorID, @healthSafety_status)";
-    }
+    const sql = (await hasHealthSafetyRecord(updateForm.contractorID))
+      ? "update cpqs_pass" +
+      " set cpass_status = @healthSafety_status" +
+      " where cpass_contractorid = @contractorID"
+      : "insert into cpqs_pass" +
+      " (cpass_contractorid, cpass_status)" +
+      " values (@contractorID, @healthSafety_status)";
 
     await pool.request()
       .input("healthSafety_status", updateForm.healthSafety_status)
@@ -40,8 +36,8 @@ export const updateHealthSafety = async (updateForm: HealthSafetyForm): Promise<
 
     return true;
 
-  } catch (e) {
-    debugSQL(e);
+  } catch (error) {
+    debugSQL(error);
   }
 
   return false;

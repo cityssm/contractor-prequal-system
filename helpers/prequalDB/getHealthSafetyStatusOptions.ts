@@ -1,5 +1,5 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 
 import type * as sqlTypes from "mssql";
 
@@ -16,7 +16,7 @@ export const getHealthSafetyStatusOptions = async (): Promise<string[]> => {
 
   try {
     const pool: sqlTypes.ConnectionPool =
-      await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+      await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
 
     const sql = "select cso_status" +
       " from cpqs_statusoptions" +
@@ -40,8 +40,8 @@ export const getHealthSafetyStatusOptions = async (): Promise<string[]> => {
 
     return statusOptions;
 
-  } catch (e) {
-    debugSQL(e);
+  } catch (error) {
+    debugSQL(error);
   }
 
   return [];

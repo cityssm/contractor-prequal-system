@@ -5,17 +5,17 @@ import * as resultsCache from "../helpers/queryResultsCache.js";
 import type { RequestHandler } from "express";
 
 
-export const handler: RequestHandler = async (req, res) => {
+export const handler: RequestHandler = async (request, response) => {
 
-  const updateForm: LegalForm = req.body;
+  const updateForm: LegalForm = request.body;
 
-  const success = await updateLegal(updateForm, req.session);
+  const success = await updateLegal(updateForm, request.session);
 
   if (success) {
     resultsCache.clearCache();
   }
 
-  return res.json({
+  return response.json({
     success
   });
 };

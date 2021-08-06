@@ -1,10 +1,10 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:getExpiredWSIBAccountNumbers");
 export const getExpiredWSIBAccountNumbers = async (limit = 50) => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         const sql = "select top " + limit.toString() + " wsib_accountNumber" +
             " from Prequal.Contractor_SearchResults" +
             " where IsContractor = 1" +
@@ -25,8 +25,8 @@ export const getExpiredWSIBAccountNumbers = async (limit = 50) => {
         }
         return accountNumbers;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
     return [];
 };

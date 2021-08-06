@@ -4,15 +4,15 @@
   * Navbar Toggle
   */
 
-  const navbarBurgerEle = document.getElementsByClassName("navbar-burger")[0];
-  const navbarMenuEle = document.getElementsByClassName("navbar-menu")[0];
+  const navbarBurgerElement = document.querySelector(".navbar-burger");
+  const navbarMenuElement = document.querySelector(".navbar-menu");
 
-  navbarBurgerEle.addEventListener("click", () => {
-    navbarMenuEle.classList.toggle("is-active");
+  navbarBurgerElement.addEventListener("click", () => {
+    navbarMenuElement.classList.toggle("is-active");
 
-    navbarBurgerEle.classList.toggle("is-active");
-    navbarBurgerEle.setAttribute(
+    navbarBurgerElement.classList.toggle("is-active");
+    navbarBurgerElement.setAttribute(
       "aria-expanded",
-      navbarBurgerEle.classList.contains("is-active") ? "true" : "false");
+      navbarBurgerElement.classList.contains("is-active") ? "true" : "false");
   });
 })();

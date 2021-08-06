@@ -8,7 +8,7 @@ import csurf from "csurf";
 import rateLimit from "express-rate-limit";
 import session from "express-session";
 import sqlite from "connect-sqlite3";
-import * as configFns from "./helpers/configFns.js";
+import * as configFunctions from "./helpers/configFunctions.js";
 import * as stringFns from "@cityssm/expressjs-server-js/stringFns.js";
 import * as dateTimeFns from "@cityssm/expressjs-server-js/dateTimeFns.js";
 import routerLogin from "./routes/login.js";
@@ -19,20 +19,20 @@ import debug from "debug";
 const debugApp = debug("contractor-prequal-system:app");
 const __dirname = ".";
 export const app = express();
-if (!configFns.getProperty("reverseProxy.disableEtag")) {
+if (!configFunctions.getProperty("reverseProxy.disableEtag")) {
     app.set("etag", false);
 }
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(abuseCheck({
-    byXForwardedFor: configFns.getProperty("reverseProxy.blockViaXForwardedFor"),
-    byIP: !configFns.getProperty("reverseProxy.blockViaXForwardedFor")
+    byXForwardedFor: configFunctions.getProperty("reverseProxy.blockViaXForwardedFor"),
+    byIP: !configFunctions.getProperty("reverseProxy.blockViaXForwardedFor")
 }));
-if (!configFns.getProperty("reverseProxy.disableCompression")) {
+if (!configFunctions.getProperty("reverseProxy.disableCompression")) {
     app.use(compression());
 }
-app.use((req, _res, next) => {
-    debugApp(req.method + " " + req.url);
+app.use((request, _response, next) => {
+    debugApp(request.method + " " + request.url);
     next();
 });
 app.use(express.json());
@@ -46,67 +46,68 @@ const limiter = rateLimit({
     max: 1000
 });
 app.use(limiter);
-const urlPrefix = configFns.getProperty("reverseProxy.urlPrefix");
+const urlPrefix = configFunctions.getProperty("reverseProxy.urlPrefix");
 app.use(urlPrefix, express.static(path.join(__dirname, "public")));
 app.use(urlPrefix + "/lib/bulma-webapp-js", express.static(path.join(__dirname, "node_modules", "@cityssm", "bulma-webapp-js", "dist")));
 app.use(urlPrefix + "/lib/fa5", express.static(path.join(__dirname, "node_modules", "@fortawesome", "fontawesome-free")));
 const SQLiteStore = sqlite(session);
-const sessionCookieName = configFns.getProperty("session.cookieName");
+const sessionCookieName = configFunctions.getProperty("session.cookieName");
 app.use(session({
     store: new SQLiteStore({
         dir: "data",
         db: "sessions.db"
     }),
     name: sessionCookieName,
-    secret: configFns.getProperty("session.secret"),
+    secret: configFunctions.getProperty("session.secret"),
     resave: true,
     saveUninitialized: false,
     rolling: true,
     cookie: {
-        maxAge: configFns.getProperty("session.maxAgeMillis"),
+        maxAge: configFunctions.getProperty("session.maxAgeMillis"),
         sameSite: "strict"
     }
 }));
-app.use((req, res, next) => {
-    if (req.cookies[sessionCookieName] && !req.session.user) {
-        res.clearCookie(sessionCookieName);
+app.use((request, response, next) => {
+    if (request.cookies[sessionCookieName] && !request.session.user) {
+        response.clearCookie(sessionCookieName);
     }
     next();
 });
-const sessionChecker = (req, res, next) => {
-    if (req.session.user && req.cookies[sessionCookieName]) {
+const sessionChecker = (request, response, next) => {
+    if (request.session.user && request.cookies[sessionCookieName]) {
         return next();
     }
-    return res.redirect(urlPrefix + "/login");
+    return response.redirect(urlPrefix + "/login");
 };
-const twoFactorChecker = (req, res, next) => {
-    if (req.session.user.passed2FA) {
+const twoFactorChecker = (request, response, next) => {
+    if (request.session.user.passed2FA) {
         return next();
     }
-    return res.redirect(urlPrefix + "/2fa");
+    return response.redirect(urlPrefix + "/2fa");
 };
-app.use(function (req, res, next) {
-    res.locals.configFns = configFns;
-    res.locals.dateTimeFns = dateTimeFns;
-    res.locals.stringFns = stringFns;
-    res.locals.user = req.session.user;
-    res.locals.csrfToken = req.csrfToken();
-    res.locals.urlPrefix = configFns.getProperty("reverseProxy.urlPrefix");
+app.use(function (request, response, next) {
+    response.locals.configFunctions = configFunctions;
+    response.locals.dateTimeFns = dateTimeFns;
+    response.locals.stringFns = stringFns;
+    response.locals.user = request.session.user;
+    response.locals.csrfToken = request.csrfToken();
+    response.locals.urlPrefix = configFunctions.getProperty("reverseProxy.urlPrefix");
     next();
 });
-app.get(urlPrefix + "/", sessionChecker, (_req, res) => {
-    res.redirect(urlPrefix + "/contractors");
+app.get(urlPrefix + "/", sessionChecker, (_request, response) => {
+    response.redirect(urlPrefix + "/contractors");
 });
 app.use(urlPrefix + "/contractors", sessionChecker, twoFactorChecker, routerContractors);
 app.use(urlPrefix + "/2fa", sessionChecker, router2fa);
 app.use(urlPrefix + "/login", routerLogin);
-app.get(urlPrefix + "/logout", (req, res) => {
-    if (req.session.user && req.cookies[sessionCookieName]) {
-        req.session.destroy(null);
-        req.session = null;
-        res.clearCookie(sessionCookieName);
+app.get(urlPrefix + "/logout", (request, response) => {
+    if (request.session.user && request.cookies[sessionCookieName]) {
+        request.session.destroy(() => {
+            request.session = undefined;
+            response.clearCookie(sessionCookieName);
+        });
     }
-    res.redirect(urlPrefix + "/login");
+    response.redirect(urlPrefix + "/login");
 });
 const childProcesses = {
     clearRisk: fork("./tasks/clearRiskInsuranceImport"),
@@ -124,13 +125,13 @@ app.get(urlPrefix + "/tasks/:taskName", (request, response) => {
     }
     return response.json(false);
 });
-app.use(function (_req, _res, next) {
+app.use(function (_request, _response, next) {
     next(createError(404));
 });
-app.use(function (err, req, res, _next) {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get("env") === "development" ? err : {};
-    res.status(err.status || 500);
-    res.render("error");
+app.use(function (error, request, response) {
+    response.locals.message = error.message;
+    response.locals.error = request.app.get("env") === "development" ? error : {};
+    response.status(error.status || 500);
+    response.render("error");
 });
 export default app;

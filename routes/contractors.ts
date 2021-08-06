@@ -21,15 +21,15 @@ import handler_doAddTradeCategory from "../handlers/doAddTradeCategory.js";
 import handler_doRemoveTradeCategory from "../handlers/doRemoveTradeCategory.js";
 
 
-const handler_updateOnly: RequestHandler = (req, res, next) => {
+const handler_updateOnly: RequestHandler = (request, response, next) => {
 
-  if (req.session.user.canUpdate) {
+  if (request.session.user.canUpdate) {
     return next();
   }
 
-  res.status(403);
+  response.status(403);
 
-  return res.json({
+  return response.json({
     success: false
   });
 };

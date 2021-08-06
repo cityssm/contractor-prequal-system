@@ -1,9 +1,9 @@
-(function () {
-    var navbarBurgerEle = document.getElementsByClassName("navbar-burger")[0];
-    var navbarMenuEle = document.getElementsByClassName("navbar-menu")[0];
-    navbarBurgerEle.addEventListener("click", function () {
-        navbarMenuEle.classList.toggle("is-active");
-        navbarBurgerEle.classList.toggle("is-active");
-        navbarBurgerEle.setAttribute("aria-expanded", navbarBurgerEle.classList.contains("is-active") ? "true" : "false");
+(() => {
+    const navbarBurgerElement = document.querySelector(".navbar-burger");
+    const navbarMenuElement = document.querySelector(".navbar-menu");
+    navbarBurgerElement.addEventListener("click", () => {
+        navbarMenuElement.classList.toggle("is-active");
+        navbarBurgerElement.classList.toggle("is-active");
+        navbarBurgerElement.setAttribute("aria-expanded", navbarBurgerElement.classList.contains("is-active") ? "true" : "false");
     });
 })();

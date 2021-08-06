@@ -1,10 +1,10 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:getContractor");
 export const getContractor = async (contractorID) => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         const contractorResult = await pool.request()
             .input("contractorID", contractorID)
             .query("select contractorID, docuShareCollectionID, isContractor," +
@@ -18,14 +18,14 @@ export const getContractor = async (contractorID) => {
             " from Prequal.Contractor_SearchResults" +
             " where contractorID = @contractorID");
         if (!contractorResult.recordset || contractorResult.recordset.length === 0) {
-            return null;
+            return undefined;
         }
         const contractor = contractorResult.recordset[0];
         return contractor;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
-    return null;
+    return undefined;
 };
 export default getContractor;

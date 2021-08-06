@@ -1,7 +1,7 @@
-import getHealthSafetyStatusOptions from "../helpers/prequalDB/getHealthSafetyStatusOptions.js";
-export const handler = async (_req, res) => {
+import { getHealthSafetyStatusOptions } from "../helpers/prequalDB/getHealthSafetyStatusOptions.js";
+export const handler = async (_request, response) => {
     const healthSafetyStatuses = await getHealthSafetyStatusOptions();
-    return res.json({
+    return response.json({
         healthSafetyStatuses
     });
 };

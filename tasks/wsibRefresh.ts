@@ -19,7 +19,7 @@ const refreshIntervalMillis = 2 * 60 * 60 * 1000;
 const calculateCacheExpiry = (dayMultiplier: number): number => {
   // Expiry three days in the future, spaced out by the regular refresh interval
   return Date.now() +
-    (dayMultiplier * 86400 * 1000) +
+    (dayMultiplier * 86_400 * 1000) +
     (Math.random() * refreshIntervalMillis * 3);
 };
 
@@ -42,7 +42,7 @@ const purgeExpiredCacheEntries = () => {
       accountNumbersToSkip.removeItem(accountNumber);
     }
 
-    const expiryTimeMillis = parseInt(expiryTimeMillisString, 10);
+    const expiryTimeMillis = Number.parseInt(expiryTimeMillisString, 10);
 
     if (expiryTimeMillis < rightNowMillis) {
       accountNumbersToSkip.removeItem(accountNumber);
@@ -72,8 +72,8 @@ const refreshWSIBDates = async () => {
         accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry(3).toString());
       }
 
-    } catch (e) {
-      debugWSIB(e);
+    } catch (error) {
+      debugWSIB(error);
       accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry(1).toString());
     }
   }

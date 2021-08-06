@@ -1,7 +1,7 @@
-import getTradeCategories from "../helpers/prequalDB/getTradeCategories.js";
-export const handler = async (_req, res) => {
+import { getTradeCategories } from "../helpers/prequalDB/getTradeCategories.js";
+export const handler = async (_request, response) => {
     const tradeCategories = await getTradeCategories(false);
-    return res.json({
+    return response.json({
         tradeCategories
     });
 };

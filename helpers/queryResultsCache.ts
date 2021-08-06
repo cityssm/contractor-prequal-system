@@ -16,7 +16,7 @@ const getCacheKey = (canUpdate: boolean, filters: GetContractorFilters): string 
 };
 
 
-export const clearCache = () => {
+export const clearCache = (): void => {
   cache.flushAll();
 };
 
@@ -35,12 +35,12 @@ export const getCachedResult = (canUpdate: boolean, filters: GetContractorFilter
 };
 
 
-export const cacheResult = (canUpdate: boolean, filters: GetContractorFilters, result: Contractor[]) => {
+export const cacheResult = (canUpdate: boolean, filters: GetContractorFilters, result: Contractor[]): void => {
   const cacheKey = getCacheKey(canUpdate, filters);
 
   try {
     cache.set(cacheKey, result);
-  } catch (_e) {
+  } catch {
     // cache is full
   }
 };

@@ -1,5 +1,5 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 
 import type * as sqlTypes from "mssql";
 
@@ -11,7 +11,7 @@ export const has2FA = async (userName: string): Promise<boolean> => {
 
   try {
     const pool: sqlTypes.ConnectionPool =
-      await sqlPool.connect(configFns.getProperty("twoFactor.mssqlConfig"));
+      await sqlPool.connect(configFunctions.getProperty("twoFactor.mssqlConfig"));
 
     const userResult = await pool.request()
       .input("userName", userName)
@@ -24,8 +24,8 @@ export const has2FA = async (userName: string): Promise<boolean> => {
 
     return userResult.recordset[0].enforce2FA;
 
-  } catch (e) {
-    debugSQL(e);
+  } catch (error) {
+    debugSQL(error);
   }
 
   return false;

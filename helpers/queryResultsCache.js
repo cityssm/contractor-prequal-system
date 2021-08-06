@@ -23,6 +23,6 @@ export const cacheResult = (canUpdate, filters, result) => {
     try {
         cache.set(cacheKey, result);
     }
-    catch (_e) {
+    catch (_a) {
     }
 };

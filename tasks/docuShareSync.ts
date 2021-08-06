@@ -1,7 +1,7 @@
 import * as ds from "@cityssm/docushare";
 
-import * as configFns from "../helpers/configFns.js";
-import * as docuShareFns from "../helpers/docuShareFns.js";
+import * as configFunctions from "../helpers/configFunctions.js";
+import * as docuShareFunctions from "../helpers/docuShareFunctions.js";
 
 import { clearCache } from "../helpers/queryResultsCache.js";
 
@@ -15,16 +15,16 @@ import type * as recordTypes from "../types/recordTypes";
 import debug from "debug";
 const debugDocuShare = debug("contractor-prequal-system:docuShareSync");
 
-const contractorPrequalCollectionHandle = configFns.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
+const contractorPrequalCollectionHandle = configFunctions.getProperty("docuShareConfig.contractorPrequalCollectionHandle");
 
 const recentlyModifiedYears = 1;
-const recentlyModifiedMillis = recentlyModifiedYears * 365 * 86400 * 1000;
+const recentlyModifiedMillis = recentlyModifiedYears * 365 * 86_400 * 1000;
 
 /*
  * Setup DocuShare Connection
  */
 
-docuShareFns.doSetup();
+docuShareFunctions.doSetup();
 
 /*
  * Tasks
@@ -43,7 +43,7 @@ const checkSavedDocuShareCollectionIDs = async () => {
 
   for (const contractor of contractors) {
 
-    const contractorCollectionHandle = docuShareFns.getCollectionHandle(contractor.docuShareCollectionID);
+    const contractorCollectionHandle = docuShareFunctions.getCollectionHandle(contractor.docuShareCollectionID);
 
     try {
 
@@ -70,8 +70,8 @@ const checkSavedDocuShareCollectionIDs = async () => {
         }
       }
 
-    } catch (e) {
-      debugDocuShare(e);
+    } catch (error) {
+      debugDocuShare(error);
     }
   }
 };
@@ -103,8 +103,8 @@ const createDocuShareCollections = async () => {
         });
       }
 
-    } catch (e) {
-      debugDocuShare(e);
+    } catch (error) {
+      debugDocuShare(error);
     }
   }
 };
@@ -116,7 +116,7 @@ const purgeDocuShareCollections = async (contractors: recordTypes.Contractor[]) 
 
   for (const contractor of contractors) {
 
-    const collectionHandle = docuShareFns.getCollectionHandle(contractor.docuShareCollectionID);
+    const collectionHandle = docuShareFunctions.getCollectionHandle(contractor.docuShareCollectionID);
 
     const docuShareOutput = await ds.findByHandle(collectionHandle);
 

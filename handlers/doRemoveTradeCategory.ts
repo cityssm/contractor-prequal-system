@@ -1,24 +1,24 @@
-import removeTradeCategory from "../helpers/prequalDB/removeTradeCategory.js";
+import { removeTradeCategory } from "../helpers/prequalDB/removeTradeCategory.js";
 
 import * as resultsCache from "../helpers/queryResultsCache.js";
 
 import type { RequestHandler } from "express";
 
 
-export const handler: RequestHandler = async (req, res) => {
+export const handler: RequestHandler = async (request, response) => {
 
-  const formParams: {
+  const formParameters: {
     contractorID: string;
     tradeCategoryID: string;
-  } = req.body;
+  } = request.body;
 
-  const success = await removeTradeCategory(formParams.contractorID, formParams.tradeCategoryID);
+  const success = await removeTradeCategory(formParameters.contractorID, formParameters.tradeCategoryID);
 
   if (success) {
     resultsCache.clearCache();
   }
 
-  return res.json({
+  return response.json({
     success
   });
 };

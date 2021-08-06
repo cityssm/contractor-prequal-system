@@ -1,10 +1,10 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:hasWSIBInsuranceRecord");
 export const hasWSIBInsuranceRecord = async (contractorID) => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         const result = await pool.request()
             .input("contractorID", contractorID)
             .query("select top 1 cp2_contractorid" +
@@ -15,8 +15,8 @@ export const hasWSIBInsuranceRecord = async (contractorID) => {
         }
         return true;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
     return false;
 };

@@ -2,14 +2,14 @@ export interface User {
   userName: string;
   canUpdate: boolean;
   passed2FA: boolean;
-};
+}
 
 
 declare module "express-session" {
   interface Session {
     user: User;
   }
-};
+}
 
 
 export interface Contractor {
@@ -43,10 +43,10 @@ export interface Contractor {
 
   legal_note?: string;
   legal_isSatisfactory: boolean;
-};
+}
 
 
 export interface TradeCategory {
   tradeCategoryID: number;
   tradeCategory: string;
-};
+}

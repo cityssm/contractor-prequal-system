@@ -1,65 +1,65 @@
 import { Router } from "express";
-import * as authFns from "../helpers/authFns.js";
-import * as configFns from "../helpers/configFns.js";
+import * as authFunctions from "../helpers/authFunctions.js";
+import * as configFunctions from "../helpers/configFunctions.js";
 import requestIP from "request-ip";
 import { isPrivate } from "@cityssm/is-private-network-address";
 import userHas2FA from "../helpers/twoFactorDB/has2FA.js";
 import debug from "debug";
 const debugLogin = debug("contractor-prequal-system:routes:login");
-const redirectURL = configFns.getProperty("reverseProxy.urlPrefix") + "/contractors";
-const redirectURL_2fa = configFns.getProperty("reverseProxy.urlPrefix") + "/2fa";
+const redirectURL = configFunctions.getProperty("reverseProxy.urlPrefix") + "/contractors";
+const redirectURL_2fa = configFunctions.getProperty("reverseProxy.urlPrefix") + "/2fa";
 export const router = Router();
 router.route("/")
-    .get((req, res) => {
-    const sessionCookieName = configFns.getProperty("session.cookieName");
-    if (req.session.user && req.cookies[sessionCookieName]) {
-        res.redirect(redirectURL);
+    .get((request, response) => {
+    const sessionCookieName = configFunctions.getProperty("session.cookieName");
+    if (request.session.user && request.cookies[sessionCookieName]) {
+        response.redirect(redirectURL);
     }
     else {
-        res.render("login", {
+        response.render("login", {
             userName: "",
             message: ""
         });
     }
 })
-    .post(async (req, res) => {
-    const userName = req.body.userName.toLowerCase();
-    const passwordPlain = req.body.password;
+    .post(async (request, response) => {
+    const userName = request.body.userName.toLowerCase();
+    const passwordPlain = request.body.password;
     try {
-        const isAuthenticated = await authFns.authenticate(userName, passwordPlain);
+        const isAuthenticated = await authFunctions.authenticate(userName, passwordPlain);
         if (isAuthenticated) {
             let passed2FA = true;
-            if (configFns.getProperty("twoFactor.isEnabledInternally") || configFns.getProperty("twoFactor.isEnabledExternally")) {
-                const ipAddress = requestIP.getClientIp(req);
+            if (configFunctions.getProperty("twoFactor.isEnabledInternally") || configFunctions.getProperty("twoFactor.isEnabledExternally")) {
+                const ipAddress = requestIP.getClientIp(request);
                 const isPrivateIP = isPrivate(ipAddress);
-                if (configFns.getProperty("twoFactor.isRequiredInternally") && isPrivateIP) {
+                if (configFunctions.getProperty("twoFactor.isRequiredInternally") && isPrivateIP) {
                     passed2FA = false;
                 }
-                else if (configFns.getProperty("twoFactor.isRequiredExternally") && !isPrivateIP) {
+                else if (configFunctions.getProperty("twoFactor.isRequiredExternally") && !isPrivateIP) {
                     passed2FA = false;
                 }
-                else if ((configFns.getProperty("twoFactor.isEnabledInternally") && isPrivateIP) ||
-                    (configFns.getProperty("twoFactor.isEnabledExternally") && !isPrivateIP)) {
+                else if ((configFunctions.getProperty("twoFactor.isEnabledInternally") && isPrivateIP) ||
+                    (configFunctions.getProperty("twoFactor.isEnabledExternally") && !isPrivateIP)) {
                     passed2FA = !(await userHas2FA(userName));
                 }
             }
-            req.session.user = {
+            request.session.user = {
                 userName: userName,
-                canUpdate: configFns.getProperty("permissions.canUpdate").includes(userName),
+                canUpdate: configFunctions.getProperty("permissions.canUpdate").includes(userName),
                 passed2FA
             };
-            return res.redirect(passed2FA
+            return response.redirect(passed2FA
                 ? redirectURL
                 : redirectURL_2fa);
         }
-        return res.render("login", {
+        return response.render("login", {
             userName,
             message: "Login Failed"
         });
     }
-    catch (e) {
-        debugLogin(e);
-        return res.render("login", {
+    catch (error) {
+        debugLogin(error);
+        return response.render("login", {
             userName,
             message: "Login Failed"
         });

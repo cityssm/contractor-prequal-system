@@ -1,5 +1,5 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 
 import type * as sqlTypes from "mssql";
 
@@ -16,7 +16,7 @@ export const getDistinctInsuranceCompanyNames = async (): Promise<string[]> => {
 
   try {
     const pool: sqlTypes.ConnectionPool =
-      await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+      await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
 
     const sql = "select distinct insurance_company" +
     " from Prequal.Contractor_SearchResults" +
@@ -40,8 +40,8 @@ export const getDistinctInsuranceCompanyNames = async (): Promise<string[]> => {
 
     return companyOptions;
 
-  } catch (e) {
-    debugSQL(e);
+  } catch (error) {
+    debugSQL(error);
   }
 
   return [];

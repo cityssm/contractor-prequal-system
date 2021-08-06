@@ -18,8 +18,8 @@ declare const exports: {
   const urlPrefix: string = exports.urlPrefix;
   cityssm.htmlModalFolder = urlPrefix + "/html/";
 
-  const filterFormEle = document.getElementById("form--filters");
-  const resultsEle = document.getElementById("container--results");
+  const filterFormElement = document.querySelector("#form--filters") as HTMLFormElement;
+  const resultsElement = document.querySelector("#container--results") as HTMLElement;
 
 
   let contractors: recordTypes.Contractor[] = [];
@@ -65,7 +65,7 @@ declare const exports: {
   const openDocuShareLink = (clickEvent: Event) => {
     clickEvent.preventDefault();
 
-    const docuShareCollectionID = (document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement).value;
+    const docuShareCollectionID = (document.querySelector("#contractor--docuShareCollectionID") as HTMLInputElement).value;
 
     if (docuShareCollectionID === "") {
       cityssm.alertModal("DocuShare Collection ID Not Available",
@@ -90,10 +90,10 @@ declare const exports: {
 
     formEvent.preventDefault();
 
-    const formEle = formEvent.currentTarget as HTMLFormElement;
-    const updateFormAction = formEle.getAttribute("data-action") as UpdateFormActions;
+    const formElement = formEvent.currentTarget as HTMLFormElement;
+    const updateFormAction = formElement.getAttribute("data-action") as UpdateFormActions;
 
-    cityssm.postJSON(urlPrefix + "/contractors/" + updateFormAction, formEle,
+    cityssm.postJSON(urlPrefix + "/contractors/" + updateFormAction, formElement,
       (responseJSON: { success: boolean }) => {
 
         if (responseJSON.success) {
@@ -118,7 +118,7 @@ declare const exports: {
     formEvent.preventDefault();
 
     const tradeCategoryID =
-      (document.getElementById("tradeCategories--tradeCategoryID") as HTMLSelectElement).value;
+      (document.querySelector("#tradeCategories--tradeCategoryID") as HTMLSelectElement).value;
 
     if (tradeCategoryID === "") {
 
@@ -129,7 +129,7 @@ declare const exports: {
 
       return;
 
-    } else if (usedTradeCategories.has(parseInt(tradeCategoryID, 10))) {
+    } else if (usedTradeCategories.has(Number.parseInt(tradeCategoryID, 10))) {
 
       cityssm.alertModal("Trade Category Already Included",
         "No need to add it twice.",
@@ -139,25 +139,25 @@ declare const exports: {
       return;
     }
 
-    const formEle = formEvent.currentTarget as HTMLFormElement;
+    const formElement = formEvent.currentTarget as HTMLFormElement;
 
-    cityssm.postJSON(urlPrefix + "/contractors/doAddTradeCategory", formEle,
+    cityssm.postJSON(urlPrefix + "/contractors/doAddTradeCategory", formElement,
       (responseJSON: { success: boolean }) => {
 
         if (responseJSON.success) {
 
-          const contractorID = parseInt((formEle.getElementsByClassName("contractor--contractorID")[0] as HTMLInputElement).value, 10);
-          const tradeCategory = getTradeCategoryFromCache(parseInt(tradeCategoryID, 10));
-          const tradeCategoryEle = buildContractorTradeCategoryEle(contractorID, tradeCategory);
+          const contractorID = Number.parseInt((formElement.querySelector(".contractor--contractorID") as HTMLInputElement).value, 10);
+          const tradeCategory = getTradeCategoryFromCache(Number.parseInt(tradeCategoryID, 10));
+          const tradeCategoryElement = buildContractorTradeCategoryElement(contractorID, tradeCategory);
 
-          const tradeCategoriesContainerEle = document.getElementById("contractor--tradeCategories");
+          const tradeCategoriesContainerElement = document.querySelector("#contractor--tradeCategories");
 
-          if (!tradeCategoriesContainerEle.classList.contains("panel")) {
-            tradeCategoriesContainerEle.innerHTML = "";
-            tradeCategoriesContainerEle.classList.add("panel");
+          if (!tradeCategoriesContainerElement.classList.contains("panel")) {
+            tradeCategoriesContainerElement.innerHTML = "";
+            tradeCategoriesContainerElement.classList.add("panel");
           }
 
-          tradeCategoriesContainerEle.insertAdjacentElement("afterbegin", tradeCategoryEle);
+          tradeCategoriesContainerElement.prepend(tradeCategoryElement);
           usedTradeCategories.set(tradeCategory.tradeCategoryID, tradeCategory.tradeCategory);
 
           doRefreshOnClose = true;
@@ -174,27 +174,27 @@ declare const exports: {
 
   const createDocuShareCollection = (clickEvent: MouseEvent) => {
 
-    const createButtonEle = clickEvent.currentTarget as HTMLButtonElement;
+    const createButtonElement = clickEvent.currentTarget as HTMLButtonElement;
 
-    const docuShareCollectionIDEle = document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement;
+    const docuShareCollectionIDElement = document.querySelector("#contractor--docuShareCollectionID") as HTMLInputElement;
 
-    const currentDocuShareCollectionID = docuShareCollectionIDEle.value;
+    const currentDocuShareCollectionID = docuShareCollectionIDElement.value;
 
-    let closeLoadingModalFn: () => void;
+    let closeLoadingModalFunction: () => void;
 
     const doCreate = () => {
 
-      const contractorID = createButtonEle.getAttribute("data-contractor-id");
+      const contractorID = createButtonElement.getAttribute("data-contractor-id");
 
       cityssm.postJSON(urlPrefix + "/contractors/doCreateDocuShareCollection", {
         contractorID
       },
         (responseJSON: { success: boolean; message?: string; docuShareCollectionID?: string }) => {
 
-          closeLoadingModalFn();
+          closeLoadingModalFunction();
 
           if (responseJSON.success) {
-            docuShareCollectionIDEle.value = responseJSON.docuShareCollectionID;
+            docuShareCollectionIDElement.value = responseJSON.docuShareCollectionID;
           } else {
             cityssm.alertModal("DocuShare Collection Not Created",
               cityssm.escapeHTML(responseJSON.message),
@@ -207,8 +207,8 @@ declare const exports: {
     const openLoadingAndDoCreate = () => {
 
       cityssm.openHtmlModal("contractor-createDSCollection-loading", {
-        onshown: (_modalEle, closeModalFn) => {
-          closeLoadingModalFn = closeModalFn;
+        onshown: (_modalElement, closeModalFunction) => {
+          closeLoadingModalFunction = closeModalFunction;
           doCreate();
         }
       });
@@ -233,12 +233,12 @@ declare const exports: {
 
   const removeTradeCategory = (clickEvent: MouseEvent) => {
 
-    const deleteButtonEle = clickEvent.currentTarget as HTMLButtonElement;
+    const deleteButtonElement = clickEvent.currentTarget as HTMLButtonElement;
 
-    const removeFn = () => {
+    const removeFunction = () => {
 
-      const contractorID = deleteButtonEle.getAttribute("data-contractor-id");
-      const tradeCategoryID = deleteButtonEle.getAttribute("data-trade-category-id");
+      const contractorID = deleteButtonElement.getAttribute("data-contractor-id");
+      const tradeCategoryID = deleteButtonElement.getAttribute("data-trade-category-id");
 
       cityssm.postJSON(urlPrefix + "/contractors/doRemoveTradeCategory", {
         contractorID,
@@ -248,9 +248,9 @@ declare const exports: {
 
           if (responseJSON.success) {
 
-            deleteButtonEle.closest(".panel-block").remove();
+            deleteButtonElement.closest(".panel-block").remove();
 
-            usedTradeCategories.delete(parseInt(tradeCategoryID, 10));
+            usedTradeCategories.delete(Number.parseInt(tradeCategoryID, 10));
 
             doRefreshOnClose = true;
 
@@ -267,16 +267,16 @@ declare const exports: {
       "Are you sure you want to remove the trade category from the contractor?",
       "Yes, Remove It",
       "warning",
-      removeFn);
+      removeFunction);
   };
 
 
-  const buildContractorTradeCategoryEle = (contractorID: number, tradeCategory: recordTypes.TradeCategory) => {
+  const buildContractorTradeCategoryElement = (contractorID: number, tradeCategory: recordTypes.TradeCategory) => {
 
-    const tradeCategoryEle = document.createElement("div");
-    tradeCategoryEle.className = "panel-block";
+    const tradeCategoryElement = document.createElement("div");
+    tradeCategoryElement.className = "panel-block";
 
-    tradeCategoryEle.innerHTML = ("<span class=\"panel-icon\">" +
+    tradeCategoryElement.innerHTML = ("<span class=\"panel-icon\">" +
       "<i class=\"fas fa-book\" aria-hidden=\"true\"></i>" +
       "</span>") +
       ("<span class=\"is-flex-grow-1\">" +
@@ -285,35 +285,35 @@ declare const exports: {
 
     if (canUpdate) {
 
-      const deleteButtonEle = document.createElement("button");
+      const deleteButtonElement = document.createElement("button");
 
-      deleteButtonEle.className = "button is-small is-danger is-inverted is-edit-control-flex";
-      deleteButtonEle.type = "button";
+      deleteButtonElement.className = "button is-small is-danger is-inverted is-edit-control-flex";
+      deleteButtonElement.type = "button";
 
-      deleteButtonEle.setAttribute("data-contractor-id", contractorID.toString());
-      deleteButtonEle.setAttribute("data-trade-category-id", tradeCategory.tradeCategoryID.toString());
+      deleteButtonElement.dataset.contractorId = contractorID.toString();
+      deleteButtonElement.dataset.tradeCategoryId = tradeCategory.tradeCategoryID.toString();
 
-      deleteButtonEle.innerHTML = "<i class=\"fas fa-times\" aria-hidden=\"true\"></i>" +
+      deleteButtonElement.innerHTML = "<i class=\"fas fa-times\" aria-hidden=\"true\"></i>" +
         "<span class=\"sr-only\">Remove</span>";
 
-      deleteButtonEle.addEventListener("click", removeTradeCategory);
+      deleteButtonElement.addEventListener("click", removeTradeCategory);
 
-      tradeCategoryEle.appendChild(deleteButtonEle);
+      tradeCategoryElement.append(deleteButtonElement);
     }
 
-    return tradeCategoryEle;
+    return tradeCategoryElement;
   };
 
 
   const loadTradeCategoryOptions = () => {
 
-    const renderFn = () => {
+    const renderFunction = () => {
 
-      const selectEle = document.getElementById("tradeCategories--tradeCategoryID");
+      const selectElement = document.querySelector("#tradeCategories--tradeCategoryID");
 
       for (const tradeCategory of updateOptionsCache.tradeCategories) {
 
-        selectEle.insertAdjacentHTML("beforeend",
+        selectElement.insertAdjacentHTML("beforeend",
           "<option value=\"" + tradeCategory.tradeCategoryID.toString() + "\">" +
           tradeCategory.tradeCategory +
           "</option>");
@@ -321,14 +321,14 @@ declare const exports: {
     };
 
     if (updateOptionsCache.tradeCategories.length > 0) {
-      renderFn();
+      renderFunction();
 
     } else {
       cityssm.postJSON(urlPrefix + "/contractors/doGetAllTradeCategories", {},
         (responseJSON: { tradeCategories: recordTypes.TradeCategory[] }) => {
 
           updateOptionsCache.tradeCategories = responseJSON.tradeCategories;
-          renderFn();
+          renderFunction();
         });
     }
   };
@@ -336,28 +336,28 @@ declare const exports: {
 
   const loadHealthSafetyOptions = () => {
 
-    const renderFn = () => {
+    const renderFunction = () => {
 
-      const optgroupEle = document.createElement("optgroup");
-      optgroupEle.label = "Options";
+      const optgroupElement = document.createElement("optgroup");
+      optgroupElement.label = "Options";
 
       for (const status of updateOptionsCache.healthSafetyStatuses) {
-        optgroupEle.insertAdjacentHTML("beforeend",
+        optgroupElement.insertAdjacentHTML("beforeend",
           "<option>" + cityssm.escapeHTML(status) + "</option>");
       }
 
-      document.getElementById("contractor--healthSafety_status").appendChild(optgroupEle);
+      document.querySelector("#contractor--healthSafety_status").append(optgroupElement);
     };
 
     if (updateOptionsCache.healthSafetyStatuses.length > 0) {
-      renderFn();
+      renderFunction();
 
     } else {
       cityssm.postJSON(urlPrefix + "/contractors/doGetHealthSafetyOptions", {},
         (responseJSON: { healthSafetyStatuses: string[] }) => {
 
           updateOptionsCache.healthSafetyStatuses = responseJSON.healthSafetyStatuses;
-          renderFn();
+          renderFunction();
         });
     }
   };
@@ -365,7 +365,7 @@ declare const exports: {
 
   const loadLegalOptions = () => {
 
-    document.getElementById("contractor--legal_isSatisfactory").insertAdjacentHTML("beforeend",
+    document.querySelector("#contractor--legal_isSatisfactory").insertAdjacentHTML("beforeend",
       "<optgroup label=\"Options\">" +
       "<option value=\"1\">Approved</option>" +
       "<option value=\"0\">Declined</option>" +
@@ -375,18 +375,18 @@ declare const exports: {
 
   const loadInsuranceOptions = () => {
 
-    const renderFn = () => {
+    const renderFunction = () => {
 
-      const datalistEle = document.getElementById("contractor--insurance_company-datalist");
+      const datalistElement = document.querySelector("#contractor--insurance_company-datalist");
 
       for (const companyName of updateOptionsCache.insuranceCompanyNames) {
-        datalistEle.insertAdjacentHTML("beforeend",
+        datalistElement.insertAdjacentHTML("beforeend",
           "<option value=\"" + cityssm.escapeHTML(companyName) + "\"></option>");
       }
     };
 
     if (updateOptionsCache.insuranceCompanyNames.length > 0) {
-      renderFn();
+      renderFunction();
 
     } else {
 
@@ -394,7 +394,7 @@ declare const exports: {
         (responseJSON: { insuranceCompanyNames: string[] }) => {
 
           updateOptionsCache.insuranceCompanyNames = responseJSON.insuranceCompanyNames;
-          renderFn();
+          renderFunction();
         });
     }
   };
@@ -402,9 +402,9 @@ declare const exports: {
 
   const unlockUpdateForm = (clickEvent: MouseEvent) => {
 
-    const unlockButtonEle = clickEvent.currentTarget as HTMLButtonElement;
-    const formEle = unlockButtonEle.closest("form");
-    const updateFormAction = formEle.getAttribute("data-action") as UpdateFormActions;
+    const unlockButtonElement = clickEvent.currentTarget as HTMLButtonElement;
+    const formElement = unlockButtonElement.closest("form");
+    const updateFormAction = formElement.dataset.action as UpdateFormActions;
 
     // Load extra data
     switch (updateFormAction) {
@@ -422,47 +422,46 @@ declare const exports: {
         break;
     }
 
-    formEle.addEventListener("submit", submitUpdateForm);
-    formEle.getElementsByTagName("fieldset")[0].disabled = false;
+    formElement.addEventListener("submit", submitUpdateForm);
+    formElement.querySelector("fieldset").disabled = false;
 
-    unlockButtonEle.remove();
+    unlockButtonElement.remove();
   };
 
 
   const unlockContractorUpdateForm = (clickEvent: MouseEvent) => {
 
-    const unlockControlEle = (clickEvent.currentTarget as HTMLElement).closest(".control");
+    const unlockControlElement = (clickEvent.currentTarget as HTMLElement).closest(".control");
 
-    const formEle = unlockControlEle.closest("form");
-    formEle.classList.add("is-edit-mode");
+    const formElement = unlockControlElement.closest("form");
+    formElement.classList.add("is-edit-mode");
 
-    formEle.addEventListener("submit", submitUpdateForm);
+    formElement.addEventListener("submit", submitUpdateForm);
 
-    const createButtonEle = document.getElementById("contractor--docuShareCollectionID-create");
-    createButtonEle.addEventListener("click", createDocuShareCollection);
-    createButtonEle.setAttribute("data-contractor-id",
-      (formEle.getElementsByClassName("contractor--contractorID")[0] as HTMLInputElement).value);
+    const createButtonElement = document.querySelector("#contractor--docuShareCollectionID-create") as HTMLButtonElement;
+    createButtonElement.addEventListener("click", createDocuShareCollection);
+    createButtonElement.dataset.contractorId = (formElement.querySelector(".contractor--contractorID") as HTMLInputElement).value;
 
-    (document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement).disabled = false;
+    (document.querySelector("#contractor--docuShareCollectionID") as HTMLInputElement).disabled = false;
 
-    unlockControlEle.remove();
+    unlockControlElement.remove();
   };
 
 
   const unlockTradeCategoriesUpdateForm = (clickEvent: MouseEvent) => {
 
-    const unlockContainerEle = (clickEvent.currentTarget as HTMLElement).closest(".is-unlock-tradecategories-container");
-    const formEle = document.getElementById("form--tradeCategories");
+    const unlockContainerElement = (clickEvent.currentTarget as HTMLElement).closest(".is-unlock-tradecategories-container");
+    const formElement = document.querySelector("#form--tradeCategories");
 
-    document.getElementById("contractor--tradeCategories").classList.add("is-edit-mode");
+    document.querySelector("#contractor--tradeCategories").classList.add("is-edit-mode");
 
     loadTradeCategoryOptions();
 
-    formEle.addEventListener("submit", submitAddTradeCategoryForm);
+    formElement.addEventListener("submit", submitAddTradeCategoryForm);
 
-    formEle.classList.remove("is-hidden");
+    formElement.classList.remove("is-hidden");
 
-    unlockContainerEle.remove();
+    unlockContainerElement.remove();
   };
 
 
@@ -470,7 +469,7 @@ declare const exports: {
 
     clickEvent.preventDefault();
 
-    const contractorIndex: number = parseInt((clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-index"), 10);
+    const contractorIndex: number = Number.parseInt((clickEvent.currentTarget as HTMLAnchorElement).getAttribute("data-index"), 10);
     const contractor = contractors[contractorIndex];
 
     const loadTradeCategories = () => {
@@ -481,64 +480,63 @@ declare const exports: {
         contractorID: contractor.contractorID
       }, (responseJSON: { tradeCategories: recordTypes.TradeCategory[] }) => {
 
-        const tradeCategoriesEle = document.getElementById("contractor--tradeCategories");
+        const tradeCategoriesElement = document.querySelector("#contractor--tradeCategories");
 
         if (responseJSON.tradeCategories.length === 0) {
-          tradeCategoriesEle.innerHTML = "<div class=\"message is-warning\">" +
+          tradeCategoriesElement.innerHTML = "<div class=\"message is-warning\">" +
             "<div class=\"message-body\">There are no trade categories assigned to this contractor.</div>" +
             "</div>";
           return;
         }
 
-        tradeCategoriesEle.innerHTML = "";
-        tradeCategoriesEle.classList.add("panel");
+        tradeCategoriesElement.innerHTML = "";
+        tradeCategoriesElement.classList.add("panel");
 
         for (const tradeCategory of responseJSON.tradeCategories) {
 
           usedTradeCategories.set(tradeCategory.tradeCategoryID, tradeCategory.tradeCategory);
 
-          const tradeCategoryEle = buildContractorTradeCategoryEle(contractor.contractorID, tradeCategory);
-          tradeCategoriesEle.appendChild(tradeCategoryEle);
+          const tradeCategoryElement = buildContractorTradeCategoryElement(contractor.contractorID, tradeCategory);
+          tradeCategoriesElement.append(tradeCategoryElement);
         }
       });
     };
 
     cityssm.openHtmlModal("contractor-view", {
-      onshow: (modalEle) => {
+      onshow: (modalElement) => {
 
-        document.getElementsByTagName("html")[0].classList.add("is-clipped");
+        document.querySelector("html").classList.add("is-clipped");
 
         loadTradeCategories();
 
-        document.getElementById("contractor--contractor_name").innerText =
-          contractor.contractor_name;
+        document.querySelector("#contractor--contractor_name").textContent = contractor.contractor_name;
 
         const location = (contractor.contractor_city ? contractor.contractor_city + ", " : "") +
           (contractor.contractor_province || "");
 
-        document.getElementById("contractor--location").innerText =
+        document.querySelector("#contractor--location").textContent =
           (location && location !== "" ? location : "(Unavailable)");
 
-        document.getElementById("contractor--phone_name").innerText =
+        document.querySelector("#contractor--phone_name").textContent =
           (contractor.phone_name && contractor.phone_name !== ""
             ? contractor.phone_name
             : "(Unavailable)");
 
-        document.getElementById("contractor--phone_number").innerText =
+        document.querySelector("#contractor--phone_number").textContent =
           (contractor.phone_number && contractor.phone_number !== ""
             ? contractor.phone_number
             : "(Unavailable)");
 
         if (contractor.docuShareCollectionID) {
-          (document.getElementById("contractor--docuShareCollectionID") as HTMLInputElement).value =
+          (document.querySelector("#contractor--docuShareCollectionID") as HTMLInputElement).value =
             contractor.docuShareCollectionID.toString();
         }
 
-        document.getElementById("contractor--docuShareCollectionID-link").addEventListener("click", openDocuShareLink);
+        document.querySelector("#contractor--docuShareCollectionID-link").addEventListener("click", openDocuShareLink);
 
         // Health & Safety
 
-        (document.getElementById("contractor--healthSafety_status") as HTMLSelectElement).innerHTML =
+        (document.querySelector("#contractor--healthSafety_status") as HTMLSelectElement).innerHTML =
           (contractor.healthSafety_status === null || contractor.healthSafety_status === ""
             ? "<option value=\"\">(Not Set)</option>"
             : "<option>" + cityssm.escapeHTML(contractor.healthSafety_status) + "</option>"
@@ -550,15 +548,15 @@ declare const exports: {
           ? "<option value=\"1\">Approved</option>"
           : "<option value=\"0\">Declined</option>");
 
-        (document.getElementById("contractor--legal_isSatisfactory") as HTMLSelectElement).innerHTML =
+        (document.querySelector("#contractor--legal_isSatisfactory") as HTMLSelectElement).innerHTML =
           legalOptionHTML;
 
         // WSIB
 
-        (document.getElementById("contractor--wsib_accountNumber") as HTMLInputElement).value =
+        (document.querySelector("#contractor--wsib_accountNumber") as HTMLInputElement).value =
           contractor.wsib_accountNumber;
 
-        (document.getElementById("contractor--wsib_firmNumber") as HTMLInputElement).value =
+        (document.querySelector("#contractor--wsib_firmNumber") as HTMLInputElement).value =
           contractor.wsib_firmNumber;
 
         if (contractor.wsib_effectiveDate) {
@@ -566,7 +564,7 @@ declare const exports: {
           const effectiveDate = new Date(contractor.wsib_effectiveDate);
           const effectiveDateString = cityssm.dateToString(effectiveDate);
 
-          (document.getElementById("contractor--wsib_effectiveDate") as HTMLInputElement).value =
+          (document.querySelector("#contractor--wsib_effectiveDate") as HTMLInputElement).value =
             effectiveDateString;
         }
 
@@ -575,23 +573,23 @@ declare const exports: {
           const expiryDate = new Date(contractor.wsib_expiryDate);
           const expiryDateString = cityssm.dateToString(expiryDate);
 
-          (document.getElementById("contractor--wsib_expiryDate") as HTMLInputElement).value =
+          (document.querySelector("#contractor--wsib_expiryDate") as HTMLInputElement).value =
             expiryDateString;
         }
 
         if (contractor.wsib_isIndependent) {
-          (document.getElementById("contractor--wsib_isIndependent") as HTMLInputElement).checked = true;
+          (document.querySelector("#contractor--wsib_isIndependent") as HTMLInputElement).checked = true;
         }
 
         // Liability Insurance
 
-        (document.getElementById("contractor--insurance_company") as HTMLInputElement).value =
+        (document.querySelector("#contractor--insurance_company") as HTMLInputElement).value =
           contractor.insurance_company || "";
 
-        (document.getElementById("contractor--insurance_policyNumber") as HTMLInputElement).value =
+        (document.querySelector("#contractor--insurance_policyNumber") as HTMLInputElement).value =
           contractor.insurance_policyNumber || "";
 
-        (document.getElementById("contractor--insurance_amount") as HTMLInputElement).value =
+        (document.querySelector("#contractor--insurance_amount") as HTMLInputElement).value =
           contractor.insurance_amount.toString();
 
         if (contractor.insurance_expiryDate) {
@@ -599,7 +597,7 @@ declare const exports: {
           const expiryDate = new Date(contractor.insurance_expiryDate);
           const expiryDateString = cityssm.dateToString(expiryDate);
 
-          (document.getElementById("contractor--insurance_expiryDate") as HTMLInputElement).value =
+          (document.querySelector("#contractor--insurance_expiryDate") as HTMLInputElement).value =
             expiryDateString;
         }
 
@@ -607,43 +605,42 @@ declare const exports: {
 
         if (canUpdate) {
 
-          const contractorIDInputEles = modalEle.getElementsByClassName("contractor--contractorID") as HTMLCollectionOf<HTMLInputElement>;
+          const contractorIDInputElements = modalElement.querySelectorAll(".contractor--contractorID") as NodeListOf<HTMLInputElement>;
 
-          for (let index = 0; index < contractorIDInputEles.length; index += 1) {
-            contractorIDInputEles[index].value = contractor.contractorID.toString();
+          for (const contractorIDInputElement of contractorIDInputElements) {
+            contractorIDInputElement.value = contractor.contractorID.toString();
           }
         }
       },
-      onshown: (modalEle) => {
+      onshown: (modalElement) => {
 
         if (canUpdate) {
 
           // Contractor (DocuShare) form
 
-          const contractorUnlockControlEle = modalEle.getElementsByClassName("is-unlock-contractor-control")[0];
+          const contractorUnlockControlElement = modalElement.querySelector(".is-unlock-contractor-control");
 
-          contractorUnlockControlEle.classList.remove("is-hidden");
+          contractorUnlockControlElement.classList.remove("is-hidden");
 
-          contractorUnlockControlEle.getElementsByTagName("button")[0]
-            .addEventListener("click", unlockContractorUpdateForm);
+          contractorUnlockControlElement.querySelector("button").addEventListener("click", unlockContractorUpdateForm);
 
           // Trade Categories Form
 
-          const tradeCategoriesUnlockContainerEle = modalEle.getElementsByClassName("is-unlock-tradecategories-container")[0];
+          const tradeCategoriesUnlockContainerElement = modalElement.querySelectorAll(".is-unlock-tradecategories-container")[0];
 
-          tradeCategoriesUnlockContainerEle.classList.remove("is-hidden");
+          tradeCategoriesUnlockContainerElement.classList.remove("is-hidden");
 
-          tradeCategoriesUnlockContainerEle.getElementsByTagName("button")[0]
+          tradeCategoriesUnlockContainerElement.querySelector("button")
             .addEventListener("click", unlockTradeCategoriesUpdateForm);
 
 
           // Other forms
 
-          const unlockButtonEles = modalEle.getElementsByClassName("is-unlock-button");
+          const unlockButtonElements = modalElement.querySelectorAll(".is-unlock-button");
 
-          for (let index = 0; index < unlockButtonEles.length; index += 1) {
-            unlockButtonEles[index].classList.remove("is-hidden");
-            unlockButtonEles[index].addEventListener("click", unlockUpdateForm);
+          for (const unlockButtonElement of unlockButtonElements) {
+            unlockButtonElement.classList.remove("is-hidden");
+            unlockButtonElement.addEventListener("click", unlockUpdateForm);
           }
         }
       },
@@ -654,7 +651,7 @@ declare const exports: {
         }
       },
       onremoved: () => {
-        document.getElementsByTagName("html")[0].classList.remove("is-clipped");
+        document.querySelector("html").classList.remove("is-clipped");
       }
     });
   };
@@ -748,15 +745,15 @@ declare const exports: {
   };
 
 
-  const buildContractorResultEle = (contractor: recordTypes.Contractor, contractorIndex: number): HTMLElement => {
+  const buildContractorResultElement = (contractor: recordTypes.Contractor, contractorIndex: number): HTMLElement => {
 
-    const panelBlockEle = document.createElement("div");
-    panelBlockEle.className = "panel-block is-block";
+    const panelBlockElement = document.createElement("div");
+    panelBlockElement.className = "panel-block is-block";
 
-    const columnsEle = document.createElement("div");
-    columnsEle.className = "columns is-mobile is-multiline";
+    const columnsElement = document.createElement("div");
+    columnsElement.className = "columns is-mobile is-multiline";
 
-    columnsEle.innerHTML = "<div class=\"column is-full-mobile is-full-tablet is-half-widescreen\">" +
+    columnsElement.innerHTML = "<div class=\"column is-full-mobile is-full-tablet is-half-widescreen\">" +
       "<a class=\"is-size-5 has-text-weight-bold\" data-index=\"" + contractorIndex.toString() + "\" role=\"button\" href=\"#\">" + cityssm.escapeHTML(contractor.contractor_name) + "</a><br />" +
       (isContractorHireReady(contractor)
         ? "<span class=\"icon\"><i class=\"fas fa-phone\" aria-hidden=\"true\"></i></span> <span>" + contractor.phone_number + "</span>"
@@ -775,31 +772,31 @@ declare const exports: {
         buildContractorInsuranceIconHTML(contractor) +
         "</div>");
 
-    columnsEle.getElementsByTagName("a")[0].addEventListener("click", openContractorModal);
+    columnsElement.querySelector("a").addEventListener("click", openContractorModal);
 
-    panelBlockEle.appendChild(columnsEle);
+    panelBlockElement.append(columnsElement);
 
-    return panelBlockEle;
+    return panelBlockElement;
   };
 
 
   const getContractors = () => {
 
     contractors = [];
-    cityssm.clearElement(resultsEle);
+    cityssm.clearElement(resultsElement);
 
-    resultsEle.innerHTML = "<div class=\"has-text-centered p-4\">" +
+    resultsElement.innerHTML = "<div class=\"has-text-centered p-4\">" +
       "<span class=\"icon\"><i class=\"fas fa-4x fa-spinner fa-pulse\" aria-hidden=\"true\"></i>" +
       "</span>" +
       "</div>";
 
-    cityssm.postJSON(urlPrefix + "/contractors/doGetContractors", filterFormEle,
+    cityssm.postJSON(urlPrefix + "/contractors/doGetContractors", filterFormElement,
       (responseJSON: { contractors: recordTypes.Contractor[] }) => {
 
         contractors = responseJSON.contractors;
 
         if (contractors.length === 0) {
-          resultsEle.innerHTML = "<div class=\"message is-info\">" +
+          resultsElement.innerHTML = "<div class=\"message is-info\">" +
             "<div class=\"message-body\">There are no contractors available that meet your search criteria.</div>" +
             "</div>";
 
@@ -808,18 +805,18 @@ declare const exports: {
 
         let hireReadyCount = 0;
 
-        const panelEle = document.createElement("div");
-        panelEle.className = "panel";
+        const panelElement = document.createElement("div");
+        panelElement.className = "panel";
 
-        contractors.forEach((contractor, contractorIndex) => {
-          const panelBlockEle = buildContractorResultEle(contractor, contractorIndex);
+        for (const [contractorIndex, contractor] of contractors.entries()) {
+          const panelBlockElement = buildContractorResultElement(contractor, contractorIndex);
 
-          panelEle.appendChild(panelBlockEle);
+          panelElement.append(panelBlockElement);
 
           if (isContractorHireReady(contractor)) {
             hireReadyCount += 1;
           }
-        });
+        }
 
         let hireReadyHTML = "";
 
@@ -831,18 +828,18 @@ declare const exports: {
           hireReadyHTML += "<span class=\"has-text-success\">" + hireReadyCount.toString() + " out of " + contractors.length.toString() + " Contractors are Hire Ready</span>";
         }
 
-        resultsEle.innerHTML = "<div class=\"mb-5 has-text-centered has-text-weight-bold\">" +
+        resultsElement.innerHTML = "<div class=\"mb-5 has-text-centered has-text-weight-bold\">" +
           "Displaying " + contractors.length.toString() + " contractor" + (contractors.length === 1 ? "" : "s") + "<br />" +
           hireReadyHTML +
           "</div>";
 
-        resultsEle.appendChild(panelEle);
+        resultsElement.append(panelElement);
       });
   };
 
 
   // Disable regular form behaviour
-  filterFormEle.addEventListener("submit", (formEvent) => {
+  filterFormElement.addEventListener("submit", (formEvent) => {
     formEvent.preventDefault();
   });
 
@@ -850,7 +847,7 @@ declare const exports: {
   getContractors();
 
 
-  document.getElementById("filter--contractorName").addEventListener("change", getContractors);
-  document.getElementById("filter--tradeCategoryID").addEventListener("change", getContractors);
-  document.getElementById("filter--hireStatus").addEventListener("change", getContractors);
+  document.querySelector("#filter--contractorName").addEventListener("change", getContractors);
+  document.querySelector("#filter--tradeCategoryID").addEventListener("change", getContractors);
+  document.querySelector("#filter--hireStatus").addEventListener("change", getContractors);
 })();

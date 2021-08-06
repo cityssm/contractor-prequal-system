@@ -31,7 +31,10 @@
         "case": "camelCase",
         "ignore": [
           "DB",
-          "URL"
+          "FA",
+          "ID",
+          "URL",
+          "WSIB"
         ]
       }
     ],

@@ -9,12 +9,12 @@ interface FormFilters {
   contractorName: string;
   tradeCategoryID: string;
   hireStatus: "hireReady" | "cityApproved" | "";
-};
+}
 
 
-export const handler: RequestHandler = async (req, res) => {
+export const handler: RequestHandler = async (request, response) => {
 
-  const formFilters: FormFilters = req.body;
+  const formFilters: FormFilters = request.body;
 
   const queryFilters: GetContractorFilters = {};
 
@@ -41,23 +41,23 @@ export const handler: RequestHandler = async (req, res) => {
   }
 
   if (formFilters.tradeCategoryID !== "") {
-    queryFilters.tradeCategoryID = parseInt(formFilters.tradeCategoryID, 10);
+    queryFilters.tradeCategoryID = Number.parseInt(formFilters.tradeCategoryID, 10);
   }
 
   // Read only users can see those that haven't been approved by legal and health and safety
-  if (!req.session.user.canUpdate) {
+  if (!request.session.user.canUpdate) {
     queryFilters.healthSafetyIsSatisfactory = true;
     queryFilters.legalIsSatisfactory = true;
   }
 
-  let contractors = resultsCache.getCachedResult(req.session.user.canUpdate, queryFilters);
+  let contractors = resultsCache.getCachedResult(request.session.user.canUpdate, queryFilters);
 
   if (!contractors) {
-    contractors = await getContractors(req.session.user.canUpdate, queryFilters);
-    resultsCache.cacheResult(req.session.user.canUpdate, queryFilters, contractors);
+    contractors = await getContractors(request.session.user.canUpdate, queryFilters);
+    resultsCache.cacheResult(request.session.user.canUpdate, queryFilters, contractors);
   }
 
-  return res.json({
+  return response.json({
     contractors
   });
 };

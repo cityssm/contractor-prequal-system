@@ -1,6 +1,6 @@
-import * as path from "path";
+import path from "path";
 import * as ds from "@cityssm/docushare";
-import * as configFns from "./configFns.js";
+import * as configFunctions from "./configFunctions.js";
 export const doSetup = () => {
     ds.setupJava({
         dsapiPath: [
@@ -10,14 +10,14 @@ export const doSetup = () => {
             path.join("..", "..", "..", "java", "dsapi.jar")
         ]
     });
-    ds.setupServer(configFns.getProperty("docuShareConfig.server"));
-    ds.setupSession(configFns.getProperty("docuShareConfig.session"));
+    ds.setupServer(configFunctions.getProperty("docuShareConfig.server"));
+    ds.setupSession(configFunctions.getProperty("docuShareConfig.session"));
 };
 export const getCollectionHandle = (collectionID) => {
     return "Collection-" + collectionID.toString();
 };
 export const getCollectionURL = (collectionID) => {
-    return configFns.getProperty("docuShareConfig.rootURL") + "/dsweb/View/" +
+    return configFunctions.getProperty("docuShareConfig.rootURL") + "/dsweb/View/" +
         getCollectionHandle(collectionID);
 };
 export const getIDFromHandle = (handle) => {

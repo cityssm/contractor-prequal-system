@@ -1,5 +1,5 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 
 import type * as sqlTypes from "mssql";
 
@@ -12,11 +12,11 @@ interface RawResult {
 }
 
 
-export const getExpiredWSIBAccountNumbers = async (limit: number = 50): Promise<string[]> => {
+export const getExpiredWSIBAccountNumbers = async (limit = 50): Promise<string[]> => {
 
   try {
     const pool: sqlTypes.ConnectionPool =
-      await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+      await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
 
     const sql = "select top " + limit.toString() + " wsib_accountNumber" +
       " from Prequal.Contractor_SearchResults" +
@@ -44,8 +44,8 @@ export const getExpiredWSIBAccountNumbers = async (limit: number = 50): Promise<
 
     return accountNumbers;
 
-  } catch (e) {
-    debugSQL(e);
+  } catch (error) {
+    debugSQL(error);
   }
 
   return [];

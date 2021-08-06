@@ -13,12 +13,12 @@ import handler_doUpdateWSIB from "../handlers/doUpdateWSIB.js";
 import handler_doUpdateInsurance from "../handlers/doUpdateInsurance.js";
 import handler_doAddTradeCategory from "../handlers/doAddTradeCategory.js";
 import handler_doRemoveTradeCategory from "../handlers/doRemoveTradeCategory.js";
-const handler_updateOnly = (req, res, next) => {
-    if (req.session.user.canUpdate) {
+const handler_updateOnly = (request, response, next) => {
+    if (request.session.user.canUpdate) {
         return next();
     }
-    res.status(403);
-    return res.json({
+    response.status(403);
+    return response.json({
         success: false
     });
 };

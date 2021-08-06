@@ -1,12 +1,12 @@
-#!/usr/bin/env node
+/* eslint-disable no-process-exit, unicorn/no-process-exit */
 
-import app from "../app.js";
+import { app } from "../app.js";
 
 import http from "http";
 import https from "https";
 import fs from "fs";
 
-import * as configFns from "../helpers/configFns.js";
+import * as configFunctions from "../helpers/configFunctions.js";
 
 import debug from "debug";
 const debugWWW = debug("contractor-prequal-system:www");
@@ -52,7 +52,7 @@ const onListening = (server: http.Server | https.Server) => {
  */
 
 
-const httpPort = configFns.getProperty("application.httpPort");
+const httpPort = configFunctions.getProperty("application.httpPort");
 
 if (httpPort) {
 
@@ -74,7 +74,7 @@ if (httpPort) {
  */
 
 
-const httpsConfig = configFns.getProperty("application.https");
+const httpsConfig = configFunctions.getProperty("application.https");
 
 if (httpsConfig) {
 

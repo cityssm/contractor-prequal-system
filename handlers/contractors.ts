@@ -1,13 +1,13 @@
-import getTradeCategories from "../helpers/prequalDB/getTradeCategories.js";
+import { getTradeCategories } from "../helpers/prequalDB/getTradeCategories.js";
 
 import type { RequestHandler } from "express";
 
 
-export const handler: RequestHandler = async (req, res) => {
+export const handler: RequestHandler = async (request, response) => {
 
-  const tradeCategories = await getTradeCategories(!req.session.user.canUpdate);
+  const tradeCategories = await getTradeCategories(!request.session.user.canUpdate);
 
-  res.render("contractors", {
+  response.render("contractors", {
     tradeCategories
   });
 };

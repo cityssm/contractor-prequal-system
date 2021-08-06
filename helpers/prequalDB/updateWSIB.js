@@ -1,36 +1,32 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 import { hasWSIBInsuranceRecord } from "./hasWSIBInsuranceRecord.js";
 import debug from "debug";
 const debugSQL = debug("contractor-prequal-system:prequalDB:updateWSIB");
 export const updateWSIB = async (updateForm) => {
     try {
-        const pool = await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+        const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         const effectiveDateString = updateForm.wsib_effectiveDate !== ""
             ? updateForm.wsib_effectiveDate
-            : null;
+            : undefined;
         const expiryDateString = updateForm.wsib_expiryDate !== ""
             ? updateForm.wsib_expiryDate
-            : null;
+            : undefined;
         const isIndependent = updateForm.wsib_isIndependent && updateForm.wsib_isIndependent === "1"
             ? 1
             : 0;
-        let sql;
         const hasRecord = await hasWSIBInsuranceRecord(updateForm.contractorID);
-        if (hasRecord) {
-            sql = "update cpqs_p2" +
+        const sql = hasRecord
+            ? "update cpqs_p2" +
                 " set cp2_wsibaccountnumber = @wsib_accountNumber," +
                 " cp2_wsibfirmnumber = @wsib_firmNumber," +
                 " cp2_wsibdate = @wsib_effectiveDate," +
                 " cp2_wsibexpirydate = @wsib_expiryDate," +
                 " cp2_isindependent = @wsib_isIndependent" +
-                " where cp2_contractorid = @contractorID";
-        }
-        else {
-            sql = "insert into cpqs_p2" +
+                " where cp2_contractorid = @contractorID"
+            : "insert into cpqs_p2" +
                 " (cp2_contractorid, cp2_wsibaccountnumber, cp2_wsibfirmnumber, cp2_wsibdate, cp2_wsibexpirydate, cp2_isindependent, cp2_creationdate)" +
                 " values (@contractorID, @wsib_accountNumber, @wsib_firmNumber, @wsib_effectiveDate, @wsib_expiryDate, @wsib_isIndependent, getdate())";
-        }
         await pool.request()
             .input("wsib_accountNumber", updateForm.wsib_accountNumber)
             .input("wsib_firmNumber", updateForm.wsib_firmNumber)
@@ -41,8 +37,8 @@ export const updateWSIB = async (updateForm) => {
             .query(sql);
         return true;
     }
-    catch (e) {
-        debugSQL(e);
+    catch (error) {
+        debugSQL(error);
     }
     return false;
 };

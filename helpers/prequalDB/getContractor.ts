@@ -1,5 +1,5 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 
 import type * as sqlTypes from "mssql";
 import type { Contractor } from "../../types/recordTypes";
@@ -12,7 +12,7 @@ export const getContractor = async (contractorID: number | string): Promise<Cont
 
   try {
     const pool: sqlTypes.ConnectionPool =
-      await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+      await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
 
     const contractorResult = await pool.request()
       .input("contractorID", contractorID)
@@ -28,18 +28,18 @@ export const getContractor = async (contractorID: number | string): Promise<Cont
         " where contractorID = @contractorID");
 
     if (!contractorResult.recordset || contractorResult.recordset.length === 0) {
-      return null;
+      return undefined;
     }
 
     const contractor = contractorResult.recordset[0] as Contractor;
 
     return contractor;
 
-  } catch (e) {
-    debugSQL(e);
+  } catch (error) {
+    debugSQL(error);
   }
 
-  return null;
+  return undefined;
 };
 
 

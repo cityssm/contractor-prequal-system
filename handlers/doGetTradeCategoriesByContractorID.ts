@@ -1,20 +1,20 @@
-import getTradeCategoriesByContractorID from "../helpers/prequalDB/getTradeCategoriesByContractorID.js";
+import { getTradeCategoriesByContractorID } from "../helpers/prequalDB/getTradeCategoriesByContractorID.js";
 
 import type { RequestHandler } from "express";
 
 
 interface FormFilters {
   contractorID: string;
-};
+}
 
 
-export const handler: RequestHandler = async (req, res) => {
+export const handler: RequestHandler = async (request, response) => {
 
-  const formFilters: FormFilters = req.body;
+  const formFilters: FormFilters = request.body;
 
   const tradeCategories = await getTradeCategoriesByContractorID(formFilters.contractorID);
 
-  return res.json({
+  return response.json({
     tradeCategories
   });
 };

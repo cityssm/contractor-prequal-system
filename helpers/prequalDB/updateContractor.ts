@@ -1,5 +1,5 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 
 import type * as sqlTypes from "mssql";
 
@@ -17,10 +17,10 @@ export const updateContractor = async (updateForm: ContractorForm): Promise<bool
 
   try {
     const pool: sqlTypes.ConnectionPool =
-      await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+      await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
 
     await pool.request()
-      .input("docuShareCollectionID", updateForm.docuShareCollectionID === "" ? null : updateForm.docuShareCollectionID)
+      .input("docuShareCollectionID", updateForm.docuShareCollectionID === "" ? undefined : updateForm.docuShareCollectionID)
       .input("contractorID", updateForm.contractorID)
       .query("update cpqs_contractors" +
         " set cc_docusharecollectionid = @docuShareCollectionID" +
@@ -28,8 +28,8 @@ export const updateContractor = async (updateForm: ContractorForm): Promise<bool
 
     return true;
 
-  } catch (e) {
-    debugSQL(e);
+  } catch (error) {
+    debugSQL(error);
   }
 
   return false;

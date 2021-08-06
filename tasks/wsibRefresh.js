@@ -23,7 +23,7 @@ const purgeExpiredCacheEntries = () => {
         if (!expiryTimeMillisString) {
             accountNumbersToSkip.removeItem(accountNumber);
         }
-        const expiryTimeMillis = parseInt(expiryTimeMillisString, 10);
+        const expiryTimeMillis = Number.parseInt(expiryTimeMillisString, 10);
         if (expiryTimeMillis < rightNowMillis) {
             accountNumbersToSkip.removeItem(accountNumber);
         }
@@ -46,8 +46,8 @@ const refreshWSIBDates = async () => {
                 accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry(3).toString());
             }
         }
-        catch (e) {
-            debugWSIB(e);
+        catch (error) {
+            debugWSIB(error);
             accountNumbersToSkip.setItem(accountNumber, calculateCacheExpiry(1).toString());
         }
     }

@@ -1,5 +1,5 @@
 import * as sqlPool from "@cityssm/mssql-multi-pool";
-import * as configFns from "../configFns.js";
+import * as configFunctions from "../configFunctions.js";
 
 import type * as sqlTypes from "mssql";
 import type * as express from "express-session";
@@ -14,16 +14,16 @@ export interface LegalForm {
 }
 
 
-export const updateLegal = async (updateForm: LegalForm, reqSession: express.Session): Promise<boolean> => {
+export const updateLegal = async (updateForm: LegalForm, requestSession: express.Session): Promise<boolean> => {
 
   try {
     const pool: sqlTypes.ConnectionPool =
-      await sqlPool.connect(configFns.getProperty("mssqlConfig"));
+      await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
 
     await pool.request()
       .input("legal_isSatisfactory", updateForm.legal_isSatisfactory === "1" ? 1 : 0)
       .input("legal_updateTime", new Date())
-      .input("legal_updateUser", reqSession.user.userName)
+      .input("legal_updateUser", requestSession.user.userName)
       .input("contractorID", updateForm.contractorID)
       .query("update cpqs_contractors" +
         " set cc_legal_issatisfactory = @legal_isSatisfactory," +
@@ -33,8 +33,8 @@ export const updateLegal = async (updateForm: LegalForm, reqSession: express.Ses
 
     return true;
 
-  } catch (e) {
-    debugSQL(e);
+  } catch (error) {
+    debugSQL(error);
   }
 
   return false;

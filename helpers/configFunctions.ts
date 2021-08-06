@@ -8,7 +8,7 @@ import type { ADWebAuthConfig } from "@cityssm/ad-web-auth-connector/types";
  * LOAD CONFIGURATION
  */
 
-
+// eslint-disable-next-line node/no-unpublished-import
 import { config } from "../data/config.js";
 
 Object.freeze(config);
@@ -19,11 +19,11 @@ Object.freeze(config);
  */
 
 
-const configOverrides: { [propertyName: string]: any } = {};
+const configOverrides: { [propertyName: string]: unknown } = {};
 
-const configFallbackValues = new Map<string, any>();
+const configFallbackValues = new Map<string, unknown>();
 
-configFallbackValues.set("application.httpPort", 55556);
+configFallbackValues.set("application.httpPort", 55_556);
 
 configFallbackValues.set("reverseProxy.disableCompression", false);
 configFallbackValues.set("reverseProxy.disableEtag", false);
@@ -77,25 +77,25 @@ export function getProperty(propertyName: "clearRiskConfig.insuranceImport.colum
 export function getProperty(propertyName: "permissions.canUpdate"): string[];
 
 
-export function getProperty(propertyName: string): any {
+export function getProperty(propertyName: string): unknown {
 
-  if (configOverrides.hasOwnProperty(propertyName)) {
+  if (Object.prototype.hasOwnProperty.call(configOverrides, propertyName)) {
     return configOverrides[propertyName];
   }
 
   const propertyNameSplit = propertyName.split(".");
 
-  let currentObj = config;
+  let currentObject = config;
 
-  for (let index = 0; index < propertyNameSplit.length; index += 1) {
+  for (const element of propertyNameSplit) {
 
-    currentObj = currentObj[propertyNameSplit[index]];
+    currentObject = currentObject[element];
 
-    if (!currentObj) {
+    if (!currentObject) {
       return configFallbackValues.get(propertyName);
     }
 
   }
 
-  return currentObj;
+  return currentObject;
 }
