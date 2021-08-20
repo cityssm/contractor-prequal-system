@@ -5,7 +5,7 @@ import type { GetContractorFilters } from "./prequalDB/getContractors";
 
 
 const cache: NodeCache = new NodeCache({
-  stdTTL: 60 * 60,
+  stdTTL: 10 * 60,
   useClones: false,
   maxKeys: 50
 });

@@ -1,6 +1,6 @@
 import NodeCache from "node-cache";
 const cache = new NodeCache({
-    stdTTL: 60 * 60,
+    stdTTL: 10 * 60,
     useClones: false,
     maxKeys: 50
 });
