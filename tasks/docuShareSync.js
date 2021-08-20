@@ -2,7 +2,8 @@ import * as ds from "@cityssm/docushare";
 import * as configFunctions from "../helpers/configFunctions.js";
 import * as docuShareFunctions from "../helpers/docuShareFunctions.js";
 import { clearCache } from "../helpers/queryResultsCache.js";
-import { setIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import exitHook from "exit-hook";
 import { getContractors } from "../helpers/prequalDB/getContractors.js";
 import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
 import debug from "debug";
@@ -127,9 +128,14 @@ const queueTask = () => {
     }
 };
 queueTask();
-setIntervalAsync(async () => {
-    queueTask();
-}, 2 * 60 * 60 * 1000);
+const intervalID = setIntervalAsync(queueTask, 2 * 60 * 60 * 1000);
+exitHook(() => {
+    try {
+        clearIntervalAsync(intervalID);
+    }
+    catch (_a) {
+    }
+});
 process.on("message", () => {
     debugDocuShare("Task queued.");
     queueTask();

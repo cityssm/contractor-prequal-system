@@ -5,7 +5,8 @@ import * as docuShareFunctions from "../helpers/docuShareFunctions.js";
 
 import { clearCache } from "../helpers/queryResultsCache.js";
 
-import { setIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import exitHook from "exit-hook";
 
 import { getContractors } from "../helpers/prequalDB/getContractors.js";
 import { updateContractor } from "../helpers/prequalDB/updateContractor.js";
@@ -210,9 +211,19 @@ const queueTask = () => {
 
 queueTask();
 
-setIntervalAsync(async () => {
-  queueTask();
-}, 2 * 60 * 60 * 1000);
+/*
+ * Run the Task On A Regular Interval
+ */
+
+const intervalID = setIntervalAsync(queueTask, 2 * 60 * 60 * 1000);
+
+exitHook(() => {
+  try {
+    clearIntervalAsync(intervalID);
+  } catch {
+    // ignore
+  }
+});
 
 /*
  * Listener

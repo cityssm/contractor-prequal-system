@@ -8,7 +8,8 @@ import { updateInsurance, InsuranceForm } from "../helpers/prequalDB/updateInsur
 import * as chokidar from "chokidar";
 import * as Papa from "papaparse";
 
-import { setIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import exitHook from "exit-hook";
 
 import debug from "debug";
 const debugClearRisk = debug("contractor-prequal-system:clearRiskInsuranceImport");
@@ -123,4 +124,12 @@ watcher.on("add", doTask);
  */
 
 
-setIntervalAsync(doTask, 3 * 60 * 60 * 1000);
+const intervalID = setIntervalAsync(doTask, 3 * 60 * 60 * 1000);
+
+exitHook(() => {
+  try {
+    clearIntervalAsync(intervalID);
+  } catch {
+    // ignore
+  }
+});

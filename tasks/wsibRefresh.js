@@ -1,7 +1,8 @@
 import { getExpiredWSIBAccountNumbers } from "../helpers/prequalDB/getExpiredWSIBAccountNumbers.js";
 import { updateWSIBExpiryDate } from "../helpers/prequalDB/updateWSIBExpiryDate.js";
 import * as wsib from "@cityssm/wsib-clearance-check";
-import { setIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import exitHook from "exit-hook";
 import { LocalStorage } from "node-localstorage";
 import debug from "debug";
 const debugWSIB = debug("contractor-prequal-system:wsibRefresh");
@@ -57,4 +58,11 @@ const doTask = async () => {
     await refreshWSIBDates();
 };
 doTask();
-setIntervalAsync(doTask, refreshIntervalMillis);
+const intervalID = setIntervalAsync(doTask, refreshIntervalMillis);
+exitHook(() => {
+    try {
+        clearIntervalAsync(intervalID);
+    }
+    catch (_a) {
+    }
+});

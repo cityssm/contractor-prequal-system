@@ -8,11 +8,23 @@ import fs from "fs";
 
 import * as configFunctions from "../helpers/configFunctions.js";
 
+import exitHook from "exit-hook";
+
 import debug from "debug";
 const debugWWW = debug("contractor-prequal-system:www");
 
 
-const onError = (error: Error) => {
+let httpServer: http.Server;
+let httpsServer: https.Server;
+
+
+interface ServerError extends Error {
+  syscall: string;
+  code: string;
+}
+
+
+const onError = (error: ServerError) => {
 
   if (error.syscall !== "listen") {
     throw error;
@@ -56,7 +68,7 @@ const httpPort = configFunctions.getProperty("application.httpPort");
 
 if (httpPort) {
 
-  const httpServer = http.createServer(app);
+  httpServer = http.createServer(app);
 
   httpServer.listen(httpPort);
 
@@ -78,7 +90,7 @@ const httpsConfig = configFunctions.getProperty("application.https");
 
 if (httpsConfig) {
 
-  const httpsServer = https.createServer({
+  httpsServer = https.createServer({
     key: fs.readFileSync(httpsConfig.keyPath),
     cert: fs.readFileSync(httpsConfig.certPath),
     passphrase: httpsConfig.passphrase
@@ -94,3 +106,19 @@ if (httpsConfig) {
 
   debugWWW("HTTPS listening on " + httpsConfig.port.toString());
 }
+
+
+exitHook(() => {
+
+  if (httpServer) {
+    debugWWW("Closing HTTP");
+    httpServer.close();
+    httpServer = undefined;
+  }
+
+  if (httpsServer) {
+    debugWWW("Closing HTTPS");
+    httpsServer.close();
+    httpsServer = undefined;
+  }
+});
