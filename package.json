@@ -32,7 +32,7 @@
     "@cityssm/express-abuse-points": "^1.0.1",
     "@cityssm/expressjs-server-js": "^2.2.0",
     "@cityssm/is-private-network-address": "^0.2.1",
-    "@cityssm/mssql-multi-pool": "^2.1.0",
+    "@cityssm/mssql-multi-pool": "^2.1.1",
     "@cityssm/wsib-clearance-check": "^2.0.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "chokidar": "^3.5.2",
