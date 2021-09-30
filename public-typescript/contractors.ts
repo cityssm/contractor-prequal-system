@@ -518,13 +518,19 @@ declare const exports: {
           (location && location !== "" ? location : "(Unavailable)");
 
         document.querySelector("#contractor--phone_name").textContent =
-          (contractor.phone_name && contractor.phone_name !== ""
-            ? contractor.phone_name
-            : "(Unavailable)");
+          contractor.phone_name;
 
         document.querySelector("#contractor--phone_number").textContent =
           (contractor.phone_number && contractor.phone_number !== ""
             ? contractor.phone_number
+            : "(Unavailable)");
+
+        document.querySelector("#contractor--email_name").textContent =
+          contractor.email_name;
+
+        document.querySelector("#contractor--email_address").textContent =
+          (contractor.email_address && contractor.email_address !== ""
+            ? contractor.email_address
             : "(Unavailable)");
 
         if (contractor.docuShareCollectionID) {
@@ -550,6 +556,9 @@ declare const exports: {
 
         (document.querySelector("#contractor--legal_isSatisfactory") as HTMLSelectElement).innerHTML =
           legalOptionHTML;
+
+        (document.querySelector("#contractor--legal_note") as HTMLTextAreaElement).value =
+          contractor.legal_note;
 
         // WSIB
 
@@ -745,6 +754,13 @@ declare const exports: {
   };
 
 
+  const buildContractorContactDetails = (contractor: recordTypes.Contractor): string => {
+
+    return "<span class=\"icon\"><i class=\"fas fa-phone\" aria-hidden=\"true\"></i></span> <span aria-label=\"Phone Number\">" + contractor.phone_number + "</span><br />" +
+      "<span class=\"icon\"><i class=\"fas fa-envelope\" aria-hidden=\"true\"></i></span> <span aria-label=\"Email Address\">" + contractor.email_address + "</span><br />";
+  };
+
+
   const buildContractorResultElement = (contractor: recordTypes.Contractor, contractorIndex: number): HTMLElement => {
 
     const panelBlockElement = document.createElement("div");
@@ -756,7 +772,7 @@ declare const exports: {
     columnsElement.innerHTML = "<div class=\"column is-full-mobile is-full-tablet is-half-widescreen\">" +
       "<a class=\"is-size-5 has-text-weight-bold\" data-index=\"" + contractorIndex.toString() + "\" role=\"button\" href=\"#\">" + cityssm.escapeHTML(contractor.contractor_name) + "</a><br />" +
       (isContractorHireReady(contractor)
-        ? "<span class=\"icon\"><i class=\"fas fa-phone\" aria-hidden=\"true\"></i></span> <span>" + contractor.phone_number + "</span>"
+        ? buildContractorContactDetails(contractor)
         : "<span class=\"has-text-weight-semibold has-text-danger\"><span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span> Not Hire Ready</span>") +
       "</div>" +
       ("<div class=\"column pt-4 has-text-centered\">" +

@@ -11,6 +11,7 @@ const debugSQL = debug("contractor-prequal-system:prequalDB:updateLegal");
 export interface LegalForm {
   contractorID: string;
   legal_isSatisfactory: "1" | "0";
+  legal_note: string;
 }
 
 
@@ -22,11 +23,13 @@ export const updateLegal = async (updateForm: LegalForm, requestSession: express
 
     await pool.request()
       .input("legal_isSatisfactory", updateForm.legal_isSatisfactory === "1" ? 1 : 0)
+      .input("legal_note", updateForm.legal_note)
       .input("legal_updateTime", new Date())
       .input("legal_updateUser", requestSession.user.userName)
       .input("contractorID", updateForm.contractorID)
       .query("update cpqs_contractors" +
         " set cc_legal_issatisfactory = @legal_isSatisfactory," +
+        " cc_legal_note = @legal_note," +
         " cc_legal_updatetime = @legal_updateTime," +
         " cc_legal_updateuser = @legal_updateUser" +
         " where cc_contractorid = @contractorID");

@@ -10,7 +10,7 @@ export const getContractor = async (contractorID) => {
             .query("select contractorID, docuShareCollectionID, isContractor," +
             " contractor_name, contractor_city, contractor_province," +
             " phone_name, phone_title, phone_number," +
-            " websiteURL," +
+            " email_name, email_address, websiteURL," +
             " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
             " insurance_company, insurance_policyNumber, insurance_amount, insurance_expiryDate, insurance_isSatisfactory," +
             " healthSafety_status, healthSafety_isSatisfactory," +

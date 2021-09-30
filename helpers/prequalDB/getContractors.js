@@ -51,11 +51,18 @@ export const getContractors = async (canUpdate, filters) => {
             (canUpdate
                 ? " phone_number,"
                 : " case when healthSafety_isSatisfactory = 1 and legal_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then phone_number else '' end as phone_number,") +
+            " email_name," +
+            (canUpdate
+                ? " email_address,"
+                : " case when healthSafety_isSatisfactory = 1 and legal_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then email_address else '' end as email_address,") +
             " websiteURL," +
             " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
             " insurance_company, insurance_policyNumber, insurance_amount, insurance_expiryDate, insurance_isSatisfactory," +
             " healthSafety_status, healthSafety_isSatisfactory," +
-            " legal_note, legal_isSatisfactory" +
+            (canUpdate
+                ? " legal_note,"
+                : " '' as legal_note,") +
+            " legal_isSatisfactory" +
             " from Prequal.Contractor_SearchResults" +
             buildWhereClause(filters) +
             " order by contractor_name, contractorID";

@@ -7,11 +7,13 @@ export const updateLegal = async (updateForm, requestSession) => {
         const pool = await sqlPool.connect(configFunctions.getProperty("mssqlConfig"));
         await pool.request()
             .input("legal_isSatisfactory", updateForm.legal_isSatisfactory === "1" ? 1 : 0)
+            .input("legal_note", updateForm.legal_note)
             .input("legal_updateTime", new Date())
             .input("legal_updateUser", requestSession.user.userName)
             .input("contractorID", updateForm.contractorID)
             .query("update cpqs_contractors" +
             " set cc_legal_issatisfactory = @legal_isSatisfactory," +
+            " cc_legal_note = @legal_note," +
             " cc_legal_updatetime = @legal_updateTime," +
             " cc_legal_updateuser = @legal_updateUser" +
             " where cc_contractorid = @contractorID");

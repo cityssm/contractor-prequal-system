@@ -76,8 +76,8 @@
     "@types/papaparse": "^5.2.6",
     "@types/request-ip": "^0.0.37",
     "@types/set-interval-async": "^1.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.31.2",
-    "@typescript-eslint/parser": "^4.31.2",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
     "bulma": "^0.9.3",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.24.2",
@@ -86,7 +86,7 @@
     "eslint-plugin-unicorn": "^36.0.0",
     "gulp": "^4.0.2",
     "gulp-minify": "^3.1.0",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.13"
   },
   "resolutions": {
     "xmldom": "github:xmldom/xmldom#0.7.0",

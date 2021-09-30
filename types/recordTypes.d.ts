@@ -18,6 +18,9 @@ export interface Contractor {
     phone_name?: string;
     phone_title?: string;
     phone_number?: string;
+    email_name?: string;
+    email_address?: string;
+    websiteURL?: string;
     wsib_accountNumber?: string;
     wsib_firmNumber?: string;
     wsib_effectiveDate?: Date;

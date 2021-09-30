@@ -291,12 +291,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 document.querySelector("#contractor--location").textContent =
                     (location && location !== "" ? location : "(Unavailable)");
                 document.querySelector("#contractor--phone_name").textContent =
-                    (contractor.phone_name && contractor.phone_name !== ""
-                        ? contractor.phone_name
-                        : "(Unavailable)");
+                    contractor.phone_name;
                 document.querySelector("#contractor--phone_number").textContent =
                     (contractor.phone_number && contractor.phone_number !== ""
                         ? contractor.phone_number
+                        : "(Unavailable)");
+                document.querySelector("#contractor--email_name").textContent =
+                    contractor.email_name;
+                document.querySelector("#contractor--email_address").textContent =
+                    (contractor.email_address && contractor.email_address !== ""
+                        ? contractor.email_address
                         : "(Unavailable)");
                 if (contractor.docuShareCollectionID) {
                     document.querySelector("#contractor--docuShareCollectionID").value =
@@ -312,6 +316,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
                     : "<option value=\"0\">Declined</option>");
                 document.querySelector("#contractor--legal_isSatisfactory").innerHTML =
                     legalOptionHTML;
+                document.querySelector("#contractor--legal_note").value =
+                    contractor.legal_note;
                 document.querySelector("#contractor--wsib_accountNumber").value =
                     contractor.wsib_accountNumber;
                 document.querySelector("#contractor--wsib_firmNumber").value =
@@ -438,6 +444,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "<span class=\"is-size-7 has-text-weight-semibold\">Insurance</span>";
         return html;
     };
+    const buildContractorContactDetails = (contractor) => {
+        return "<span class=\"icon\"><i class=\"fas fa-phone\" aria-hidden=\"true\"></i></span> <span aria-label=\"Phone Number\">" + contractor.phone_number + "</span><br />" +
+            "<span class=\"icon\"><i class=\"fas fa-envelope\" aria-hidden=\"true\"></i></span> <span aria-label=\"Email Address\">" + contractor.email_address + "</span><br />";
+    };
     const buildContractorResultElement = (contractor, contractorIndex) => {
         const panelBlockElement = document.createElement("div");
         panelBlockElement.className = "panel-block is-block";
@@ -446,7 +456,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
         columnsElement.innerHTML = "<div class=\"column is-full-mobile is-full-tablet is-half-widescreen\">" +
             "<a class=\"is-size-5 has-text-weight-bold\" data-index=\"" + contractorIndex.toString() + "\" role=\"button\" href=\"#\">" + cityssm.escapeHTML(contractor.contractor_name) + "</a><br />" +
             (isContractorHireReady(contractor)
-                ? "<span class=\"icon\"><i class=\"fas fa-phone\" aria-hidden=\"true\"></i></span> <span>" + contractor.phone_number + "</span>"
+                ? buildContractorContactDetails(contractor)
                 : "<span class=\"has-text-weight-semibold has-text-danger\"><span class=\"icon\"><i class=\"fas fa-exclamation-triangle\" aria-hidden=\"true\"></i></span> Not Hire Ready</span>") +
             "</div>" +
             ("<div class=\"column pt-4 has-text-centered\">" +
