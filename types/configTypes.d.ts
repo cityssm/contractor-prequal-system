@@ -50,6 +50,11 @@ export interface Config {
     vendorInformationSystemConfig: {
         vendorURL: string;
     };
+    satisfactoryCriteria?: {
+        legal?: {
+            criteriaAlias: string;
+        };
+    };
 }
 export interface Config_HTTPSConfig {
     port: number;

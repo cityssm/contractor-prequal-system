@@ -26,4 +26,5 @@ export declare function getProperty(propertyName: "docuShareConfig.server"): dsT
 export declare function getProperty(propertyName: "docuShareConfig.session"): dsTypes.SessionConfig;
 export declare function getProperty(propertyName: "clearRiskConfig.insuranceImport.folderPath"): string;
 export declare function getProperty(propertyName: "clearRiskConfig.insuranceImport.columnNames"): configTypes.Config_ClearRisk_InsuranceImport_ColumnNames;
+export declare function getProperty(propertyName: "satisfactoryCriteria.legal.criteriaAlias"): string;
 export declare function getProperty(propertyName: "permissions.canUpdate"): string[];

@@ -15,6 +15,7 @@ configFallbackValues.set("twoFactor.isEnabledInternally", false);
 configFallbackValues.set("twoFactor.isRequiredInternally", false);
 configFallbackValues.set("twoFactor.isEnabledExternally", false);
 configFallbackValues.set("twoFactor.isRequiredExternally", false);
+configFallbackValues.set("satisfactoryCriteria.legal.criteriaAlias", "Legal");
 configFallbackValues.set("permissions.canUpdate", []);
 export function getProperty(propertyName) {
     if (Object.prototype.hasOwnProperty.call(configOverrides, propertyName)) {

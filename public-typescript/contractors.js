@@ -298,9 +298,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         : "(Unavailable)");
                 document.querySelector("#contractor--email_name").textContent =
                     contractor.email_name;
-                document.querySelector("#contractor--email_address").textContent =
+                document.querySelector("#contractor--email_address").innerHTML =
                     (contractor.email_address && contractor.email_address !== ""
-                        ? contractor.email_address
+                        ? "<a href=\"mailto:" + cityssm.escapeHTML(contractor.email_address) + "\">" + contractor.email_address + "</a>"
                         : "(Unavailable)");
                 if (contractor.docuShareCollectionID) {
                     document.querySelector("#contractor--docuShareCollectionID").value =
@@ -357,6 +357,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 }
             },
             onshown: (modalElement) => {
+                const legalCriteriaAliasElements = modalElement.querySelectorAll(".uses-legal-criteria-alias");
+                for (const aliasElement of legalCriteriaAliasElements) {
+                    aliasElement.textContent = exports.legalCriteriaAlias;
+                }
                 if (canUpdate) {
                     const contractorUnlockControlElement = modalElement.querySelector(".is-unlock-contractor-control");
                     contractorUnlockControlElement.classList.remove("is-hidden");
@@ -405,7 +409,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 ? "<i class=\"fas fa-2x fa-check-circle has-text-success\" aria-hidden=\"true\"></i>"
                 : "<i class=\"fas fa-2x fa-times-circle has-text-danger\" aria-hidden=\"true\"></i>") +
             "</span><br />" +
-            "<span class=\"is-size-7 has-text-weight-semibold\">Legal</span>";
+            "<span class=\"is-size-7 has-text-weight-semibold\">" + exports.legalCriteriaAlias + "</span>";
         return html;
     };
     const buildContractorWSIBIconHTML = (contractor) => {

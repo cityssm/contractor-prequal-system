@@ -40,6 +40,8 @@ configFallbackValues.set("twoFactor.isRequiredInternally", false);
 configFallbackValues.set("twoFactor.isEnabledExternally", false);
 configFallbackValues.set("twoFactor.isRequiredExternally", false);
 
+configFallbackValues.set("satisfactoryCriteria.legal.criteriaAlias", "Legal");
+
 configFallbackValues.set("permissions.canUpdate", []);
 
 
@@ -73,6 +75,8 @@ export function getProperty(propertyName: "docuShareConfig.session"): dsTypes.Se
 
 export function getProperty(propertyName: "clearRiskConfig.insuranceImport.folderPath"): string;
 export function getProperty(propertyName: "clearRiskConfig.insuranceImport.columnNames"): configTypes.Config_ClearRisk_InsuranceImport_ColumnNames;
+
+export function getProperty(propertyName: "satisfactoryCriteria.legal.criteriaAlias"): string;
 
 export function getProperty(propertyName: "permissions.canUpdate"): string[];
 

@@ -1,6 +1,20 @@
 (() => {
 
   /*
+   * Navbar Dropdown Toggles
+   */
+
+  const toggleDropdown = (clickEvent: Event) => {
+    (clickEvent.currentTarget as HTMLAnchorElement).closest(".navbar-item").classList.toggle("is-active");
+  };
+
+  const navbarDropdownToggleElements = document.querySelectorAll(".navbar-item.has-dropdown > .navbar-link");
+
+  for (const toggleElement of navbarDropdownToggleElements) {
+    toggleElement.addEventListener("click", toggleDropdown);
+  }
+
+  /*
   * Navbar Toggle
   */
 
