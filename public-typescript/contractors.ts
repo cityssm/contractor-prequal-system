@@ -53,9 +53,9 @@ declare const exports: {
    */
 
 
-  // const buildVendorInformationSystemURL = (contractorID: number) => {
-  //  return exports.vendorInformationSystemVendorURL + "?vendorID=" + contractorID.toString();
-  // };
+  const buildVendorInformationSystemURL = (contractorID: number) => {
+    return exports.vendorInformationSystemVendorURL + "?vendorID=" + contractorID.toString();
+  };
 
 
   const buildDocuShareURL = (docuShareCollectionID: string) => {
@@ -540,6 +540,14 @@ declare const exports: {
         }
 
         document.querySelector("#contractor--docuShareCollectionID-link").addEventListener("click", openDocuShareLink);
+
+        if (canUpdate) {
+          const contractorIDElement = document.querySelector("#contractor--contractorID");
+          contractorIDElement.innerHTML = "<a href=\"" + buildVendorInformationSystemURL(contractor.contractorID) + "\" target=\"_blank\">" +
+            contractor.contractorID.toString() +
+            "<a>";
+          contractorIDElement.closest(".panel-block").classList.remove("is-hidden");
+        }
 
         // Health & Safety
 

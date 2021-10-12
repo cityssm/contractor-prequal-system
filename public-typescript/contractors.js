@@ -18,6 +18,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
         });
         return tradeCategory;
     };
+    const buildVendorInformationSystemURL = (contractorID) => {
+        return exports.vendorInformationSystemVendorURL + "?vendorID=" + contractorID.toString();
+    };
     const buildDocuShareURL = (docuShareCollectionID) => {
         return exports.docuShareRootURL + "/dsweb/View/Collection-" + docuShareCollectionID;
     };
@@ -307,6 +310,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
                         contractor.docuShareCollectionID.toString();
                 }
                 document.querySelector("#contractor--docuShareCollectionID-link").addEventListener("click", openDocuShareLink);
+                if (canUpdate) {
+                    const contractorIDElement = document.querySelector("#contractor--contractorID");
+                    contractorIDElement.innerHTML = "<a href=\"" + buildVendorInformationSystemURL(contractor.contractorID) + "\" target=\"_blank\">" +
+                        contractor.contractorID.toString() +
+                        "<a>";
+                    contractorIDElement.closest(".panel-block").classList.remove("is-hidden");
+                }
                 document.querySelector("#contractor--healthSafety_status").innerHTML =
                     (contractor.healthSafety_status === null || contractor.healthSafety_status === ""
                         ? "<option value=\"\">(Not Set)</option>"
