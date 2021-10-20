@@ -771,8 +771,12 @@ declare const exports: {
 
   const buildContractorContactDetails = (contractor: recordTypes.Contractor): string => {
 
-    return "<span class=\"icon\"><i class=\"fas fa-phone\" aria-hidden=\"true\"></i></span> <span aria-label=\"Phone Number\">" + contractor.phone_number + "</span><br />" +
-      "<span class=\"icon\"><i class=\"fas fa-envelope\" aria-hidden=\"true\"></i></span> <span aria-label=\"Email Address\">" + contractor.email_address + "</span><br />";
+    return (contractor.phone_number
+      ? "<span class=\"icon\"><i class=\"fas fa-phone\" aria-hidden=\"true\"></i></span> <span aria-label=\"Phone Number\">" + contractor.phone_number + "</span><br />"
+      : "") +
+      (contractor.email_address
+        ? "<span class=\"icon\"><i class=\"fas fa-envelope\" aria-hidden=\"true\"></i></span> <span aria-label=\"Email Address\">" + contractor.email_address + "</span><br />"
+        : "");
   };
 
 
