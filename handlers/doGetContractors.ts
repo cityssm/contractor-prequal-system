@@ -8,7 +8,7 @@ import type { RequestHandler } from "express";
 interface FormFilters {
   contractorName: string;
   tradeCategoryID: string;
-  hireStatus: "hireReady" | "cityApproved" | "";
+  hireStatus: "hireReady" | "cityApproved" | "partiallyApproved" | "";
 }
 
 
@@ -22,22 +22,8 @@ export const handler: RequestHandler = async (request, response) => {
     queryFilters.contractorName = formFilters.contractorName;
   }
 
-  switch (formFilters.hireStatus) {
-
-    case "hireReady":
-      queryFilters.isContractor = true;
-      queryFilters.wsibIsSatisfactory = true;
-      queryFilters.insuranceIsSatisfactory = true;
-      queryFilters.healthSafetyIsSatisfactory = true;
-      queryFilters.legalIsSatisfactory = true;
-      break;
-
-    case "cityApproved":
-      queryFilters.isContractor = true;
-      queryFilters.healthSafetyIsSatisfactory = true;
-      queryFilters.legalIsSatisfactory = true;
-      break;
-
+  if (formFilters.hireStatus !== "") {
+    queryFilters.hireStatus = formFilters.hireStatus;
   }
 
   if (formFilters.tradeCategoryID !== "") {
@@ -45,9 +31,8 @@ export const handler: RequestHandler = async (request, response) => {
   }
 
   // Read only users can see those that haven't been approved by legal and health and safety
-  if (!request.session.user.canUpdate) {
-    queryFilters.healthSafetyIsSatisfactory = true;
-    queryFilters.legalIsSatisfactory = true;
+  if (!request.session.user.canUpdate && formFilters.hireStatus === "") {
+    queryFilters.hireStatus = "partiallyApproved";
   }
 
   let contractors = resultsCache.getCachedResult(request.session.user.canUpdate, queryFilters);

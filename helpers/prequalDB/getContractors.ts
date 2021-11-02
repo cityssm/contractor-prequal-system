@@ -12,11 +12,8 @@ const debugSQL = debug("contractor-prequal-system:prequalDB:getContractors");
 export interface GetContractorFilters {
   contractorName?: string;
   tradeCategoryID?: number;
+  hireStatus?: "hireReady" | "cityApproved" | "partiallyApproved" | "";
   isContractor?: boolean;
-  wsibIsSatisfactory?: boolean;
-  insuranceIsSatisfactory?: boolean;
-  healthSafetyIsSatisfactory?: boolean;
-  legalIsSatisfactory?: boolean;
   hasDocuShareCollectionID?: boolean;
   updateYears?: number;
 }
@@ -34,20 +31,27 @@ const buildWhereClause = (filters: GetContractorFilters) => {
     whereClause += " and datediff(year, updateTime, getDate()) <= " + filters.updateYears.toString();
   }
 
-  if (Object.prototype.hasOwnProperty.call(filters, "wsibIsSatisfactory")) {
-    whereClause += " and wsib_isSatisfactory = " + (filters.wsibIsSatisfactory ? "1" : "0");
-  }
+  if (Object.prototype.hasOwnProperty.call(filters, "hireStatus")) {
 
-  if (Object.prototype.hasOwnProperty.call(filters, "insuranceIsSatisfactory")) {
-    whereClause += " and insurance_isSatisfactory = " + (filters.insuranceIsSatisfactory ? "1" : "0");
-  }
+    switch (filters.hireStatus) {
 
-  if (Object.prototype.hasOwnProperty.call(filters, "healthSafetyIsSatisfactory")) {
-    whereClause += " and healthSafety_isSatisfactory = " + (filters.healthSafetyIsSatisfactory ? "1" : "0");
-  }
+      case "hireReady":
+        whereClause += " and healthSafety_isSatisfactory = 1" +
+          " and legal_isSatisfactory = 1" +
+          " and wsib_isSatisfactory = 1" +
+          " and insurance_isSatisfactory = 1";
+        break;
 
-  if (Object.prototype.hasOwnProperty.call(filters, "legalIsSatisfactory")) {
-    whereClause += " and legal_isSatisfactory = " + (filters.legalIsSatisfactory ? "1" : "0");
+      case "cityApproved":
+        whereClause += " and healthSafety_isSatisfactory = 1" +
+          " and legal_isSatisfactory = 1";
+        break;
+
+      case "partiallyApproved":
+        whereClause += " and healthSafety_isSatisfactory = 1" +
+          " or legal_isSatisfactory = 1";
+        break;
+    }
   }
 
   if (Object.prototype.hasOwnProperty.call(filters, "hasDocuShareCollectionID")) {

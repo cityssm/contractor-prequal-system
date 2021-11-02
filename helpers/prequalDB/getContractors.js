@@ -11,17 +11,23 @@ const buildWhereClause = (filters) => {
     if (Object.prototype.hasOwnProperty.call(filters, "updateYears")) {
         whereClause += " and datediff(year, updateTime, getDate()) <= " + filters.updateYears.toString();
     }
-    if (Object.prototype.hasOwnProperty.call(filters, "wsibIsSatisfactory")) {
-        whereClause += " and wsib_isSatisfactory = " + (filters.wsibIsSatisfactory ? "1" : "0");
-    }
-    if (Object.prototype.hasOwnProperty.call(filters, "insuranceIsSatisfactory")) {
-        whereClause += " and insurance_isSatisfactory = " + (filters.insuranceIsSatisfactory ? "1" : "0");
-    }
-    if (Object.prototype.hasOwnProperty.call(filters, "healthSafetyIsSatisfactory")) {
-        whereClause += " and healthSafety_isSatisfactory = " + (filters.healthSafetyIsSatisfactory ? "1" : "0");
-    }
-    if (Object.prototype.hasOwnProperty.call(filters, "legalIsSatisfactory")) {
-        whereClause += " and legal_isSatisfactory = " + (filters.legalIsSatisfactory ? "1" : "0");
+    if (Object.prototype.hasOwnProperty.call(filters, "hireStatus")) {
+        switch (filters.hireStatus) {
+            case "hireReady":
+                whereClause += " and healthSafety_isSatisfactory = 1" +
+                    " and legal_isSatisfactory = 1" +
+                    " and wsib_isSatisfactory = 1" +
+                    " and insurance_isSatisfactory = 1";
+                break;
+            case "cityApproved":
+                whereClause += " and healthSafety_isSatisfactory = 1" +
+                    " and legal_isSatisfactory = 1";
+                break;
+            case "partiallyApproved":
+                whereClause += " and healthSafety_isSatisfactory = 1" +
+                    " or legal_isSatisfactory = 1";
+                break;
+        }
     }
     if (Object.prototype.hasOwnProperty.call(filters, "hasDocuShareCollectionID")) {
         whereClause += filters.hasDocuShareCollectionID

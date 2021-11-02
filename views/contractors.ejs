@@ -107,8 +107,11 @@
               <div class="select is-fullwidth">
                 <select id="filter--hireStatus" name="hireStatus">
                   <option value="hireReady">Hire Ready</option>
-                  <option value="cityApproved">City Approved</option>
-                  <option value="">All</option>
+                  <!-- <option value="cityApproved">City Approved</option> -->
+                  <option value="partiallyApproved">Partially Approved</option>
+                  <% if (user.canUpdate) { %>
+                    <option value="">All</option>
+                  <% } %>
                 </select>
               </div>
             </div>

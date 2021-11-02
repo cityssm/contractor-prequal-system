@@ -6,26 +6,14 @@ export const handler = async (request, response) => {
     if (formFilters.contractorName !== "") {
         queryFilters.contractorName = formFilters.contractorName;
     }
-    switch (formFilters.hireStatus) {
-        case "hireReady":
-            queryFilters.isContractor = true;
-            queryFilters.wsibIsSatisfactory = true;
-            queryFilters.insuranceIsSatisfactory = true;
-            queryFilters.healthSafetyIsSatisfactory = true;
-            queryFilters.legalIsSatisfactory = true;
-            break;
-        case "cityApproved":
-            queryFilters.isContractor = true;
-            queryFilters.healthSafetyIsSatisfactory = true;
-            queryFilters.legalIsSatisfactory = true;
-            break;
+    if (formFilters.hireStatus !== "") {
+        queryFilters.hireStatus = formFilters.hireStatus;
     }
     if (formFilters.tradeCategoryID !== "") {
         queryFilters.tradeCategoryID = Number.parseInt(formFilters.tradeCategoryID, 10);
     }
-    if (!request.session.user.canUpdate) {
-        queryFilters.healthSafetyIsSatisfactory = true;
-        queryFilters.legalIsSatisfactory = true;
+    if (!request.session.user.canUpdate && formFilters.hireStatus === "") {
+        queryFilters.hireStatus = "partiallyApproved";
     }
     let contractors = resultsCache.getCachedResult(request.session.user.canUpdate, queryFilters);
     if (!contractors) {

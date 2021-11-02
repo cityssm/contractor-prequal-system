@@ -2,11 +2,8 @@ import type { Contractor } from "../../types/recordTypes";
 export interface GetContractorFilters {
     contractorName?: string;
     tradeCategoryID?: number;
+    hireStatus?: "hireReady" | "cityApproved" | "partiallyApproved" | "";
     isContractor?: boolean;
-    wsibIsSatisfactory?: boolean;
-    insuranceIsSatisfactory?: boolean;
-    healthSafetyIsSatisfactory?: boolean;
-    legalIsSatisfactory?: boolean;
     hasDocuShareCollectionID?: boolean;
     updateYears?: number;
 }
