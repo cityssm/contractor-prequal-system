@@ -48,8 +48,8 @@ const buildWhereClause = (filters: GetContractorFilters) => {
         break;
 
       case "partiallyApproved":
-        whereClause += " and healthSafety_isSatisfactory = 1" +
-          " or legal_isSatisfactory = 1";
+        whereClause += " and (healthSafety_isSatisfactory = 1" +
+          " or legal_isSatisfactory = 1)";
         break;
     }
   }
