@@ -33,7 +33,7 @@
     "@cityssm/expressjs-server-js": "^2.3.1",
     "@cityssm/is-private-network-address": "^0.2.1",
     "@cityssm/mssql-multi-pool": "^2.1.2",
-    "@cityssm/wsib-clearance-check": "^3.0.0-beta.1",
+    "@cityssm/wsib-clearance-check": "^3.0.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "chokidar": "^3.5.2",
     "compression": "^1.7.4",
