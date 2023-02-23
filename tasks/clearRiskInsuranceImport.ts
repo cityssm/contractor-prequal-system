@@ -8,7 +8,7 @@ import { updateInsurance, InsuranceForm } from "../helpers/prequalDB/updateInsur
 import * as chokidar from "chokidar";
 import * as Papa from "papaparse";
 
-import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed";
 import exitHook from "exit-hook";
 
 import debug from "debug";

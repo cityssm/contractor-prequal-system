@@ -3,7 +3,7 @@ import { updateWSIBExpiryDate } from "../helpers/prequalDB/updateWSIBExpiryDate.
 
 import * as wsib from "@cityssm/wsib-clearance-check";
 
-import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed";
 import exitHook from "exit-hook";
 
 import { LocalStorage } from "node-localstorage";

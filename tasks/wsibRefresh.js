@@ -1,7 +1,7 @@
 import { getExpiredWSIBAccountNumbers } from "../helpers/prequalDB/getExpiredWSIBAccountNumbers.js";
 import { updateWSIBExpiryDate } from "../helpers/prequalDB/updateWSIBExpiryDate.js";
 import * as wsib from "@cityssm/wsib-clearance-check";
-import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed";
 import exitHook from "exit-hook";
 import { LocalStorage } from "node-localstorage";
 import debug from "debug";

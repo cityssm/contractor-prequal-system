@@ -5,7 +5,7 @@ import * as docuShareFunctions from "../helpers/docuShareFunctions.js";
 
 import { clearCache } from "../helpers/queryResultsCache.js";
 
-import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed";
 import exitHook from "exit-hook";
 
 import { getContractors } from "../helpers/prequalDB/getContractors.js";

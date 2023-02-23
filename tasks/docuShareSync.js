@@ -2,7 +2,7 @@ import * as ds from "@cityssm/docushare";
 import * as configFunctions from "../helpers/configFunctions.js";
 import * as docuShareFunctions from "../helpers/docuShareFunctions.js";
 import { clearCache } from "../helpers/queryResultsCache.js";
-import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed";
 import exitHook from "exit-hook";
 import { getContractors } from "../helpers/prequalDB/getContractors.js";
 import { updateContractor } from "../helpers/prequalDB/updateContractor.js";

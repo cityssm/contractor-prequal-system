@@ -5,7 +5,7 @@ import { getContractor } from "../helpers/prequalDB/getContractor.js";
 import { updateInsurance } from "../helpers/prequalDB/updateInsurance.js";
 import * as chokidar from "chokidar";
 import * as Papa from "papaparse";
-import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed/index.js";
+import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed";
 import exitHook from "exit-hook";
 import debug from "debug";
 const debugClearRisk = debug("contractor-prequal-system:clearRiskInsuranceImport");
