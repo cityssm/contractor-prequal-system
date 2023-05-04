@@ -366,7 +366,7 @@ declare const exports: {
 
   const loadLegalOptions = () => {
 
-    document.querySelector("#contractor--legal_isSatisfactory").insertAdjacentHTML("beforeend",
+    document.querySelector("#contractor--legal_isSatisfactory")?.insertAdjacentHTML("beforeend",
       "<optgroup label=\"Options\">" +
       "<option value=\"1\">Approved</option>" +
       "<option value=\"0\">Declined</option>" +
@@ -690,7 +690,7 @@ declare const exports: {
 
     return contractor.isContractor &&
       contractor.healthSafety_isSatisfactory &&
-      contractor.legal_isSatisfactory &&
+      // contractor.legal_isSatisfactory &&
       contractor.wsib_isSatisfactory &&
       contractor.insurance_isSatisfactory;
   };
@@ -708,7 +708,7 @@ declare const exports: {
     return html;
   };
 
-
+  /*
   const buildContractorLegalIconHTML = (contractor: recordTypes.Contractor): string => {
 
     const html = "<span class=\"icon\">" +
@@ -720,6 +720,7 @@ declare const exports: {
 
     return html;
   };
+  */
 
 
   const buildContractorWSIBIconHTML = (contractor: recordTypes.Contractor): string => {
@@ -797,9 +798,11 @@ declare const exports: {
       ("<div class=\"column pt-4 has-text-centered\">" +
         buildContractorHealthSafetyIconHTML(contractor) +
         "</div>") +
+      /*
       ("<div class=\"column pt-4 has-text-centered\">" +
         buildContractorLegalIconHTML(contractor) +
         "</div>") +
+      */
       ("<div class=\"column pt-4 has-text-centered\">" +
         buildContractorWSIBIconHTML(contractor) +
         "</div>") +

@@ -109,78 +109,6 @@
       </div>
       <div class="columns">
         <div class="column">
-          <form data-action="doUpdateHealthSafety">
-            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
-            <div class="columns is-mobile">
-              <div class="column">
-                <h3 class="title is-4">Health & Safety</h3>
-              </div>
-              <div class="column is-narrow">
-                <button class="button is-small is-unlock-button is-hidden" type="button">
-                  <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
-                  <span>Unlock</span>
-                </button>
-              </div>
-            </div>
-            <fieldset disabled>
-              <div class="field">
-                <label class="label" for="contractor--healthSafety_status">
-                  Health & Safety Status
-                </label>
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select id="contractor--healthSafety_status" name="healthSafety_status"></select>
-                  </div>
-                </div>
-              </div>
-              <div class="has-text-right">
-                <button class="button is-primary" type="submit">Save</button>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-        <div class="column">
-          <form data-action="doUpdateLegal">
-            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
-            <div class="columns is-mobile">
-              <div class="column">
-                <h3 class="title is-4 uses-legal-criteria-alias"></h3>
-              </div>
-              <div class="column is-narrow">
-                <button class="button is-small is-unlock-button is-hidden" type="button">
-                  <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
-                  <span>Unlock</span>
-                </button>
-              </div>
-            </div>
-            <fieldset disabled>
-              <div class="field">
-                <label class="label" for="contractor--legal_isSatisfactory">
-                  <span class="uses-legal-criteria-alias"></span> Status
-                </label>
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select id="contractor--legal_isSatisfactory" name="legal_isSatisfactory"></select>
-                  </div>
-                </div>
-              </div>
-              <div class="field">
-                <label class="label" for="contractor--legal_note">
-                  Note
-                </label>
-                <div class="control">
-                  <textarea class="textarea" id="contractor--legal_note" name="legal_note"></textarea>
-                </div>
-              </div>
-              <div class="has-text-right">
-                <button class="button is-primary" type="submit">Save</button>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column">
           <form data-action="doUpdateWSIB">
             <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
             <div class="columns is-mobile">
@@ -292,6 +220,78 @@
                 </label>
                 <div class="control">
                   <input class="input" id="contractor--insurance_expiryDate" name="insurance_expiryDate" type="date" />
+                </div>
+              </div>
+              <div class="has-text-right">
+                <button class="button is-primary" type="submit">Save</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column">
+          <form data-action="doUpdateHealthSafety">
+            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
+            <div class="columns is-mobile">
+              <div class="column">
+                <h3 class="title is-4">Health & Safety</h3>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-small is-unlock-button is-hidden" type="button">
+                  <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
+                  <span>Unlock</span>
+                </button>
+              </div>
+            </div>
+            <fieldset disabled>
+              <div class="field">
+                <label class="label" for="contractor--healthSafety_status">
+                  Health & Safety Status
+                </label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select id="contractor--healthSafety_status" name="healthSafety_status"></select>
+                  </div>
+                </div>
+              </div>
+              <div class="has-text-right">
+                <button class="button is-primary" type="submit">Save</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="column is-hidden">
+          <form data-action="doUpdateLegal">
+            <input class="contractor--contractorID" name="contractorID" type="hidden" value="" />
+            <div class="columns is-mobile">
+              <div class="column">
+                <h3 class="title is-4 uses-legal-criteria-alias"></h3>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-small is-unlock-button is-hidden" type="button">
+                  <span class="icon"><i class="fas fa-unlock" aria-hidden="true"></i></span>
+                  <span>Unlock</span>
+                </button>
+              </div>
+            </div>
+            <fieldset disabled>
+              <div class="field">
+                <label class="label" for="contractor--legal_isSatisfactory">
+                  <span class="uses-legal-criteria-alias"></span> Status
+                </label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select id="contractor--legal_isSatisfactory" name="legal_isSatisfactory"></select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label" for="contractor--legal_note">
+                  Note
+                </label>
+                <div class="control">
+                  <textarea class="textarea" id="contractor--legal_note" name="legal_note"></textarea>
                 </div>
               </div>
               <div class="has-text-right">

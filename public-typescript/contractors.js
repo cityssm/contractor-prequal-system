@@ -198,7 +198,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
         }
     };
     const loadLegalOptions = () => {
-        document.querySelector("#contractor--legal_isSatisfactory").insertAdjacentHTML("beforeend", "<optgroup label=\"Options\">" +
+        var _a;
+        (_a = document.querySelector("#contractor--legal_isSatisfactory")) === null || _a === void 0 ? void 0 : _a.insertAdjacentHTML("beforeend", "<optgroup label=\"Options\">" +
             "<option value=\"1\">Approved</option>" +
             "<option value=\"0\">Declined</option>" +
             "</optgroup>");
@@ -400,7 +401,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
     const isContractorHireReady = (contractor) => {
         return contractor.isContractor &&
             contractor.healthSafety_isSatisfactory &&
-            contractor.legal_isSatisfactory &&
             contractor.wsib_isSatisfactory &&
             contractor.insurance_isSatisfactory;
     };
@@ -411,15 +411,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
                 : "<i class=\"fas fa-2x fa-times-circle has-text-danger\" aria-hidden=\"true\"></i>") +
             "</span><br />" +
             "<span class=\"is-size-7 has-text-weight-semibold\">Health & Safety</span>";
-        return html;
-    };
-    const buildContractorLegalIconHTML = (contractor) => {
-        const html = "<span class=\"icon\">" +
-            (contractor.legal_isSatisfactory
-                ? "<i class=\"fas fa-2x fa-check-circle has-text-success\" aria-hidden=\"true\"></i>"
-                : "<i class=\"fas fa-2x fa-times-circle has-text-danger\" aria-hidden=\"true\"></i>") +
-            "</span><br />" +
-            "<span class=\"is-size-7 has-text-weight-semibold\">" + exports.legalCriteriaAlias + "</span>";
         return html;
     };
     const buildContractorWSIBIconHTML = (contractor) => {
@@ -479,9 +470,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
             "</div>" +
             ("<div class=\"column pt-4 has-text-centered\">" +
                 buildContractorHealthSafetyIconHTML(contractor) +
-                "</div>") +
-            ("<div class=\"column pt-4 has-text-centered\">" +
-                buildContractorLegalIconHTML(contractor) +
                 "</div>") +
             ("<div class=\"column pt-4 has-text-centered\">" +
                 buildContractorWSIBIconHTML(contractor) +

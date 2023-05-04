@@ -37,19 +37,20 @@ const buildWhereClause = (filters: GetContractorFilters) => {
 
       case "hireReady":
         whereClause += " and healthSafety_isSatisfactory = 1" +
-          " and legal_isSatisfactory = 1" +
+          // " and legal_isSatisfactory = 1" +
           " and wsib_isSatisfactory = 1" +
           " and insurance_isSatisfactory = 1";
         break;
 
       case "cityApproved":
-        whereClause += " and healthSafety_isSatisfactory = 1" +
-          " and legal_isSatisfactory = 1";
+        // whereClause += " and healthSafety_isSatisfactory = 1" + " and legal_isSatisfactory = 1";
+        whereClause += " and healthSafety_isSatisfactory = 1";
+
         break;
 
       case "partiallyApproved":
-        whereClause += " and (healthSafety_isSatisfactory = 1" +
-          " or legal_isSatisfactory = 1)";
+        // whereClause += " and (healthSafety_isSatisfactory = 1" + " or legal_isSatisfactory = 1)";
+        whereClause += " and healthSafety_isSatisfactory = 1";
         break;
     }
   }
@@ -90,11 +91,11 @@ export const getContractors = async (canUpdate: boolean, filters: GetContractorF
       " phone_name, phone_title," +
       (canUpdate
         ? " phone_number,"
-        : " case when healthSafety_isSatisfactory = 1 and legal_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then phone_number else '' end as phone_number,") +
+        : " case when healthSafety_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then phone_number else '' end as phone_number,") +
       " email_name," +
       (canUpdate
         ? " email_address,"
-        : " case when healthSafety_isSatisfactory = 1 and legal_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then email_address else '' end as email_address,") +
+        : " case when healthSafety_isSatisfactory = 1 and wsib_isSatisfactory = 1 and insurance_isSatisfactory = 1 then email_address else '' end as email_address,") +
       " websiteURL," +
       " wsib_accountNumber, wsib_firmNumber, wsib_effectiveDate, wsib_expiryDate, wsib_isIndependent, wsib_isSatisfactory," +
       " insurance_company, insurance_policyNumber, insurance_amount, insurance_expiryDate, insurance_isSatisfactory," +
