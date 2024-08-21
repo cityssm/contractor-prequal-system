@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "isolatedModules": false,
+    "declaration": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "allowUnreachableCode": false,
+    "strictNullChecks": true
+  },
+  "compileOnSave": true,
+  "buildOnSave": true,
+  "include": ["public-typescript/*"],
+  "exclude": ["data/*", "helpers/*"]
+}

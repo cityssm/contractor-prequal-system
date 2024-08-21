@@ -1,14 +1,15 @@
-import * as configFunctions from "./configFunctions.js";
-import * as adWebAuth from "@cityssm/ad-web-auth-connector";
+import { AdWebAuthConnector } from '@cityssm/ad-web-auth-connector'
 
+import * as configFunctions from './configFunctions.js'
 
-const adWebAuthConfig = configFunctions.getProperty("adWebAuthConfig");
-const userDomain = configFunctions.getProperty("application.userDomain");
+const adWebAuthConfig = configFunctions.getProperty('adWebAuthConfig')
+const userDomain = configFunctions.getProperty('application.userDomain')
 
+const auth = new AdWebAuthConnector(adWebAuthConfig)
 
-adWebAuth.setConfig(adWebAuthConfig);
-
-
-export const authenticate = async (userName: string, password: string): Promise<boolean> => {
-  return await adWebAuth.authenticate(userDomain + "\\" + userName, password);
-};
+export const authenticate = async (
+  userName: string,
+  password: string
+): Promise<boolean> => {
+  return await auth.authenticate(userDomain + '\\' + userName, password)
+}

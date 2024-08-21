@@ -1,19 +1,19 @@
-import { getExpiredWSIBAccountNumbers } from "../helpers/prequalDB/getExpiredWSIBAccountNumbers.js";
-import { updateWSIBExpiryDate } from "../helpers/prequalDB/updateWSIBExpiryDate.js";
-import * as wsib from "@cityssm/wsib-clearance-check";
-import { setIntervalAsync, clearIntervalAsync } from "set-interval-async/fixed";
-import exitHook from "exit-hook";
-import { LocalStorage } from "node-localstorage";
-import debug from "debug";
-const debugWSIB = debug("contractor-prequal-system:wsibRefresh");
-const accountNumbersToSkip = new LocalStorage("./data/wsibRefreshCache");
+import * as wsib from '@cityssm/wsib-clearance-check';
+import debug from 'debug';
+import exitHook from 'exit-hook';
+import { LocalStorage } from 'node-localstorage';
+import { clearIntervalAsync, setIntervalAsync } from 'set-interval-async/fixed';
+import { getExpiredWSIBAccountNumbers } from '../helpers/prequalDB/getExpiredWSIBAccountNumbers.js';
+import { updateWSIBExpiryDate } from '../helpers/prequalDB/updateWSIBExpiryDate.js';
+const debugWSIB = debug('contractor-prequal-system:wsibRefresh');
+const accountNumbersToSkip = new LocalStorage('./data/wsibRefreshCache');
 const refreshIntervalMillis = 2 * 60 * 60 * 1000;
-const calculateCacheExpiry = (dayMultiplier) => {
-    return Date.now() +
-        (dayMultiplier * 86400 * 1000) +
-        (Math.random() * refreshIntervalMillis * 3);
-};
-const purgeExpiredCacheEntries = () => {
+function calculateCacheExpiry(dayMultiplier) {
+    return (Date.now() +
+        dayMultiplier * 86400 * 1000 +
+        Math.random() * refreshIntervalMillis * 3);
+}
+function purgeExpiredCacheEntries() {
     const rightNowMillis = Date.now();
     for (let keyIndex = 0; keyIndex < accountNumbersToSkip.length; keyIndex += 1) {
         const accountNumber = accountNumbersToSkip.key(keyIndex);
@@ -29,7 +29,7 @@ const purgeExpiredCacheEntries = () => {
             accountNumbersToSkip.removeItem(accountNumber);
         }
     }
-};
+}
 const refreshWSIBDates = async () => {
     const wsibAccountNumbers = await getExpiredWSIBAccountNumbers(50 + accountNumbersToSkip.length);
     for (const accountNumber of wsibAccountNumbers) {
@@ -63,6 +63,6 @@ exitHook(() => {
     try {
         clearIntervalAsync(intervalID);
     }
-    catch (_a) {
+    catch {
     }
 });
