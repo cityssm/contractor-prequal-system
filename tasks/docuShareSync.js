@@ -133,7 +133,7 @@ exitHook(() => {
     try {
         clearIntervalAsync(intervalID);
     }
-    catch (_a) {
+    catch {
     }
 });
 process.on("message", () => {

@@ -73,6 +73,6 @@ exitHook(() => {
     try {
         clearIntervalAsync(intervalID);
     }
-    catch (_a) {
+    catch {
     }
 });
