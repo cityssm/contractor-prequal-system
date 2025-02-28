@@ -3,7 +3,7 @@ export interface User {
     canUpdate: boolean;
     passed2FA: boolean;
 }
-declare module "express-session" {
+declare module 'express-session' {
     interface Session {
         user: User;
     }
@@ -34,6 +34,8 @@ export interface Contractor {
     insurance_isSatisfactory: boolean;
     healthSafety_status?: string;
     healthSafety_isSatisfactory: boolean;
+    accessibility_status?: string;
+    accessibility_isSatisfactory: boolean;
     legal_note?: string;
     legal_isSatisfactory: boolean;
 }

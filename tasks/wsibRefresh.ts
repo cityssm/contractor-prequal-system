@@ -52,7 +52,7 @@ function purgeExpiredCacheEntries(): void {
 
 const refreshWSIBDates = async () => {
   const wsibAccountNumbers = await getExpiredWSIBAccountNumbers(
-    50 + accountNumbersToSkip.length
+    100 + accountNumbersToSkip.length
   )
 
   for (const accountNumber of wsibAccountNumbers) {

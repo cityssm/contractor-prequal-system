@@ -31,7 +31,7 @@ function purgeExpiredCacheEntries() {
     }
 }
 const refreshWSIBDates = async () => {
-    const wsibAccountNumbers = await getExpiredWSIBAccountNumbers(50 + accountNumbersToSkip.length);
+    const wsibAccountNumbers = await getExpiredWSIBAccountNumbers(100 + accountNumbersToSkip.length);
     for (const accountNumber of wsibAccountNumbers) {
         if (accountNumbersToSkip.getItem(accountNumber)) {
             continue;

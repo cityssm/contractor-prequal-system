@@ -1,11 +1,11 @@
-import NodeCache from "node-cache";
+import NodeCache from 'node-cache';
 const cache = new NodeCache({
     stdTTL: 10 * 60,
     useClones: false,
     maxKeys: 50
 });
 const getCacheKey = (canUpdate, filters) => {
-    return canUpdate.toString() + ":" + JSON.stringify(filters);
+    return canUpdate.toString() + ':' + JSON.stringify(filters);
 };
 export const clearCache = () => {
     cache.flushAll();

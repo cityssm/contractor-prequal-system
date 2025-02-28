@@ -1,8 +1,8 @@
-import type { Contractor } from "../../types/recordTypes";
+import type { Contractor } from '../../types/recordTypes';
 export interface GetContractorFilters {
     contractorName?: string;
     tradeCategoryID?: number;
-    hireStatus?: "hireReady" | "cityApproved" | "partiallyApproved" | "";
+    hireStatus?: 'hireReady' | 'cityApproved' | 'partiallyApproved' | '';
     isContractor?: boolean;
     hasDocuShareCollectionID?: boolean;
     updateYears?: number;
